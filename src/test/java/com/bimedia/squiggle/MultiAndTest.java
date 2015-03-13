@@ -1,23 +1,24 @@
-package com.truemesh.squiggle.tests;
+package com.bimedia.squiggle.tests;
 
-import com.truemesh.squiggle.Literal;
-import com.truemesh.squiggle.SelectQuery;
-import com.truemesh.squiggle.Table;
-import com.truemesh.squiggle.WildCardColumn;
-import com.truemesh.squiggle.criteria.MultiInCriteria;
-import com.truemesh.squiggle.literal.StringLiteral;
-import com.truemesh.squiggle.tests.support.SqlMatcher;
+import com.bimedia.squiggle.Literal;
+import com.bimedia.squiggle.SelectQuery;
+import com.bimedia.squiggle.Table;
+import com.bimedia.squiggle.WildCardColumn;
+import com.bimedia.squiggle.criteria.MultiAndCriteria;
+import com.bimedia.squiggle.literal.StringLiteral;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.hamcrest.text.IsEqualIgnoringWhiteSpace;
 
 import static org.junit.Assert.assertThat;
 
-public class Example012MultiIn {
+public class MultiAndTest {
+
   @Test
-  public void multiIn () {
+  public void multiAnd() {
     Table user = new Table("user");
 
     SelectQuery select = new SelectQuery();
@@ -44,19 +45,16 @@ public class Example012MultiIn {
     values.add(firstValueTuple);
     values.add(secondValueTuple);
 
-    select.addCriteria(new MultiInCriteria(user, columns, values));
+    select.addCriteria(new MultiAndCriteria(user, columns, values));
 
-    assertThat(select, SqlMatcher.generatesSql(
+    assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
         "SELECT " +
             "    user.* " +
             "FROM " +
             "    user " +
             "WHERE " +
-            " (user.first_column, user.second_column, user.third_column) " +
-            "IN ( " +
-            "( 'first_value', 'second_value', 'third_value' ), ( 'first_value', 'second_value', 'third_value' )" +
-            " )"));
-
-
+            "    ( ( user.first_column = 'first_value' AND ( user.second_column = 'second_value' AND user.third_column = 'third_value' ) ) OR " +
+            "    ( user.first_column = 'first_value' AND ( user.second_column = 'second_value' AND user.third_column = 'third_value' ) ) )"));
   }
+
 }

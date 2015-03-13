@@ -19,7 +19,7 @@ public class NoCriteria implements Criteria {
      * Writes an empty criteria (single space) to the given output stream.
      *
      * @see
-     * com.truemesh.squiggle.Criteria#write(com.truemesh.squiggle.output.Output)
+     * com.bimedia.squiggle.Criteria#write(com.bimedia.squiggle.output.Output)
      */
     public void write(Output out) {
         out.print(' ');

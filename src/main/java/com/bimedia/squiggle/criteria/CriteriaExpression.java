@@ -150,7 +150,7 @@ public class CriteriaExpression implements Criteria {
      * expression.
      *
      * @see
-     * com.truemesh.squiggle.Criteria#write(com.truemesh.squiggle.output.Output)
+     * com.bimedia.squiggle.Criteria#write(com.bimedia.squiggle.output.Output)
      */
     public void write(Output out) {
         if (term == null && expression == null) {
