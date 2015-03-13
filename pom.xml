@@ -6,7 +6,7 @@
 
     <groupId>com.airbnb.squiggle</groupId>
     <artifactId>squiggle</artifactId>
-    <version>3.0.1</version>
+    <version>3.0.2</version>
     <dependencies>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -15,20 +15,4 @@
         </dependency>
     </dependencies>
 
-    <distributionManagement>
-        <repository>
-            <id>s3.snapshot</id>
-            <name>AirBnB s3 snapshot repo</name>
-            <url>s3://airbnb-maven/snapshot</url>
-        </repository>
-    </distributionManagement>
-    <build>
-        <extensions>
-            <extension>
-                <groupId>org.springframework.build.aws</groupId>
-                <artifactId>org.springframework.build.aws.maven</artifactId>
-                <version>3.0.0.RELEASE</version>
-            </extension>
-        </extensions>
-    </build>
 </project>
