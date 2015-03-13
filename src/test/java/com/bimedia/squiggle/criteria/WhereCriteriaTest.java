@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bimedia.squiggle;
+package com.bimedia.squiggle.criteria;
 
+import com.bimedia.squiggle.SelectQuery;
+import com.bimedia.squiggle.Table;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.bimedia.squiggle.criteria.BetweenCriteria;
-import com.bimedia.squiggle.criteria.InCriteria;
-import com.bimedia.squiggle.criteria.IsNotNullCriteria;
-import com.bimedia.squiggle.criteria.IsNullCriteria;
-import com.bimedia.squiggle.criteria.MatchCriteria;
 import org.hamcrest.text.IsEqualIgnoringWhiteSpace;
 
 public class WhereCriteriaTest {

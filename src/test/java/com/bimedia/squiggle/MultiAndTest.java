@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bimedia.squiggle.tests;
+package com.bimedia.squiggle;
 
-import com.bimedia.squiggle.Literal;
-import com.bimedia.squiggle.SelectQuery;
-import com.bimedia.squiggle.Table;
-import com.bimedia.squiggle.WildCardColumn;
 import com.bimedia.squiggle.criteria.MultiAndCriteria;
 import com.bimedia.squiggle.literal.StringLiteral;
 import org.junit.Test;

@@ -15,11 +15,11 @@
  */
 package com.bimedia.squiggle;
 
+import com.bimedia.squiggle.criteria.BetweenCriteria;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.bimedia.squiggle.criteria.BetweenCriteria;
 import com.bimedia.squiggle.literal.IntegerLiteral;
 import com.bimedia.squiggle.literal.StringLiteral;
 import org.hamcrest.text.IsEqualIgnoringWhiteSpace;

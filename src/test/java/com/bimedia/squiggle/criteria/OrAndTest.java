@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bimedia.squiggle;
+package com.bimedia.squiggle.criteria;
 
-import com.bimedia.squiggle.criteria.AND;
-import com.bimedia.squiggle.criteria.MatchCriteria;
-import com.bimedia.squiggle.criteria.OR;
+import com.bimedia.squiggle.Criteria;
+import com.bimedia.squiggle.SelectQuery;
+import com.bimedia.squiggle.Table;
+import com.bimedia.squiggle.WildCardColumn;
 import org.hamcrest.text.IsEqualIgnoringWhiteSpace;
 
 import org.junit.Test;
