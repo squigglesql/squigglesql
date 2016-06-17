@@ -28,13 +28,11 @@ import java.util.Set;
  * expression that the class generates is a list of criteria terms each
  * separated by an {@link Operator#AND AND} or {@link Operator#OR OR} operator.
  * Formally, we may express a logic expression in Backus-Naur Form (BNF) as
- * <p>
  * <code>
  * &lt;expression&gt; ::= &lt;term&gt; | &lt;term&gt; &lt;operator &lt;expression&gt;
- * <br/>&lt;term&gt; ::= &lt;criteria&gt;
- * <br/>&lt;operator&gt; ::= AND | OR
+ * &lt;term&gt; ::= &lt;criteria&gt;
+ * &lt;operator&gt; ::= AND | OR
  * </code>
- * </p>
  */
 public class CriteriaExpression implements Criteria {
 

@@ -19,9 +19,7 @@ import io.zatarox.squiggle.Criteria;
 
 /**
  * Used for adding CRITERIA1 AND CRITERIA2 to a statement.
- * <p/>
- * <
- * pre>
+ * <pre>
  * SelectQuery select = ... ... Criteria a = new MatchCriteria(table, col1, "=",
  * 1); Criteria b = new MatchCriteria(table, col2, "=", 2);
  * select.addCriteria(new AND(a, b)); // ( table.col1 = 1 AND table.col2 = 2 )
