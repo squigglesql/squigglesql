@@ -28,12 +28,10 @@ import java.util.Set;
 
 public class MultiAndCriteria implements Criteria {
 
-    private final Table table;
     private final List<Column> columnList;
     private final Collection<List<Literal>> valueLists;
 
     public MultiAndCriteria(Table table, List<String> columnNames, Collection<List<Literal>> values) {
-        this.table = table;
         this.columnList = new ArrayList<Column>();
         for (String columnName : columnNames) {
             columnList.add(table.getColumn(columnName));

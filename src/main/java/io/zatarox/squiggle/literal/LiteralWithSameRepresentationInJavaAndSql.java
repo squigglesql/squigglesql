@@ -26,6 +26,7 @@ public abstract class LiteralWithSameRepresentationInJavaAndSql extends Literal 
         this.literalValue = literalValue;
     }
 
+    @Override
     public void write(Output out) {
         out.print(literalValue);
     }

@@ -36,6 +36,7 @@ public class IsNotNullCriteria implements Criteria {
         out.print(" IS NOT NULL");
     }
 
+    @Override
     public void addReferencedTablesTo(Set<Table> tables) {
         matched.addReferencedTablesTo(tables);
     }

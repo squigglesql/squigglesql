@@ -15,8 +15,6 @@
  */
 package io.zatarox.squiggle;
 
-import io.zatarox.squiggle.SelectQuery;
-import io.zatarox.squiggle.Table;
 import org.hamcrest.text.IsEqualIgnoringWhiteSpace;
 import org.junit.Test;
 import static org.junit.Assert.assertThat;

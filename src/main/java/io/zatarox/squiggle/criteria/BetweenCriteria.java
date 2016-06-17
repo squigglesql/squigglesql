@@ -69,6 +69,7 @@ public class BetweenCriteria implements Criteria {
         this(column, new IntegerLiteral(lower), new IntegerLiteral(upper));
     }
 
+    @Override
     public void write(Output out) {
         column.write(out);
         out.print(" BETWEEN ");
@@ -77,6 +78,7 @@ public class BetweenCriteria implements Criteria {
         upper.write(out);
     }
 
+    @Override
     public void addReferencedTablesTo(Set<Table> tables) {
         column.addReferencedTablesTo(tables);
     }

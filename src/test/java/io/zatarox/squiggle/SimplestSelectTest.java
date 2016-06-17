@@ -15,9 +15,6 @@
  */
 package io.zatarox.squiggle;
 
-import io.zatarox.squiggle.Order;
-import io.zatarox.squiggle.SelectQuery;
-import io.zatarox.squiggle.Table;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;

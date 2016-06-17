@@ -27,12 +27,13 @@ public class Output {
         this.indent = indent;
     }
 
-    private StringBuffer result = new StringBuffer();
-    private StringBuffer currentIndent = new StringBuffer();
+    private final StringBuffer result = new StringBuffer();
+    private final StringBuffer currentIndent = new StringBuffer();
     private boolean newLineComing;
 
     private final String indent;
 
+    @Override
     public String toString() {
         return result.toString();
     }

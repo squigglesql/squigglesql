@@ -44,6 +44,7 @@ public class Order implements Outputable {
         return column;
     }
 
+    @Override
     public void write(Output out) {
         column.write(out);
         if (!ascending) {

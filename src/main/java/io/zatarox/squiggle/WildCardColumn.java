@@ -26,6 +26,7 @@ public class WildCardColumn extends Projection {
         super(table);
     }
 
+    @Override
     public void write(Output out) {
         out.print(getTable().getAlias()).print(".*");
     }

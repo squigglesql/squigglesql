@@ -26,6 +26,7 @@ public class StringLiteral extends Literal {
         this.literalValue = literalValue;
     }
 
+    @Override
     public void write(Output out) {
         out.print(quote(literalValue));
     }

@@ -17,7 +17,6 @@ package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.SelectQuery;
 import io.zatarox.squiggle.Table;
-import io.zatarox.squiggle.criteria.MatchCriteria;
 
 import org.hamcrest.text.IsEqualIgnoringWhiteSpace;
 import static org.junit.Assert.assertThat;

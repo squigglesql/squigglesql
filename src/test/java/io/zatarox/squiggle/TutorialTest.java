@@ -15,8 +15,6 @@
  */
 package io.zatarox.squiggle;
 
-import io.zatarox.squiggle.SelectQuery;
-import io.zatarox.squiggle.Table;
 import io.zatarox.squiggle.criteria.InCriteria;
 import io.zatarox.squiggle.criteria.MatchCriteria;
 

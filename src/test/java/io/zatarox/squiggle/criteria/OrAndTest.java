@@ -19,9 +19,6 @@ import io.zatarox.squiggle.Criteria;
 import io.zatarox.squiggle.SelectQuery;
 import io.zatarox.squiggle.Table;
 import io.zatarox.squiggle.WildCardColumn;
-import io.zatarox.squiggle.criteria.AND;
-import io.zatarox.squiggle.criteria.MatchCriteria;
-import io.zatarox.squiggle.criteria.OR;
 import org.hamcrest.text.IsEqualIgnoringWhiteSpace;
 
 import org.junit.Test;

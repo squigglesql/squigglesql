@@ -21,11 +21,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
-import io.zatarox.squiggle.literal.BigDecimalLiteral;
-import io.zatarox.squiggle.literal.DateTimeLiteral;
-import io.zatarox.squiggle.literal.FloatLiteral;
-import io.zatarox.squiggle.literal.IntegerLiteral;
-import io.zatarox.squiggle.literal.StringLiteral;
+import io.zatarox.squiggle.literal.*;
 import io.zatarox.squiggle.output.Output;
 
 public class LiteralValueSet implements ValueSet {
@@ -71,6 +67,7 @@ public class LiteralValueSet implements ValueSet {
         }
     }
 
+    @Override
     public void write(Output out) {
         for (Iterator<Literal> it = literals.iterator(); it.hasNext();) {
             Literal literal = it.next();

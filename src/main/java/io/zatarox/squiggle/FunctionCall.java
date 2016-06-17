@@ -29,6 +29,7 @@ public class FunctionCall implements Matchable, Selectable {
         this.arguments = arguments;
     }
 
+    @Override
     public void write(Output out) {
         out.print(functionName).print("(");
         for (int i = 0; i < arguments.length; i++) {
@@ -40,6 +41,7 @@ public class FunctionCall implements Matchable, Selectable {
         out.print(")");
     }
 
+    @Override
     public void addReferencedTablesTo(Set<Table> tables) {
         for (Matchable argument : arguments) {
             argument.addReferencedTablesTo(tables);

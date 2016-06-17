@@ -21,10 +21,12 @@ import io.zatarox.squiggle.output.Output;
 
 public class Parameter implements Matchable {
 
+    @Override
     public void write(Output out) {
         out.print("?");
     }
 
+    @Override
     public void addReferencedTablesTo(Set<Table> tables) {
     }
 }

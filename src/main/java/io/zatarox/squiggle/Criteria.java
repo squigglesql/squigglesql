@@ -15,14 +15,11 @@
  */
 package io.zatarox.squiggle;
 
-import io.zatarox.squiggle.output.Output;
 import io.zatarox.squiggle.output.Outputable;
 
 import java.util.Set;
 
 public interface Criteria extends Outputable {
-
-    public void write(Output out);
 
     public void addReferencedTablesTo(Set<Table> tables);
 }

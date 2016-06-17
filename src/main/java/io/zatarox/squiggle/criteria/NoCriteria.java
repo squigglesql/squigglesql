@@ -34,10 +34,12 @@ public class NoCriteria implements Criteria {
      * @see
      * io.zatarox.squiggle.Criteria#write(io.zatarox.squiggle.output.Output)
      */
+    @Override
     public void write(Output out) {
         out.print(' ');
     }
 
+    @Override
     public void addReferencedTablesTo(Set<Table> tables) {
     }
 }

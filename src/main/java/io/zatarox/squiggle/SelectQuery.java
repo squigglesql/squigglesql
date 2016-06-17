@@ -30,7 +30,7 @@ import io.zatarox.squiggle.output.ToStringer;
 
 public class SelectQuery implements Outputable, ValueSet {
 
-    public static final int indentSize = 4;
+    protected static final int INDENT_SIZE = 4;
 
     private final List<Selectable> selection = new ArrayList<Selectable>();
     private final List<Criteria> criteria = new ArrayList<Criteria>();
@@ -119,10 +119,12 @@ public class SelectQuery implements Outputable, ValueSet {
         return Collections.unmodifiableList(order);
     }
 
+    @Override
     public String toString() {
         return ToStringer.toString(this);
     }
 
+    @Override
     public void write(Output out) {
         out.print("SELECT");
         if (isDistinct) {

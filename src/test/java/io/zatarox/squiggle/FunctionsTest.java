@@ -15,9 +15,6 @@
  */
 package io.zatarox.squiggle;
 
-import io.zatarox.squiggle.FunctionCall;
-import io.zatarox.squiggle.SelectQuery;
-import io.zatarox.squiggle.Table;
 import io.zatarox.squiggle.criteria.BetweenCriteria;
 import static org.junit.Assert.assertThat;
 

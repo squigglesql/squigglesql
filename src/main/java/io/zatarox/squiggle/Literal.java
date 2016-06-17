@@ -24,6 +24,7 @@ import io.zatarox.squiggle.output.Outputable;
  */
 public abstract class Literal implements Outputable, Matchable, Selectable {
 
+    @Override
     public void addReferencedTablesTo(Set<Table> tables) {
     }
 }

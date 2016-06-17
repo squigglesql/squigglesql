@@ -17,8 +17,8 @@ package io.zatarox.squiggle.literal;
 
 public class BooleanLiteral extends LiteralWithSameRepresentationInJavaAndSql {
 
-    public static BooleanLiteral TRUE = new BooleanLiteral(true);
-    public static BooleanLiteral FALSE = new BooleanLiteral(false);
+    public static final BooleanLiteral TRUE = new BooleanLiteral(true);
+    public static final BooleanLiteral FALSE = new BooleanLiteral(false);
 
     public BooleanLiteral(boolean literalValue) {
         this(Boolean.valueOf(literalValue));

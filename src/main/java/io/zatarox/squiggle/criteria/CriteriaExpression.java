@@ -110,7 +110,7 @@ public class CriteriaExpression implements Criteria {
      */
     public CriteriaExpression(final List<Criteria> terms, Operator operator) {
         this.operator = operator;
-        if (terms.size() == 0)
+        if (terms.isEmpty())
 			; else {
             this.term = terms.get(0);
             if (terms.size() > 1) {
@@ -165,6 +165,7 @@ public class CriteriaExpression implements Criteria {
      * @see
      * io.zatarox.squiggle.Criteria#write(io.zatarox.squiggle.output.Output)
      */
+    @Override
     public void write(Output out) {
         if (term == null && expression == null) {
         } else if (expression == null) {
@@ -176,6 +177,7 @@ public class CriteriaExpression implements Criteria {
         }
     }
 
+    @Override
     public void addReferencedTablesTo(Set<Table> tables) {
         term.addReferencedTablesTo(tables);
         if (expression != null) {

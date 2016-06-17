@@ -30,10 +30,12 @@ public class Column extends Projection implements Matchable {
         return name;
     }
 
+    @Override
     public void write(Output out) {
         out.print(getTable().getAlias()).print('.').print(getName());
     }
 
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = getTable().hashCode();
@@ -41,6 +43,7 @@ public class Column extends Projection implements Matchable {
         return result;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

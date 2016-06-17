@@ -36,6 +36,7 @@ public abstract class BaseLogicGroup implements Criteria {
         this.operator = operator;
     }
 
+    @Override
     public void write(Output out) {
         out.print("( ");
         left.write(out);
@@ -46,6 +47,7 @@ public abstract class BaseLogicGroup implements Criteria {
         out.print(" )");
     }
 
+    @Override
     public void addReferencedTablesTo(Set<Table> tables) {
         left.addReferencedTablesTo(tables);
         right.addReferencedTablesTo(tables);

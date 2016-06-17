@@ -64,6 +64,7 @@ public class Table implements Outputable {
         return new WildCardColumn(this);
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -80,10 +81,12 @@ public class Table implements Outputable {
         return getAlias().equals(that.getAlias());
     }
 
+    @Override
     public int hashCode() {
         return getAlias().hashCode();
     }
 
+    @Override
     public void write(Output out) {
         out.print(getName());
         if (hasAlias()) {

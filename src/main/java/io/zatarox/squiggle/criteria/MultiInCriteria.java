@@ -31,12 +31,10 @@ import java.util.Set;
 
 public class MultiInCriteria implements Criteria {
 
-    private final Table table;
     private final Collection<List<Literal>> valueSets;
     private final ArrayList<Column> columnList;
 
     public MultiInCriteria(Table table, List<String> columnNames, Collection<List<Literal>> valueSets) {
-        this.table = table;
         this.valueSets = valueSets;
         this.columnList = new ArrayList<Column>();
         for (String columnName : columnNames) {

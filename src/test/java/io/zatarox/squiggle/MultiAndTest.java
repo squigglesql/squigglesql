@@ -15,10 +15,6 @@
  */
 package io.zatarox.squiggle;
 
-import io.zatarox.squiggle.Literal;
-import io.zatarox.squiggle.SelectQuery;
-import io.zatarox.squiggle.Table;
-import io.zatarox.squiggle.WildCardColumn;
 import io.zatarox.squiggle.criteria.MultiAndCriteria;
 import io.zatarox.squiggle.literal.StringLiteral;
 import org.junit.Test;

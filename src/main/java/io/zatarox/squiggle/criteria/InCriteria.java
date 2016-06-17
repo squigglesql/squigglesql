@@ -65,6 +65,7 @@ public class InCriteria implements Criteria {
         return matched;
     }
 
+    @Override
     public void write(Output out) {
         matched.write(out);
         out.println(" IN (");
@@ -75,6 +76,7 @@ public class InCriteria implements Criteria {
         out.print(")");
     }
 
+    @Override
     public void addReferencedTablesTo(Set<Table> tables) {
         matched.addReferencedTablesTo(tables);
     }
