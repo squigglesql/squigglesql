@@ -1,3 +1,6 @@
+[![Build Status via Travis CI](https://travis-ci.org/gchauvet/squiggle-sql.svg?branch=master)](https://travis-ci.org/gchauvet/squiggle-sql)
+[![Coverage Status](https://coveralls.io/repos/github/gchauvet/squiggle-sql/badge.svg?branch=master)](https://coveralls.io/github/gchauvet/squiggle-sql?branch=master)
+
 Squiggle is a little Java library for dynamically generating SQL SELECT statements. It's sweet spot is for applications that need to build up complicated queries with criteria that changes at runtime. Ordinarily it can be quite painful to figure out how to build this string. Squiggle takes much of this pain away.
 
 The code for Squiggle is intentionally clean and simple. Rather than provide support for every thing you could ever do with SQL, it provides support for the most common situations and allows you to easily modify the source to suit your needs.
