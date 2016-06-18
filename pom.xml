@@ -6,6 +6,7 @@
     <groupId>io.zatarox</groupId>
     <artifactId>squiggle</artifactId>
     <version>3.0.2</version>
+    <url>https://github.com/gchauvet/squiggle-sql</url>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -18,6 +19,14 @@
         <developerConnection>scm:git@github.com:gchauvet/squiggle-sql.git</developerConnection>
         <url>http://github.com/gchauvet/squiggle-sql</url>
     </scm>
+    <developers>
+        <developer>
+            <id>gchauvet</id>
+            <name>Guillaume Chauvet</name>
+            <email>gchauvet@zatarox.com</email>
+            <organization>Zatarox</organization>
+        </developer>
+    </developers>
     <build>
         <plugins>
             <plugin>
