@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.zatarox</groupId>
     <artifactId>squiggle</artifactId>
@@ -16,14 +14,15 @@
     </licenses>
     <scm>
         <connection>scm:git:git://github.com:gchauvet/squiggle-sql.git</connection>
-        <developerConnection>scm:git@github.com:gchauvet/squiggle-sql.git</developerConnection>
-        <url>http://github.com/gchauvet/squiggle-sql</url>
-    </scm>
+        <developerConnection>scm:git:git@github.com:gchauvet/squiggle-sql.git</developerConnection>
+        <url>https://github.com/gchauvet/squiggle-sql</url>
+  </scm>
     <developers>
         <developer>
             <id>gchauvet</id>
             <name>Guillaume Chauvet</name>
             <email>gchauvet@zatarox.com</email>
+            <url>http://github.com/gchauvet</url>
             <organization>Zatarox</organization>
         </developer>
     </developers>
@@ -117,18 +116,6 @@
             </plugin>
         </plugins>
     </build>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus snapshot repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>sonatype-nexus-staging</id>
-            <name>Sonatype Nexus release repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
     <name>Squiggle SQL builder</name>
     <description>A SQL builder provided to help users to build dynamically SQL requests</description>
     <dependencies>
