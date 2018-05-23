@@ -39,4 +39,38 @@ public class SimplestSelectTest {
                 + "FROM people "
                 + "ORDER BY people.age DESC"));
     }
+
+    @Test
+    public void simpleSelectAllColumns() {
+        Table people = new Table("people");
+
+        SelectQuery select = new SelectQuery();
+        select.setAllColumns(true);
+        select.addColumn(people, "firstname");
+        select.addColumn(people, "lastname");
+
+        select.addOrder(people, "age", Order.DESCENDING);
+
+        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
+                "SELECT * "
+                        + "FROM people "
+                        + "ORDER BY people.age DESC"));
+    }
+
+    @Test
+    public void simpleSelectDistinct() {
+        Table people = new Table("people");
+
+        SelectQuery select = new SelectQuery();
+        select.setDistinct(true);
+        select.addColumn(people, "firstname");
+        select.addColumn(people, "lastname");
+
+        select.addOrder(people, "age", Order.DESCENDING);
+
+        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
+                "SELECT DISTINCT people.firstname , people.lastname "
+                        + "FROM people "
+                        + "ORDER BY people.age DESC"));
+    }
 }

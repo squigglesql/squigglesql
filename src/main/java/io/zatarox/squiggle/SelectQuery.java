@@ -79,6 +79,10 @@ public class SelectQuery implements Outputable, ValueSet {
         return isAllColumns;
     }
 
+    public void setAllColumns(boolean allColumns) {
+        isAllColumns = allColumns;
+    }
+
     public void addCriteria(Criteria criteria) {
         this.criteria.add(criteria);
     }
