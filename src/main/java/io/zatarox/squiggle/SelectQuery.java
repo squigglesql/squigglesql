@@ -37,6 +37,7 @@ public class SelectQuery implements Outputable, ValueSet {
     private final List<Order> order = new ArrayList<Order>();
 
     private boolean isDistinct = false;
+    private boolean isAllColumns = false;
 
     public List<Table> listTables() {
         LinkedHashSet<Table> tables = new LinkedHashSet<Table>();
@@ -72,6 +73,10 @@ public class SelectQuery implements Outputable, ValueSet {
 
     public void setDistinct(boolean distinct) {
         isDistinct = distinct;
+    }
+
+    public boolean isAllColumns() {
+        return isAllColumns;
     }
 
     public void addCriteria(Criteria criteria) {
@@ -130,9 +135,13 @@ public class SelectQuery implements Outputable, ValueSet {
         if (isDistinct) {
             out.print(" DISTINCT");
         }
-        out.println();
 
-        appendIndentedList(out, selection, ",");
+        if(isAllColumns) {
+            out.print(" *").println();
+        }else {
+            out.println();
+            appendIndentedList(out, selection, ",");
+        }
 
         Set<Table> tables = findAllUsedTables();
         if (!tables.isEmpty()) {
