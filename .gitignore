@@ -2,3 +2,5 @@ target
 docs
 nb-configuration.xml
 /nbactions.xml
+/.idea/*
+*.iml

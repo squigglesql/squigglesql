@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 package io.zatarox.squiggle.output;
+
+import io.zatarox.squiggle.Parameter;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Output is where the elements of the query output their bits of SQL to.
@@ -33,9 +41,19 @@ public class Output {
 
     private final String indent;
 
+    private final List<Parameter> parameters = new ArrayList<Parameter>();
+
     @Override
     public String toString() {
         return result.toString();
+    }
+
+    public PreparedStatement toStatement(Connection connection) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(toString());
+        for (int i = 0; i < parameters.size(); ++i) {
+            parameters.get(i).setValue(statement, i + 1);
+        }
+        return statement;
     }
 
     public Output print(Object o) {
@@ -68,6 +86,10 @@ public class Output {
 
     public void unindent() {
         currentIndent.setLength(currentIndent.length() - indent.length());
+    }
+
+    public void addParameter(Parameter parameter) {
+        parameters.add(parameter);
     }
 
     private void writeNewLineIfNeeded() {

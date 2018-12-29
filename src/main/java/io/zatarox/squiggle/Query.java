@@ -16,26 +16,32 @@
 package io.zatarox.squiggle;
 
 import io.zatarox.squiggle.output.Output;
+import io.zatarox.squiggle.output.Outputable;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Set;
 
-public class Parameter implements Matchable {
+public abstract class Query implements Outputable {
 
-    @Override
-    public void write(Output out) {
-        out.print("?");
-        out.addParameter(this);
-    }
+    public static final String DEFAULT_INDENT = "    ";
 
     @Override
-    public void addReferencedTablesTo(Set<Table> tables) {
+    public String toString() {
+        return toString(DEFAULT_INDENT);
     }
 
-    public void setValue(PreparedStatement statement, int index) throws SQLException {
-        // This method should be abstract. However, for back compatibility reasons, we can't make the class abstract.
-        // TODO: Redefine it as an abstract method in Squiggle 4.
-        throw new RuntimeException("Can not compile the query due to presence of abstract (untyped) parameters.");
+    public String toString(String indent) {
+        return compile(indent).toString();
+    }
+
+    public PreparedStatement toStatement(Connection connection) throws SQLException {
+        return compile(DEFAULT_INDENT).toStatement(connection);
+    }
+
+    private Output compile(String indent) {
+        Output out = new Output(indent);
+        write(out);
+        return out;
     }
 }
