@@ -15,9 +15,8 @@
  */
 package io.zatarox.squiggle.parameter;
 
-import io.zatarox.squiggle.Parameter;
+import io.zatarox.squiggle.statement.Parametrized;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class BooleanParameter extends Parameter {
@@ -29,8 +28,8 @@ public class BooleanParameter extends Parameter {
     }
 
     @Override
-    public void setValue(PreparedStatement statement, int index) throws SQLException {
-        statement.setBoolean(index, value);
+    public void addValue(Parametrized builder) throws SQLException {
+        builder.addBoolean(value);
     }
 
     @Override

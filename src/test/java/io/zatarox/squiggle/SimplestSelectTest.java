@@ -15,6 +15,9 @@
  */
 package io.zatarox.squiggle;
 
+import io.zatarox.squiggle.query.Order;
+import io.zatarox.squiggle.query.ResultColumn;
+import io.zatarox.squiggle.query.SelectQuery;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

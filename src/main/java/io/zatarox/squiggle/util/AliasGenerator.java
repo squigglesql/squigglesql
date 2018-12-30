@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.zatarox.squiggle;
+package io.zatarox.squiggle.util;
 
 public abstract class AliasGenerator {
 

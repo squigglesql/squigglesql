@@ -15,11 +15,10 @@
  */
 package io.zatarox.squiggle.criteria;
 
-import io.zatarox.squiggle.CollectionWriter;
-import io.zatarox.squiggle.Criteria;
 import io.zatarox.squiggle.Matchable;
 import io.zatarox.squiggle.Output;
 import io.zatarox.squiggle.TableReference;
+import io.zatarox.squiggle.util.CollectionWriter;
 
 import java.util.Arrays;
 import java.util.Collection;

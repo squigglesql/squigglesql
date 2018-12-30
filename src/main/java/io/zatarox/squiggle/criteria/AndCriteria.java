@@ -15,8 +15,6 @@
  */
 package io.zatarox.squiggle.criteria;
 
-import io.zatarox.squiggle.Criteria;
-
 import java.util.Collection;
 
 public class AndCriteria extends CriteriaGroup {

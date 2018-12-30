@@ -13,28 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.zatarox.squiggle.criteria;
+package io.zatarox.squiggle.query;
 
 import io.zatarox.squiggle.Output;
-import io.zatarox.squiggle.TableReference;
+import io.zatarox.squiggle.Outputable;
 
-import java.util.Set;
+public class Order implements Outputable {
 
-public class NotCriteria implements Criteria {
+    public static final boolean ASCENDING = true;
+    public static final boolean DESCENDING = false;
 
-    private final Criteria criteria;
+    private final ResultColumn column;
+    private final boolean ascending;
 
-    public NotCriteria(Criteria criteria) {
-        this.criteria = criteria;
+    Order(ResultColumn column, boolean ascending) {
+        this.column = column;
+        this.ascending = ascending;
     }
 
     @Override
     public void write(Output output) {
-        output.write("NOT ").write(criteria);
-    }
-
-    @Override
-    public void collectTableReferences(Set<TableReference> tableReferences) {
-        criteria.collectTableReferences(tableReferences);
+        output.write(column.getAlias());
+        if (!ascending) {
+            output.write(" DESC");
+        }
     }
 }

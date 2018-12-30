@@ -13,26 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.zatarox.squiggle;
+package io.zatarox.squiggle.criteria;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Set;
+import io.zatarox.squiggle.Outputable;
+import io.zatarox.squiggle.TableReferred;
 
-public abstract class Parameter implements Matchable {
-
-    @Override
-    public void write(Output output) {
-        if (isNull()) {
-            output.write("null");
-            return;
-        }
-        output.write("?").addParameter(this);
-    }
-
-    @Override
-    public void collectTableReferences(Set<TableReference> tableReferences) {
-    }
-
-    public abstract void setValue(PreparedStatement statement, int index) throws SQLException;
+public interface Criteria extends Outputable, TableReferred {
 }

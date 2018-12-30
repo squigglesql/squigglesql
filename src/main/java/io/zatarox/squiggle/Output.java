@@ -15,8 +15,10 @@
  */
 package io.zatarox.squiggle;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import io.zatarox.squiggle.parameter.Parameter;
+import io.zatarox.squiggle.statement.StatementBuilder;
+import io.zatarox.squiggle.statement.StatementCompiler;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,12 +98,12 @@ public class Output {
         return result.toString();
     }
 
-    public PreparedStatement toStatement(Connection connection) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement(toString());
-        for (int i = 0; i < parameters.size(); ++i) {
-            parameters.get(i).setValue(statement, i + 1);
+    public <S> S toStatement(StatementCompiler<S> compiler) throws SQLException {
+        StatementBuilder<S> builder = compiler.createStatementBuilder(toString());
+        for (Parameter parameter : parameters) {
+            parameter.addValue(builder);
         }
-        return statement;
+        return builder.buildStatement();
     }
 
     private void writeNewLineIfNeeded() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
+ * Copyright 2019 Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.zatarox.squiggle.criteria;
+package io.zatarox.squiggle.query;
 
 import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.Outputable;
+import io.zatarox.squiggle.Selectable;
 import io.zatarox.squiggle.TableReference;
+import io.zatarox.squiggle.TableReferred;
 
 import java.util.Set;
 
-public class NotCriteria implements Criteria {
+public class ResultColumn implements Outputable, TableReferred {
 
-    private final Criteria criteria;
+    private final Selectable selectable;
+    private final String alias;
 
-    public NotCriteria(Criteria criteria) {
-        this.criteria = criteria;
+    ResultColumn(Selectable selectable, String alias) {
+        this.selectable = selectable;
+        this.alias = alias;
+    }
+
+    public String getAlias() {
+        return alias;
     }
 
     @Override
     public void write(Output output) {
-        output.write("NOT ").write(criteria);
+        output.write(selectable).write(" as ").write(alias);
     }
 
     @Override
     public void collectTableReferences(Set<TableReference> tableReferences) {
-        criteria.collectTableReferences(tableReferences);
+        selectable.collectTableReferences(tableReferences);
     }
 }

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.zatarox.squiggle;
+package io.zatarox.squiggle.query;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.statement.StatementCompiler;
+
 import java.sql.SQLException;
 
 public abstract class Query {
@@ -34,8 +35,8 @@ public abstract class Query {
         return compile(indent).toString();
     }
 
-    public PreparedStatement toStatement(Connection connection) throws SQLException {
-        return compile(DEFAULT_INDENT).toStatement(connection);
+    public <S> S toStatement(StatementCompiler<S> compiler) throws SQLException {
+        return compile(DEFAULT_INDENT).toStatement(compiler);
     }
 
     private Output compile(String indent) {

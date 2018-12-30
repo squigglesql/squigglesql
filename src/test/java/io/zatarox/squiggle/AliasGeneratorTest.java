@@ -15,9 +15,10 @@
  */
 package io.zatarox.squiggle;
 
+import io.zatarox.squiggle.util.AliasGenerator;
 import org.junit.Test;
 
-import static io.zatarox.squiggle.AliasGenerator.generateAlias;
+import static io.zatarox.squiggle.util.AliasGenerator.generateAlias;
 import static org.junit.Assert.assertEquals;
 
 public class AliasGeneratorTest {

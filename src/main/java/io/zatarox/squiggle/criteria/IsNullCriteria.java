@@ -15,7 +15,6 @@
  */
 package io.zatarox.squiggle.criteria;
 
-import io.zatarox.squiggle.Criteria;
 import io.zatarox.squiggle.Matchable;
 import io.zatarox.squiggle.Output;
 import io.zatarox.squiggle.TableReference;

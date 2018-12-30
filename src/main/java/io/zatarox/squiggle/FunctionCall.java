@@ -15,6 +15,8 @@
  */
 package io.zatarox.squiggle;
 
+import io.zatarox.squiggle.util.CollectionWriter;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;

@@ -15,11 +15,11 @@
  */
 package io.zatarox.squiggle.criteria;
 
-import io.zatarox.squiggle.SelectQuery;
 import io.zatarox.squiggle.Table;
 import io.zatarox.squiggle.TableColumn;
 import io.zatarox.squiggle.TableReference;
 import io.zatarox.squiggle.literal.Literal;
+import io.zatarox.squiggle.query.SelectQuery;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

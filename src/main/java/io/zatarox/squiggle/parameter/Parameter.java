@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Egor Nepomnyaschih.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.zatarox.squiggle;
+package io.zatarox.squiggle.parameter;
 
+import io.zatarox.squiggle.Matchable;
+import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.TableReference;
+import io.zatarox.squiggle.statement.Parametrized;
+
+import java.sql.SQLException;
 import java.util.Set;
 
-public class ResultColumn implements Outputable, TableReferred {
-
-    private final Selectable selectable;
-    private final String alias;
-
-    ResultColumn(Selectable selectable, String alias) {
-        this.selectable = selectable;
-        this.alias = alias;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
+public abstract class Parameter implements Matchable {
 
     @Override
     public void write(Output output) {
-        output.write(selectable).write(" as ").write(alias);
+        if (isNull()) {
+            output.write("null");
+            return;
+        }
+        output.write("?").addParameter(this);
     }
 
     @Override
     public void collectTableReferences(Set<TableReference> tableReferences) {
-        selectable.collectTableReferences(tableReferences);
     }
+
+    public abstract void addValue(Parametrized builder) throws SQLException;
+
+    // We don't provide "of" methods, because null value would have ambiguous type, while it is crucial for JDBC.
 }

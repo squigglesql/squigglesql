@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.zatarox.squiggle;
+package io.zatarox.squiggle.util;
+
+import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.Outputable;
 
 import java.util.Collection;
 import java.util.Iterator;

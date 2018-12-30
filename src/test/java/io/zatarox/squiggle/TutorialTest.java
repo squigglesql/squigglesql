@@ -18,6 +18,7 @@ package io.zatarox.squiggle;
 import io.zatarox.squiggle.criteria.InCriteria;
 import io.zatarox.squiggle.criteria.MatchCriteria;
 import io.zatarox.squiggle.literal.Literal;
+import io.zatarox.squiggle.query.SelectQuery;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
