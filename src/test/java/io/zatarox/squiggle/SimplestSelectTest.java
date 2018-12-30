@@ -25,57 +25,51 @@ public class SimplestSelectTest {
 
     @Test
     public void simpleSelect() {
-        Table people = new Table("people");
-        TableColumn firstName = people.getColumn("first_name");
-        TableColumn lastName = people.getColumn("last_name");
-        TableColumn age = people.getColumn("age");
+        Table employee = new Table("employee");
+        TableColumn employeeFirstName = employee.getColumn("first_name");
+        TableColumn employeeLastName = employee.getColumn("last_name");
+        TableColumn employeeAge = employee.getColumn("age");
 
-        TableReference p = people.createReference("p");
+        TableReference p = employee.createReference();
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(p.getColumn(firstName));
-        select.addToSelection(p.getColumn(lastName));
-        ResultColumn ageResult = select.addToSelection(p.getColumn(age));
+        select.addToSelection(p.getColumn(employeeFirstName));
+        select.addToSelection(p.getColumn(employeeLastName));
+        ResultColumn ageResult = select.addToSelection(p.getColumn(employeeAge));
 
         select.addOrder(ageResult, Order.DESCENDING);
-        select.addOrder(new FunctionCall("concat", p.getColumn(firstName), p.getColumn(lastName)), Order.ASCENDING);
+        select.addOrder(new FunctionCall("concat",
+                p.getColumn(employeeFirstName), p.getColumn(employeeLastName)), Order.ASCENDING);
 
         assertEquals("SELECT\n"
-                + "    p.first_name as a,\n"
-                + "    p.last_name as b,\n"
-                + "    p.age as c\n"
+                + "    e.first_name as a,\n"
+                + "    e.last_name as b,\n"
+                + "    e.age as c\n"
                 + "FROM\n"
-                + "    people p\n"
+                + "    employee e\n"
                 + "ORDER BY\n"
                 + "    c DESC,\n"
-                + "    concat(p.first_name, p.last_name)", select.toString());
+                + "    concat(e.first_name, e.last_name)", select.toString());
     }
 
     @Test
     public void simpleSelectDistinct() {
-        Table people = new Table("people");
-        TableColumn firstName = people.getColumn("first_name");
-        TableColumn lastName = people.getColumn("last_name");
-        TableColumn age = people.getColumn("age");
+        Table employee = new Table("employee");
+        TableColumn employeeFirstName = employee.getColumn("first_name");
+        TableColumn employeeLastName = employee.getColumn("last_name");
 
-        TableReference p = people.createReference("p");
+        TableReference p = employee.createReference();
 
         SelectQuery select = new SelectQuery(true);
 
-        select.addToSelection(p.getColumn(firstName));
-        select.addToSelection(p.getColumn(lastName));
-        ResultColumn ageResult = select.addToSelection(p.getColumn(age));
-
-        select.addOrder(ageResult, Order.DESCENDING);
+        select.addToSelection(p.getColumn(employeeFirstName));
+        select.addToSelection(p.getColumn(employeeLastName));
 
         assertEquals("SELECT DISTINCT\n"
-                + "    p.first_name as a,\n"
-                + "    p.last_name as b,\n"
-                + "    p.age as c\n"
+                + "    e.first_name as a,\n"
+                + "    e.last_name as b\n"
                 + "FROM\n"
-                + "    people p\n"
-                + "ORDER BY\n"
-                + "    c DESC", select.toString());
+                + "    employee e", select.toString());
     }
 }

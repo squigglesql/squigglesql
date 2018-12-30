@@ -15,33 +15,33 @@
  */
 package io.zatarox.squiggle;
 
-import io.zatarox.squiggle.util.AliasGenerator;
+import io.zatarox.squiggle.alias.Alphabet;
 import org.junit.Test;
 
-import static io.zatarox.squiggle.util.AliasGenerator.generateAlias;
+import static io.zatarox.squiggle.alias.AliasGenerator.generateAlphabetic;
 import static org.junit.Assert.assertEquals;
 
 public class AliasGeneratorTest {
 
-    private static final AliasGenerator.Alphabet ALPHABET = new AliasGenerator.Alphabet('a', 3);
+    private static final Alphabet ALPHABET = new Alphabet('a', 3);
 
     @Test
     public void uniqueAlias() {
-        assertEquals("a", generateAlias(0, ALPHABET));
-        assertEquals("b", generateAlias(1, ALPHABET));
-        assertEquals("c", generateAlias(2, ALPHABET));
-        assertEquals("aa", generateAlias(3, ALPHABET));
-        assertEquals("ab", generateAlias(4, ALPHABET));
-        assertEquals("ac", generateAlias(5, ALPHABET));
-        assertEquals("ba", generateAlias(6, ALPHABET));
-        assertEquals("bb", generateAlias(7, ALPHABET));
-        assertEquals("bc", generateAlias(8, ALPHABET));
-        assertEquals("ca", generateAlias(9, ALPHABET));
-        assertEquals("cb", generateAlias(10, ALPHABET));
-        assertEquals("cc", generateAlias(11, ALPHABET));
-        assertEquals("aaa", generateAlias(12, ALPHABET));
-        assertEquals("aab", generateAlias(13, ALPHABET));
-        assertEquals("aac", generateAlias(14, ALPHABET));
-        assertEquals("aba", generateAlias(15, ALPHABET));
+        assertEquals("a", generateAlphabetic(0, ALPHABET));
+        assertEquals("b", generateAlphabetic(1, ALPHABET));
+        assertEquals("c", generateAlphabetic(2, ALPHABET));
+        assertEquals("aa", generateAlphabetic(3, ALPHABET));
+        assertEquals("ab", generateAlphabetic(4, ALPHABET));
+        assertEquals("ac", generateAlphabetic(5, ALPHABET));
+        assertEquals("ba", generateAlphabetic(6, ALPHABET));
+        assertEquals("bb", generateAlphabetic(7, ALPHABET));
+        assertEquals("bc", generateAlphabetic(8, ALPHABET));
+        assertEquals("ca", generateAlphabetic(9, ALPHABET));
+        assertEquals("cb", generateAlphabetic(10, ALPHABET));
+        assertEquals("cc", generateAlphabetic(11, ALPHABET));
+        assertEquals("aaa", generateAlphabetic(12, ALPHABET));
+        assertEquals("aab", generateAlphabetic(13, ALPHABET));
+        assertEquals("aac", generateAlphabetic(14, ALPHABET));
+        assertEquals("aba", generateAlphabetic(15, ALPHABET));
     }
 }

@@ -28,8 +28,8 @@ public class TypeCast implements Selectable {
     }
 
     @Override
-    public void write(Output output) {
-        output.write(value).write("::").write(type);
+    public void compile(QueryCompiler compiler) {
+        compiler.write(value).write("::").write(type);
     }
 
     @Override

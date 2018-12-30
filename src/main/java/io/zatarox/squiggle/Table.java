@@ -37,11 +37,8 @@ public class Table {
         return new TableColumn(this, columnName);
     }
 
-    public TableReference createReference(String alias) {
-        if (alias == null || alias.equals("")) {
-            throw new RuntimeException("Table alias can not be empty.");
-        }
-        return new TableReference(this, alias);
+    public TableReference createReference() {
+        return new TableReference(this);
     }
 
     @Override

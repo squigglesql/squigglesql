@@ -17,6 +17,7 @@ package io.zatarox.squiggle.query;
 
 import io.zatarox.squiggle.Matchable;
 import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.QueryCompiler;
 import io.zatarox.squiggle.Table;
 import io.zatarox.squiggle.TableColumn;
 import io.zatarox.squiggle.util.CollectionWriter;
@@ -47,14 +48,17 @@ public class InsertQuery extends Query {
     }
 
     @Override
-    protected void write(Output output) {
+    protected void compile(Output output) {
         if (columns.isEmpty()) {
             throw new RuntimeException("No values specified for insertion.");
         }
-        output.write("INSERT INTO ").write(table.getName());
-        CollectionWriter.writeCollection(output, columns, ", ", true, false);
 
-        output.write(" VALUES ");
-        CollectionWriter.writeCollection(output, values, ", ", true, false);
+        QueryCompiler compiler = new QueryCompiler(output);
+
+        compiler.write("INSERT INTO ").write(table.getName());
+        CollectionWriter.writeCollection(compiler, columns, ", ", true, false);
+
+        compiler.write(" VALUES ");
+        CollectionWriter.writeCollection(compiler, values, ", ", true, false);
     }
 }

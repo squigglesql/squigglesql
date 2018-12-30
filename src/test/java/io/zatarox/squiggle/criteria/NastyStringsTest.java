@@ -28,23 +28,23 @@ public class NastyStringsTest {
 
     @Test
     public void testNastyStrings() {
-        Table people = new Table("people");
-        TableColumn firstName = people.getColumn("first_name");
-        TableColumn foo = people.getColumn("foo");
+        Table employee = new Table("employee");
+        TableColumn employeeName = employee.getColumn("name");
+        TableColumn employeeFee = employee.getColumn("foo");
 
-        TableReference p = people.createReference("p");
+        TableReference e = employee.createReference();
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(p.getColumn(firstName));
+        select.addToSelection(e.getColumn(employeeName));
 
-        select.addCriteria(new MatchCriteria(p.getColumn(foo), MatchCriteria.GREATER, Literal.of("I've got a quote")));
+        select.addCriteria(new MatchCriteria(e.getColumn(employeeFee), MatchCriteria.GREATER, Literal.of("I've got a quote")));
 
         assertEquals("SELECT\n"
-                + "    p.first_name as a\n"
+                + "    e.name as a\n"
                 + "FROM\n"
-                + "    people p\n"
+                + "    employee e\n"
                 + "WHERE\n"
-                + "    p.foo > 'I''ve got a quote'", select.toString());
+                + "    e.foo > 'I''ve got a quote'", select.toString());
     }
 }

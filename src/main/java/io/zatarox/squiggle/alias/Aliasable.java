@@ -13,19 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.zatarox.squiggle.literal;
+package io.zatarox.squiggle.alias;
 
-import io.zatarox.squiggle.QueryCompiler;
+public interface Aliasable {
 
-public class NullLiteral extends Literal {
-
-    static final Literal INSTANCE = new NullLiteral();
-
-    private NullLiteral() {
-    }
-
-    @Override
-    public void compile(QueryCompiler compiler) {
-        compiler.write("null");
-    }
+    Iterable<String> getPreferredAliases();
 }

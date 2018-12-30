@@ -16,10 +16,9 @@
 package io.zatarox.squiggle;
 
 /**
- * Any object that can output itself as part of the final query should implement
- * this interface.
+ * Any object that can output itself as part of the final query should implement this interface.
  */
-public interface Outputable {
+public interface Compilable {
 
-    void write(Output output);
+    void compile(QueryCompiler compiler);
 }

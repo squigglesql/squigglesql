@@ -16,7 +16,7 @@
 package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.Matchable;
-import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.QueryCompiler;
 import io.zatarox.squiggle.TableReference;
 
 import java.util.Set;
@@ -32,8 +32,8 @@ public class BetweenCriteria implements Criteria {
     }
 
     @Override
-    public void write(Output out) {
-        out.write(value).write(" BETWEEN ").write(lower).write(" AND ").write(upper);
+    public void compile(QueryCompiler compiler) {
+        compiler.write(value).write(" BETWEEN ").write(lower).write(" AND ").write(upper);
     }
 
     @Override

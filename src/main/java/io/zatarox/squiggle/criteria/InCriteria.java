@@ -16,7 +16,7 @@
 package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.Matchable;
-import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.QueryCompiler;
 import io.zatarox.squiggle.TableReference;
 import io.zatarox.squiggle.util.CollectionWriter;
 
@@ -39,13 +39,13 @@ public class InCriteria implements Criteria {
     }
 
     @Override
-    public void write(Output output) {
+    public void compile(QueryCompiler compiler) {
         if (options.isEmpty()) {
-            output.write("1 = 1");
+            compiler.write("1 = 1");
             return;
         }
-        output.write(value).write(" IN ");
-        CollectionWriter.writeCollection(output, options, ", ", true, false);
+        compiler.write(value).write(" IN ");
+        CollectionWriter.writeCollection(compiler, options, ", ", true, false);
     }
 
     @Override

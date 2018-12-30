@@ -15,7 +15,7 @@
  */
 package io.zatarox.squiggle.criteria;
 
-import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.QueryCompiler;
 import io.zatarox.squiggle.TableReference;
 import io.zatarox.squiggle.util.CollectionWriter;
 
@@ -38,12 +38,12 @@ public abstract class CriteriaGroup implements Criteria {
     protected abstract String getOperator();
 
     @Override
-    public void write(Output output) {
+    public void compile(QueryCompiler compiler) {
         if (criterias.isEmpty()) {
-            output.write("1 = 1");
+            compiler.write("1 = 1");
             return;
         }
-        CollectionWriter.writeCollection(output, criterias, getOperator(), true, true);
+        CollectionWriter.writeCollection(compiler, criterias, getOperator(), true, true);
     }
 
     @Override

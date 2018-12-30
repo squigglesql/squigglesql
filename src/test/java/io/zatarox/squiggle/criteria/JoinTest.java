@@ -35,8 +35,8 @@ public class JoinTest {
         TableColumn departmentId = department.getColumn("id");
         TableColumn departmentDirector = department.getColumn("director");
 
-        TableReference e = employee.createReference("e");
-        TableReference d = department.createReference("d");
+        TableReference e = employee.createReference();
+        TableReference d = department.createReference();
 
         SelectQuery select = new SelectQuery();
 
@@ -50,8 +50,8 @@ public class JoinTest {
                 + "    e.first_name as a,\n"
                 + "    d.director as b\n"
                 + "FROM\n"
-                + "    department d,\n"
-                + "    employee e\n"
+                + "    employee e,\n"
+                + "    department d\n"
                 + "WHERE\n"
                 + "    e.department_id = d.id", select.toString());
     }
@@ -65,8 +65,8 @@ public class JoinTest {
         Table taxPayment = new Table("tax_payment");
         TableColumn taxPaymentDate = taxPayment.getColumn("date");
 
-        TableReference i = invoice.createReference("i");
-        TableReference t = taxPayment.createReference("t");
+        TableReference i = invoice.createReference();
+        TableReference t = taxPayment.createReference();
 
         SelectQuery select = new SelectQuery();
 

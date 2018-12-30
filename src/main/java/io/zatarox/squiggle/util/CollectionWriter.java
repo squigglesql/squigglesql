@@ -15,74 +15,74 @@
  */
 package io.zatarox.squiggle.util;
 
-import io.zatarox.squiggle.Output;
-import io.zatarox.squiggle.Outputable;
+import io.zatarox.squiggle.Compilable;
+import io.zatarox.squiggle.QueryCompiler;
 
 import java.util.Collection;
 import java.util.Iterator;
 
 public abstract class CollectionWriter {
 
-    public static void writeCollection(Output output, Collection<? extends Outputable> collection, String separator,
-                                       boolean brackets, boolean multiLine) {
+    public static void writeCollection(QueryCompiler compiler, Collection<? extends Compilable> collection,
+                                       String separator, boolean brackets, boolean multiLine) {
         if (collection.isEmpty()) {
             throw new RuntimeException("Can't write empty collection as SQL.");
         }
-        Iterator<? extends Outputable> iterator = collection.iterator();
-        Outputable outputable = iterator.next();
+        Iterator<? extends Compilable> iterator = collection.iterator();
+        Compilable compilable = iterator.next();
         if (!iterator.hasNext()) {
-            writeOpenBracket(output, brackets);
-            outputable.write(output);
-            writeCloseBracket(output, brackets);
+            writeOpenBracket(compiler, brackets);
+            compilable.compile(compiler);
+            writeCloseBracket(compiler, brackets);
             return;
         }
-        writeOpenBracket(output, brackets);
-        indent(output, brackets, multiLine);
+        writeOpenBracket(compiler, brackets);
+        indent(compiler, brackets, multiLine);
         while (true) {
-            outputable.write(output);
+            compilable.compile(compiler);
             if (!iterator.hasNext()) {
                 break;
             }
-            separate(output, multiLine, separator);
-            outputable = iterator.next();
+            separate(compiler, multiLine, separator);
+            compilable = iterator.next();
         }
-        unindent(output, brackets, multiLine);
-        writeCloseBracket(output, brackets);
+        unindent(compiler, brackets, multiLine);
+        writeCloseBracket(compiler, brackets);
     }
 
-    private static void writeOpenBracket(Output output, boolean brackets) {
+    private static void writeOpenBracket(QueryCompiler compiler, boolean brackets) {
         if (brackets) {
-            output.write('(');
+            compiler.write('(');
         } else {
-            output.writeln().indent();
+            compiler.writeln().indent();
         }
     }
 
-    private static void writeCloseBracket(Output output, boolean brackets) {
+    private static void writeCloseBracket(QueryCompiler compiler, boolean brackets) {
         if (brackets) {
-            output.write(')');
+            compiler.write(')');
         } else {
-            output.writeln().unindent();
+            compiler.writeln().unindent();
         }
     }
 
-    private static void indent(Output output, boolean brackets, boolean multiLine) {
+    private static void indent(QueryCompiler compiler, boolean brackets, boolean multiLine) {
         if (brackets && multiLine) {
-            output.writeln().indent();
+            compiler.writeln().indent();
         }
     }
 
-    private static void separate(Output output, boolean multiLine, String separator) {
+    private static void separate(QueryCompiler compiler, boolean multiLine, String separator) {
         if (multiLine) {
-            output.writeln(separator);
+            compiler.writeln(separator);
         } else {
-            output.write(separator);
+            compiler.write(separator);
         }
     }
 
-    private static void unindent(Output output, boolean brackets, boolean multiLine) {
+    private static void unindent(QueryCompiler compiler, boolean brackets, boolean multiLine) {
         if (brackets && multiLine) {
-            output.writeln().unindent();
+            compiler.writeln().unindent();
         }
     }
 }

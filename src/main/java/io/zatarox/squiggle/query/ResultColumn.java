@@ -15,15 +15,15 @@
  */
 package io.zatarox.squiggle.query;
 
-import io.zatarox.squiggle.Output;
-import io.zatarox.squiggle.Outputable;
+import io.zatarox.squiggle.Compilable;
+import io.zatarox.squiggle.QueryCompiler;
 import io.zatarox.squiggle.Selectable;
 import io.zatarox.squiggle.TableReference;
 import io.zatarox.squiggle.TableReferred;
 
 import java.util.Set;
 
-public class ResultColumn implements Outputable, TableReferred {
+public class ResultColumn implements Compilable, TableReferred {
 
     private final Selectable selectable;
     private final String alias;
@@ -38,8 +38,8 @@ public class ResultColumn implements Outputable, TableReferred {
     }
 
     @Override
-    public void write(Output output) {
-        output.write(selectable).write(" as ").write(alias);
+    public void compile(QueryCompiler compiler) {
+        compiler.write(selectable).write(" as ").write(alias);
     }
 
     @Override

@@ -18,5 +18,5 @@ package io.zatarox.squiggle;
 /**
  * Something that can be part of a match expression in a where clause
  */
-public interface Matchable extends Outputable, TableReferred {
+public interface Matchable extends Compilable, TableReferred {
 }

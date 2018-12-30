@@ -32,15 +32,15 @@ public class InsertQueryTest {
     @Test
     public void testInsertQuery() throws SQLException {
         Table employee = new Table("employee");
-        TableColumn firstName = employee.getColumn("first_name");
-        TableColumn lastName = employee.getColumn("last_name");
-        TableColumn age = employee.getColumn("age");
+        TableColumn employeeFirstName = employee.getColumn("first_name");
+        TableColumn employeeLastName = employee.getColumn("last_name");
+        TableColumn employeeAge = employee.getColumn("age");
 
         InsertQuery query = new InsertQuery(employee);
 
-        query.addValue(firstName, new StringParameter("John"));
-        query.addValue(lastName, Literal.of("Smith"));
-        query.addValue(age, new IntegerParameter(30));
+        query.addValue(employeeFirstName, new StringParameter("John"));
+        query.addValue(employeeLastName, Literal.of("Smith"));
+        query.addValue(employeeAge, new IntegerParameter(30));
 
         MockStatement statement = query.toStatement(new MockStatementCompiler());
 

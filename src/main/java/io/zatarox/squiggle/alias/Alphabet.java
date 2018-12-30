@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.zatarox.squiggle.literal;
+package io.zatarox.squiggle.alias;
 
-import io.zatarox.squiggle.QueryCompiler;
+public class Alphabet {
 
-public class NullLiteral extends Literal {
+    private final char firstLetter;
+    private final int letterCount;
 
-    static final Literal INSTANCE = new NullLiteral();
-
-    private NullLiteral() {
+    public Alphabet(char firstLetter, int letterCount) {
+        this.firstLetter = firstLetter;
+        this.letterCount = letterCount;
     }
 
-    @Override
-    public void compile(QueryCompiler compiler) {
-        compiler.write("null");
+    public char getFirstLetter() {
+        return firstLetter;
+    }
+
+    public int getLetterCount() {
+        return letterCount;
     }
 }

@@ -18,7 +18,7 @@ package io.zatarox.squiggle;
 /**
  * Column that belongs to a table.
  */
-public class TableColumn implements Outputable {
+public class TableColumn implements Compilable {
 
     private final Table table;
     private final String name;
@@ -37,8 +37,8 @@ public class TableColumn implements Outputable {
     }
 
     @Override
-    public void write(Output output) {
-        output.write(name);
+    public void compile(QueryCompiler compiler) {
+        compiler.write(name);
     }
 
     @Override

@@ -39,8 +39,8 @@ public class UpdateQueryTest {
         TableColumn sessionId = session.getColumn("id");
         TableColumn sessionEmployeeId = session.getColumn("employee_id");
 
-        TableReference e = employee.createReference("e");
-        TableReference s = session.createReference("s");
+        TableReference e = employee.createReference();
+        TableReference s = session.createReference();
 
         UpdateQuery query = new UpdateQuery(e);
 

@@ -16,7 +16,7 @@
 package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.Matchable;
-import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.QueryCompiler;
 import io.zatarox.squiggle.TableReference;
 
 import java.util.Set;
@@ -30,8 +30,8 @@ public class IsNullCriteria implements Criteria {
     }
 
     @Override
-    public void write(Output output) {
-        output.write(value).write(" IS NULL");
+    public void compile(QueryCompiler compiler) {
+        compiler.write(value).write(" IS NULL");
     }
 
     @Override

@@ -36,8 +36,8 @@ public class TableColumnReference implements Selectable {
     }
 
     @Override
-    public void write(Output output) {
-        output.write(tableReference.getAlias()).write('.').write(column.getName());
+    public void compile(QueryCompiler compiler) {
+        compiler.write(compiler.getAlias(tableReference)).write('.').write(column.getName());
     }
 
     @Override

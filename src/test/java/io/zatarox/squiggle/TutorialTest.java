@@ -46,7 +46,7 @@ public class TutorialTest {
         TableColumn offerValid = offer.getColumn("valid");
 
         // basic query
-        TableReference o = order.createReference("o");
+        TableReference o = order.createReference();
 
         SelectQuery select = new SelectQuery();
 
@@ -62,7 +62,7 @@ public class TutorialTest {
                 Literal.of("post"), Literal.of("fedex"), Literal.of("goat")));
 
         // join
-        TableReference w = warehouse.createReference("w");
+        TableReference w = warehouse.createReference();
 
         select.addCriteria(new MatchCriteria(
                 o.getColumn(orderWarehouseId), MatchCriteria.EQUALS, w.getColumn(warehouseId)));
@@ -73,7 +73,7 @@ public class TutorialTest {
                 w.getColumn(warehouseSize), MatchCriteria.EQUALS, Literal.of("big")));
 
         // build subselect query
-        TableReference f = offer.createReference("f");
+        TableReference f = offer.createReference();
 
         SelectQuery subSelect = new SelectQuery();
 
@@ -99,11 +99,11 @@ public class TutorialTest {
                 + "    w.size = 'big' AND\n"
                 + "    w.location IN ((\n"
                 + "        SELECT\n"
-                + "            f.location as a\n"
+                + "            o.location as a\n"
                 + "        FROM\n"
-                + "            offer f\n"
+                + "            offer o\n"
                 + "        WHERE\n"
-                + "            f.valid = true\n"
+                + "            o.valid = true\n"
                 + "    ))", select.toString());
     }
 }

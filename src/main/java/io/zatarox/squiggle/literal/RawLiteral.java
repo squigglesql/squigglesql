@@ -15,7 +15,7 @@
  */
 package io.zatarox.squiggle.literal;
 
-import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.QueryCompiler;
 
 public class RawLiteral extends Literal {
 
@@ -29,7 +29,7 @@ public class RawLiteral extends Literal {
     }
 
     @Override
-    public void write(Output output) {
-        output.write(value.toString());
+    public void compile(QueryCompiler compiler) {
+        compiler.write(value.toString());
     }
 }

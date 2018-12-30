@@ -18,14 +18,10 @@ package io.zatarox.squiggle;
 /**
  * Something that can be returned from a select query.
  * Basically, this is any matchable element except a parameter.
- *
  * Unfortunately, this is just a shallow type protection, not a deep one.
  * For example, you can build the following invalid SQL request at the moment:
- *
- *     SELECT digest(?, 'sha256');
- *
+ * SELECT digest(?, 'sha256');
  * Because FunctionCall is a Selectable item accepting any Matchable item as input.
- *
  * TODO: Find a way to implement deep protection.
  */
 public interface Selectable extends Matchable {

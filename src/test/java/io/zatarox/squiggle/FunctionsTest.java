@@ -29,7 +29,7 @@ public class FunctionsTest {
         Table table = new Table("table");
         TableColumn column = table.getColumn("column");
 
-        TableReference t = table.createReference("t");
+        TableReference t = table.createReference();
 
         SelectQuery select = new SelectQuery();
 
@@ -47,27 +47,27 @@ public class FunctionsTest {
 
     @Test
     public void usingFunctionsInMatchCriteria() {
-        Table cards = new Table("credit_cards");
-        TableColumn numberColumn = cards.getColumn("number");
-        TableColumn issueColumn = cards.getColumn("issue");
-        TableColumn issueDate = cards.getColumn("issue_date");
-        TableColumn expiryDate = cards.getColumn("expiry_date");
+        Table card = new Table("credit_card");
+        TableColumn cardNumber = card.getColumn("number");
+        TableColumn cardIssue = card.getColumn("issue");
+        TableColumn cardIssueDate = card.getColumn("issue_date");
+        TableColumn cardExpiryDate = card.getColumn("expiry_date");
 
-        TableReference c = cards.createReference("c");
+        TableReference c = card.createReference();
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(c.getColumn(numberColumn));
-        select.addToSelection(c.getColumn(issueColumn));
+        select.addToSelection(c.getColumn(cardNumber));
+        select.addToSelection(c.getColumn(cardIssue));
 
         select.addCriteria(new BetweenCriteria(
-                new FunctionCall("getDate"), c.getColumn(issueDate), c.getColumn(expiryDate)));
+                new FunctionCall("getDate"), c.getColumn(cardIssueDate), c.getColumn(cardExpiryDate)));
 
         assertEquals("SELECT\n"
                 + "    c.number as a,\n"
                 + "    c.issue as b\n"
                 + "FROM\n"
-                + "    credit_cards c\n"
+                + "    credit_card c\n"
                 + "WHERE\n"
                 + "    getDate() BETWEEN c.issue_date AND c.expiry_date", select.toString());
     }

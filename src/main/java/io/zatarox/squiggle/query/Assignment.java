@@ -15,12 +15,12 @@
  */
 package io.zatarox.squiggle.query;
 
+import io.zatarox.squiggle.Compilable;
 import io.zatarox.squiggle.Matchable;
-import io.zatarox.squiggle.Output;
-import io.zatarox.squiggle.Outputable;
+import io.zatarox.squiggle.QueryCompiler;
 import io.zatarox.squiggle.TableColumn;
 
-public class Assignment implements Outputable {
+public class Assignment implements Compilable {
 
     private final TableColumn column;
     private final Matchable value;
@@ -31,7 +31,7 @@ public class Assignment implements Outputable {
     }
 
     @Override
-    public void write(Output output) {
-        output.write(column).write(" = ").write(value);
+    public void compile(QueryCompiler compiler) {
+        compiler.write(column).write(" = ").write(value);
     }
 }

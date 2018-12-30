@@ -17,14 +17,15 @@ package io.zatarox.squiggle.query;
 
 import io.zatarox.squiggle.Matchable;
 import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.QueryCompiler;
 import io.zatarox.squiggle.TableColumn;
 import io.zatarox.squiggle.TableReference;
+import io.zatarox.squiggle.alias.AliasGenerator;
 import io.zatarox.squiggle.criteria.Criteria;
 import io.zatarox.squiggle.util.CollectionWriter;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,33 +57,35 @@ public class UpdateQuery extends Query {
     }
 
     @Override
-    protected void write(Output output) {
+    protected void compile(Output output) {
         if (assignments.isEmpty()) {
             throw new RuntimeException("No values specified for updating.");
         }
-        output.write("UPDATE ").write(tableReference).write(" SET");
-        CollectionWriter.writeCollection(output, assignments, ",", false, true);
 
-        List<TableReference> tableReferences = getTableReferences();
+        Set<TableReference> tableReferences = findTableReferences();
+        QueryCompiler queryCompiler = new QueryCompiler(output,
+                AliasGenerator.generateAliases(tableReferences, TABLE_REFERENCE_ALIAS_ALPHABET));
+
+        queryCompiler.write("UPDATE ").write(tableReference).write(" SET");
+        CollectionWriter.writeCollection(queryCompiler, assignments, ",", false, true);
+
+        tableReferences.remove(tableReference);
         if (!tableReferences.isEmpty()) {
-            output.write("FROM");
-            CollectionWriter.writeCollection(output, tableReferences, ",", false, true);
+            queryCompiler.write("FROM");
+            CollectionWriter.writeCollection(queryCompiler, tableReferences, ",", false, true);
         }
 
         if (criterias.size() > 0) {
-            output.write("WHERE");
-            CollectionWriter.writeCollection(output, criterias, " AND", false, true);
+            queryCompiler.write("WHERE");
+            CollectionWriter.writeCollection(queryCompiler, criterias, " AND", false, true);
         }
     }
 
-    private List<TableReference> getTableReferences() {
-        Set<TableReference> tables = new HashSet<TableReference>();
+    private Set<TableReference> findTableReferences() {
+        Set<TableReference> tables = new LinkedHashSet<TableReference>();
         for (Criteria criteria : criterias) {
             criteria.collectTableReferences(tables);
         }
-        tables.remove(tableReference);
-        List<TableReference> tableList = new ArrayList<TableReference>(tables);
-        Collections.sort(tableList, new TableReference.Comparator());
-        return tableList;
+        return tables;
     }
 }

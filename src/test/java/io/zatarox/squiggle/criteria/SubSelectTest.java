@@ -28,37 +28,37 @@ public class SubSelectTest {
 
     @Test
     public void testSubSelect() {
-        Table people = new Table("people");
-        TableColumn firstName = people.getColumn("first_name");
-        TableColumn taxCode = people.getColumn("tax_code");
+        Table employee = new Table("employee");
+        TableColumn employeeName = employee.getColumn("name");
+        TableColumn employeeTaxCode = employee.getColumn("tax_code");
 
-        Table taxCodes = new Table("tax_codes");
-        TableColumn taxCodeId = taxCodes.getColumn("id");
-        TableColumn taxCodeValid = taxCodes.getColumn("valid");
+        Table taxCode = new Table("tax_code");
+        TableColumn taxCodeId = taxCode.getColumn("id");
+        TableColumn taxCodeValid = taxCode.getColumn("valid");
 
-        TableReference p = people.createReference("p");
-        TableReference t = taxCodes.createReference("t");
+        TableReference e = employee.createReference();
+        TableReference t = taxCode.createReference();
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(p.getColumn(firstName));
+        select.addToSelection(e.getColumn(employeeName));
 
         SelectQuery subSelect = new SelectQuery();
         subSelect.addToSelection(t.getColumn(taxCodeId));
         subSelect.addCriteria(new MatchCriteria(t.getColumn(taxCodeValid), MatchCriteria.EQUALS, Literal.of(true)));
 
-        select.addCriteria(new MatchCriteria(p.getColumn(taxCode), MatchCriteria.EQUALS, subSelect));
+        select.addCriteria(new MatchCriteria(e.getColumn(employeeTaxCode), MatchCriteria.EQUALS, subSelect));
 
         assertEquals("SELECT\n"
-                + "    p.first_name as a\n"
+                + "    e.name as a\n"
                 + "FROM\n"
-                + "    people p\n"
+                + "    employee e\n"
                 + "WHERE\n"
-                + "    p.tax_code = (\n"
+                + "    e.tax_code = (\n"
                 + "        SELECT\n"
                 + "            t.id as a\n"
                 + "        FROM\n"
-                + "            tax_codes t\n"
+                + "            tax_code t\n"
                 + "        WHERE\n"
                 + "            t.valid = true\n"
                 + "    )", select.toString());

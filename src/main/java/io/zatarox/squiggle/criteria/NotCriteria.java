@@ -15,7 +15,7 @@
  */
 package io.zatarox.squiggle.criteria;
 
-import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.QueryCompiler;
 import io.zatarox.squiggle.TableReference;
 
 import java.util.Set;
@@ -29,8 +29,8 @@ public class NotCriteria implements Criteria {
     }
 
     @Override
-    public void write(Output output) {
-        output.write("NOT ").write(criteria);
+    public void compile(QueryCompiler compiler) {
+        compiler.write("NOT ").write(criteria);
     }
 
     @Override

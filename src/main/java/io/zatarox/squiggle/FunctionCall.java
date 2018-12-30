@@ -36,13 +36,13 @@ public class FunctionCall implements Selectable {
     }
 
     @Override
-    public void write(Output output) {
-        output.write(function);
+    public void compile(QueryCompiler compiler) {
+        compiler.write(function);
         if (arguments.isEmpty()) {
-            output.write("()");
+            compiler.write("()");
             return;
         }
-        CollectionWriter.writeCollection(output, arguments, ", ", true, false);
+        CollectionWriter.writeCollection(compiler, arguments, ", ", true, false);
     }
 
     @Override

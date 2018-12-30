@@ -15,27 +15,24 @@
  */
 package io.zatarox.squiggle;
 
+import io.zatarox.squiggle.alias.Aliasable;
+import io.zatarox.squiggle.alias.PreferredAliases;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class TableReference implements Outputable {
+public class TableReference implements Aliasable, Compilable {
 
     private final Table table;
-    private final String alias;
 
     private final Map<TableColumn, TableColumnReference> columnReferenceCache = new HashMap<TableColumn, TableColumnReference>();
 
-    TableReference(Table table, String alias) {
+    TableReference(Table table) {
         this.table = table;
-        this.alias = alias;
     }
 
     public Table getTable() {
         return table;
-    }
-
-    public String getAlias() {
-        return alias;
     }
 
     public TableColumnReference getColumn(TableColumn column) {
@@ -55,32 +52,12 @@ public class TableReference implements Outputable {
     }
 
     @Override
-    public void write(Output output) {
-        output.write(table.getName()).write(" ").write(alias);
+    public void compile(QueryCompiler compiler) {
+        compiler.write(table.getName()).write(' ').write(compiler.getAlias(this));
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        TableReference that = (TableReference) o;
-
-        return table.equals(that.table) && alias.equals(that.alias);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = table.hashCode();
-        result = 31 * result + alias.hashCode();
-        return result;
-    }
-
-    public static class Comparator implements java.util.Comparator<TableReference> {
-
-        @Override
-        public int compare(TableReference o1, TableReference o2) {
-            return o1.alias.compareTo(o2.alias);
-        }
+    public Iterable<String> getPreferredAliases() {
+        return new PreferredAliases(table.getName());
     }
 }

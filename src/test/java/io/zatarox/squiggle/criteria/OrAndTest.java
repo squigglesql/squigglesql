@@ -33,7 +33,7 @@ public class OrAndTest {
         TableColumn userName = user.getColumn("name");
         TableColumn userFeet = user.getColumn("feet");
 
-        TableReference u = user.createReference("u");
+        TableReference u = user.createReference();
 
         SelectQuery select = new SelectQuery();
 

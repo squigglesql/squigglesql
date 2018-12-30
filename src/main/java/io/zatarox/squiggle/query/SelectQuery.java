@@ -15,26 +15,29 @@
  */
 package io.zatarox.squiggle.query;
 
+import io.zatarox.squiggle.Compilable;
 import io.zatarox.squiggle.Matchable;
 import io.zatarox.squiggle.Output;
-import io.zatarox.squiggle.Outputable;
+import io.zatarox.squiggle.QueryCompiler;
 import io.zatarox.squiggle.Selectable;
 import io.zatarox.squiggle.TableReference;
+import io.zatarox.squiggle.alias.AliasGenerator;
+import io.zatarox.squiggle.alias.Alphabet;
 import io.zatarox.squiggle.criteria.Criteria;
-import io.zatarox.squiggle.util.AliasGenerator;
 import io.zatarox.squiggle.util.CollectionWriter;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 public class SelectQuery extends Query implements Matchable {
 
+    private static final Alphabet RESULT_COLUMN_ALIAS_ALPHABET = new Alphabet('a', 19);
+
     private final List<ResultColumn> selection = new ArrayList<ResultColumn>();
     private final List<Criteria> criterias = new ArrayList<Criteria>();
-    private final List<Outputable> orders = new ArrayList<Outputable>();
+    private final List<Compilable> orders = new ArrayList<Compilable>();
 
     private final boolean distinct;
 
@@ -50,7 +53,8 @@ public class SelectQuery extends Query implements Matchable {
         if (selectable == null) {
             throw new NullPointerException("Selection can not be null.");
         }
-        ResultColumn resultColumn = new ResultColumn(selectable, AliasGenerator.generateAlias(selection.size()));
+        ResultColumn resultColumn = new ResultColumn(selectable,
+                AliasGenerator.generateAlphabetic(selection.size(), RESULT_COLUMN_ALIAS_ALPHABET));
         selection.add(resultColumn);
         return resultColumn;
     }
@@ -77,58 +81,57 @@ public class SelectQuery extends Query implements Matchable {
     }
 
     @Override
-    public void write(Output output) {
-        boolean nested = !output.isEmpty();
-        if (nested) {
-            output.writeln('(').indent();
-        }
-
-        output.write("SELECT");
-        if (distinct) {
-            output.write(" DISTINCT");
-        }
-
-        if (selection.isEmpty()) {
-            output.writeln(" 1");
-        } else {
-            CollectionWriter.writeCollection(output, selection, ",", false, true);
-        }
-
-        List<TableReference> tableReferences = getTableReferences();
-        if (!tableReferences.isEmpty()) {
-            output.write("FROM");
-            CollectionWriter.writeCollection(output, tableReferences, ",", false, true);
-        }
-
-        if (!criterias.isEmpty()) {
-            output.write("WHERE");
-            CollectionWriter.writeCollection(output, criterias, " AND", false, true);
-        }
-
-        if (!orders.isEmpty()) {
-            output.write("ORDER BY");
-            CollectionWriter.writeCollection(output, orders, ",", false, true);
-        }
-
-        if (nested) {
-            output.writeln().unindent().write(')');
-        }
-    }
-
-    @Override
     public void collectTableReferences(Set<TableReference> tables) {
     }
 
-    private List<TableReference> getTableReferences() {
-        Set<TableReference> tables = new HashSet<TableReference>();
+    @Override
+    public void compile(QueryCompiler compiler) {
+        compiler.writeln('(').indent();
+        compile(compiler.getOutput());
+        compiler.writeln().unindent().write(')');
+    }
+
+    @Override
+    protected void compile(Output output) {
+        Set<TableReference> tableReferences = findTableReferences();
+        QueryCompiler compiler = new QueryCompiler(output,
+                AliasGenerator.generateAliases(tableReferences, TABLE_REFERENCE_ALIAS_ALPHABET));
+
+        compiler.write("SELECT");
+        if (distinct) {
+            compiler.write(" DISTINCT");
+        }
+
+        if (selection.isEmpty()) {
+            compiler.writeln(" 1");
+        } else {
+            CollectionWriter.writeCollection(compiler, selection, ",", false, true);
+        }
+
+        if (!tableReferences.isEmpty()) {
+            compiler.write("FROM");
+            CollectionWriter.writeCollection(compiler, tableReferences, ",", false, true);
+        }
+
+        if (!criterias.isEmpty()) {
+            compiler.write("WHERE");
+            CollectionWriter.writeCollection(compiler, criterias, " AND", false, true);
+        }
+
+        if (!orders.isEmpty()) {
+            compiler.write("ORDER BY");
+            CollectionWriter.writeCollection(compiler, orders, ",", false, true);
+        }
+    }
+
+    private Set<TableReference> findTableReferences() {
+        Set<TableReference> tables = new LinkedHashSet<TableReference>();
         for (ResultColumn resultColumn : selection) {
             resultColumn.collectTableReferences(tables);
         }
         for (Criteria criteria : criterias) {
             criteria.collectTableReferences(tables);
         }
-        List<TableReference> tableList = new ArrayList<TableReference>(tables);
-        Collections.sort(tableList, new TableReference.Comparator());
-        return tableList;
+        return tables;
     }
 }

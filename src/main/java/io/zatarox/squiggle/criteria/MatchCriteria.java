@@ -16,7 +16,7 @@
 package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.Matchable;
-import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.QueryCompiler;
 import io.zatarox.squiggle.TableReference;
 
 import java.util.Set;
@@ -42,8 +42,8 @@ public class MatchCriteria implements Criteria {
     }
 
     @Override
-    public void write(Output output) {
-        output.write(left).write(' ').write(operator).write(' ').write(right);
+    public void compile(QueryCompiler compiler) {
+        compiler.write(left).write(' ').write(operator).write(' ').write(right);
     }
 
     @Override

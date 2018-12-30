@@ -16,7 +16,7 @@
 package io.zatarox.squiggle.parameter;
 
 import io.zatarox.squiggle.Matchable;
-import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.QueryCompiler;
 import io.zatarox.squiggle.TableReference;
 import io.zatarox.squiggle.statement.Parametrized;
 
@@ -26,8 +26,8 @@ import java.util.Set;
 public abstract class Parameter implements Matchable {
 
     @Override
-    public void write(Output output) {
-        output.write("?").addParameter(this);
+    public void compile(QueryCompiler compiler) {
+        compiler.write("?").addParameter(this);
     }
 
     @Override

@@ -29,22 +29,22 @@ public class WhereCriteriaTest {
     @Test
     public void whereCriteria() {
         Table employee = new Table("employee");
-        TableColumn firstName = employee.getColumn("first_name");
-        TableColumn lastName = employee.getColumn("last_name");
-        TableColumn height = employee.getColumn("height");
-        TableColumn department = employee.getColumn("department");
-        TableColumn age = employee.getColumn("age");
+        TableColumn employeeFirstName = employee.getColumn("first_name");
+        TableColumn employeeLastName = employee.getColumn("last_name");
+        TableColumn employeeHeight = employee.getColumn("height");
+        TableColumn employeeDepartment = employee.getColumn("department");
+        TableColumn employeeAge = employee.getColumn("age");
 
-        TableReference e = employee.createReference("e");
+        TableReference e = employee.createReference();
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(e.getColumn(firstName));
-        select.addToSelection(e.getColumn(lastName));
+        select.addToSelection(e.getColumn(employeeFirstName));
+        select.addToSelection(e.getColumn(employeeLastName));
 
-        select.addCriteria(new MatchCriteria(e.getColumn(height), MatchCriteria.GREATER, Literal.of(1.8)));
-        select.addCriteria(new InCriteria(e.getColumn(department), Literal.of("I.T."), Literal.of("Cooking")));
-        select.addCriteria(new BetweenCriteria(e.getColumn(age), Literal.of(18), Literal.of(30)));
+        select.addCriteria(new MatchCriteria(e.getColumn(employeeHeight), MatchCriteria.GREATER, Literal.of(1.8)));
+        select.addCriteria(new InCriteria(e.getColumn(employeeDepartment), Literal.of("I.T."), Literal.of("Cooking")));
+        select.addCriteria(new BetweenCriteria(e.getColumn(employeeAge), Literal.of(18), Literal.of(30)));
 
         assertEquals("SELECT\n"
                 + "    e.first_name as a,\n"
@@ -61,15 +61,15 @@ public class WhereCriteriaTest {
     @Test
     public void nullCriteria() {
         Table employee = new Table("employee");
-        TableColumn name = employee.getColumn("name");
-        TableColumn age = employee.getColumn("age");
+        TableColumn employeeName = employee.getColumn("name");
+        TableColumn employeeAge = employee.getColumn("age");
 
-        TableReference e = employee.createReference("e");
+        TableReference e = employee.createReference();
 
         SelectQuery select = new SelectQuery();
 
-        select.addCriteria(new IsNullCriteria(e.getColumn(name)));
-        select.addCriteria(new IsNotNullCriteria(e.getColumn(age)));
+        select.addCriteria(new IsNullCriteria(e.getColumn(employeeName)));
+        select.addCriteria(new IsNotNullCriteria(e.getColumn(employeeAge)));
 
         assertEquals("SELECT 1\n"
                 + "FROM\n"
@@ -82,19 +82,19 @@ public class WhereCriteriaTest {
     @Test
     public void betweenCriteriaWithColumns() {
         Table river = new Table("river");
-        TableColumn name = river.getColumn("name");
-        TableColumn level = river.getColumn("level");
-        TableColumn lowerLimit = river.getColumn("lower_limit");
-        TableColumn upperLimit = river.getColumn("upper_limit");
+        TableColumn riverName = river.getColumn("name");
+        TableColumn riverLevel = river.getColumn("level");
+        TableColumn riverLowerLimit = river.getColumn("lower_limit");
+        TableColumn riverUpperLimit = river.getColumn("upper_limit");
 
-        TableReference r = river.createReference("r");
+        TableReference r = river.createReference();
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(r.getColumn(name));
-        select.addToSelection(r.getColumn(level));
+        select.addToSelection(r.getColumn(riverName));
+        select.addToSelection(r.getColumn(riverLevel));
 
-        select.addCriteria(new BetweenCriteria(r.getColumn(level), r.getColumn(lowerLimit), r.getColumn(upperLimit)));
+        select.addCriteria(new BetweenCriteria(r.getColumn(riverLevel), r.getColumn(riverLowerLimit), r.getColumn(riverUpperLimit)));
 
         assertEquals("SELECT\n"
                 + "    r.name as a,\n"

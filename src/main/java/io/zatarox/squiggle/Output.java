@@ -23,13 +23,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The whole complex query is being built with a single output instance, while multiple QueryCompilers can be used.
+ */
 public class Output {
+
+    private final String indent;
 
     private final StringBuffer result = new StringBuffer();
     private final StringBuffer currentIndent = new StringBuffer();
     private boolean newLineComing;
-
-    private final String indent;
 
     private final List<Parameter> parameters = new ArrayList<Parameter>();
 
@@ -37,56 +40,36 @@ public class Output {
         this.indent = indent;
     }
 
-    public boolean isEmpty() {
-        return result.length() == 0;
-    }
-
-    public Output write(char c) {
+    public void write(char c) {
         writeNewLineIfNeeded();
         result.append(c);
-        return this;
     }
 
-    public Output write(String s) {
+    public void write(String s) {
         writeNewLineIfNeeded();
         result.append(s);
-        return this;
     }
 
-    public Output write(Outputable outputable) {
-        writeNewLineIfNeeded();
-        outputable.write(this);
-        return this;
-    }
-
-    public Output writeln() {
+    public void writeln() {
         newLineComing = true;
-        return this;
     }
 
-    public Output writeln(char c) {
+    public void writeln(char c) {
         write(c);
-        return writeln();
+        writeln();
     }
 
-    public Output writeln(String s) {
+    public void writeln(String s) {
         write(s);
-        return writeln();
+        writeln();
     }
 
-    public Output writeln(Outputable outputable) {
-        write(outputable);
-        return writeln();
-    }
-
-    public Output indent() {
+    public void indent() {
         currentIndent.append(indent);
-        return this;
     }
 
-    public Output unindent() {
+    public void unindent() {
         currentIndent.setLength(currentIndent.length() - indent.length());
-        return this;
     }
 
     public void addParameter(Parameter parameter) {

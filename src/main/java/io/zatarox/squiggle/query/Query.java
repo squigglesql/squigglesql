@@ -16,15 +16,18 @@
 package io.zatarox.squiggle.query;
 
 import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.alias.Alphabet;
 import io.zatarox.squiggle.statement.StatementCompiler;
 
 import java.sql.SQLException;
 
 public abstract class Query {
 
-    public static final String DEFAULT_INDENT = "    ";
+    private static final String DEFAULT_INDENT = "    ";
 
-    protected abstract void write(Output output);
+    static final Alphabet TABLE_REFERENCE_ALIAS_ALPHABET = new Alphabet('t', 7);
+
+    protected abstract void compile(Output output);
 
     @Override
     public String toString() {
@@ -41,7 +44,7 @@ public abstract class Query {
 
     private Output compile(String indent) {
         Output out = new Output(indent);
-        write(out);
+        compile(out);
         return out;
     }
 }

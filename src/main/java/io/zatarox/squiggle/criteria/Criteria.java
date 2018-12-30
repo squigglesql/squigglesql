@@ -15,8 +15,8 @@
  */
 package io.zatarox.squiggle.criteria;
 
-import io.zatarox.squiggle.Outputable;
+import io.zatarox.squiggle.Compilable;
 import io.zatarox.squiggle.TableReferred;
 
-public interface Criteria extends Outputable, TableReferred {
+public interface Criteria extends Compilable, TableReferred {
 }

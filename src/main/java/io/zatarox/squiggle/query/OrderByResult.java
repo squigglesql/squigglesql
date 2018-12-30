@@ -15,10 +15,10 @@
  */
 package io.zatarox.squiggle.query;
 
-import io.zatarox.squiggle.Output;
-import io.zatarox.squiggle.Outputable;
+import io.zatarox.squiggle.Compilable;
+import io.zatarox.squiggle.QueryCompiler;
 
-public class OrderByResult implements Outputable {
+public class OrderByResult implements Compilable {
 
     private final ResultColumn column;
     private final boolean ascending;
@@ -29,10 +29,10 @@ public class OrderByResult implements Outputable {
     }
 
     @Override
-    public void write(Output output) {
-        output.write(column.getAlias());
+    public void compile(QueryCompiler compiler) {
+        compiler.write(column.getAlias());
         if (!ascending) {
-            output.write(" DESC");
+            compiler.write(" DESC");
         }
     }
 }
