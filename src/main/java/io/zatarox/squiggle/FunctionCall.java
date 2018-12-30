@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,36 +15,43 @@
  */
 package io.zatarox.squiggle;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
 
-import io.zatarox.squiggle.output.Output;
+public class FunctionCall implements Selectable {
 
-public class FunctionCall implements Matchable, Selectable {
+    private final String function;
+    private final Collection<Matchable> arguments;
 
-    private final String functionName;
-    private final Matchable[] arguments;
-
-    public FunctionCall(String functionName, Matchable... arguments) {
-        this.functionName = functionName;
+    public FunctionCall(String function, Collection<Matchable> arguments) {
+        this.function = function;
         this.arguments = arguments;
     }
 
-    @Override
-    public void write(Output out) {
-        out.print(functionName).print("(");
-        for (int i = 0; i < arguments.length; i++) {
-            if (i > 0) {
-                out.print(", ");
-            }
-            arguments[i].write(out);
-        }
-        out.print(")");
+    public FunctionCall(String function, Matchable... arguments) {
+        this(function, Arrays.asList(arguments));
     }
 
     @Override
-    public void addReferencedTablesTo(Set<Table> tables) {
+    public boolean isNull() {
+        return false; // no way to find out...
+    }
+
+    @Override
+    public void write(Output output) {
+        output.write(function);
+        if (arguments.isEmpty()) {
+            output.write("()");
+            return;
+        }
+        CollectionWriter.writeCollection(output, arguments, ", ", true, false);
+    }
+
+    @Override
+    public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
         for (Matchable argument : arguments) {
-            argument.addReferencedTablesTo(tables);
+            argument.addReferencedTableAccessorsTo(tableAccessors);
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,71 +17,92 @@ package io.zatarox.squiggle;
 
 import io.zatarox.squiggle.criteria.InCriteria;
 import io.zatarox.squiggle.criteria.MatchCriteria;
-
-import org.hamcrest.text.IsEqualIgnoringWhiteSpace;
+import io.zatarox.squiggle.literal.Literal;
 import org.junit.Test;
-import static org.junit.Assert.assertThat;
+
+import static org.junit.Assert.assertEquals;
 
 public class TutorialTest {
 
     @Test
     public void tutorial() {
+        // define tables
+        Table order = new Table("order");
+        TableColumn orderId = order.getColumn("id");
+        TableColumn orderTotalPrice = order.getColumn("total_price");
+        TableColumn orderStatus = order.getColumn("status");
+        TableColumn orderItems = order.getColumn("items");
+        TableColumn orderDelivery = order.getColumn("delivery");
+        TableColumn orderWarehouseId = order.getColumn("warehouse_id");
+
+        Table warehouse = new Table("warehouse");
+        TableColumn warehouseId = warehouse.getColumn("id");
+        TableColumn warehouseSize = warehouse.getColumn("size");
+        TableColumn warehouseLocation = warehouse.getColumn("location");
+
+        Table offer = new Table("offer");
+        TableColumn offerLocation = offer.getColumn("location");
+        TableColumn offerValid = offer.getColumn("valid");
+
         // basic query
+        TableAccessor o = order.getAccessor("o");
+
         SelectQuery select = new SelectQuery();
 
-        // add columns
-        Table orders = new Table("orders_table");
-        select.addColumn(orders, "id");
-        select.addColumn(orders, "total_price");
+        select.addToSelection(o.getColumn(orderId));
+        select.addToSelection(o.getColumn(orderTotalPrice));
 
         // matches
-        select.addCriteria(new MatchCriteria(orders, "status", MatchCriteria.EQUALS, "processed"));
-        select.addCriteria(new MatchCriteria(orders, "items", MatchCriteria.LESS, 5));
-
-        // IN...
-        select.addCriteria(new InCriteria(orders, "delivery",
-                new String[]{"post", "fedex", "goat"}));
+        select.addCriteria(new MatchCriteria(
+                o.getColumn(orderStatus), MatchCriteria.EQUALS, Literal.of("processed")));
+        select.addCriteria(new MatchCriteria(
+                o.getColumn(orderItems), MatchCriteria.LESS, Literal.of(5)));
+        select.addCriteria(new InCriteria(o.getColumn(orderDelivery),
+                Literal.of("post"), Literal.of("fedex"), Literal.of("goat")));
 
         // join
-        Table warehouses = new Table("warehouses_table");
-        select.addJoin(orders, "warehouse_id", warehouses, "id");
+        TableAccessor w = warehouse.getAccessor("w");
+
+        select.addCriteria(new MatchCriteria(
+                o.getColumn(orderWarehouseId), MatchCriteria.EQUALS, w.getColumn(warehouseId)));
 
         // use joined table
-        select.addColumn(warehouses, "location");
-        select.addCriteria(new MatchCriteria(warehouses, "size", MatchCriteria.EQUALS, "big"));
+        select.addToSelection(w.getColumn(warehouseLocation));
+        select.addCriteria(new MatchCriteria(
+                w.getColumn(warehouseSize), MatchCriteria.EQUALS, Literal.of("big")));
 
         // build subselect query
+        TableAccessor f = offer.getAccessor("f");
+
         SelectQuery subSelect = new SelectQuery();
-        Table offers = new Table("offers_table");
-        subSelect.addColumn(offers, "location");
-        subSelect.addCriteria(new MatchCriteria(offers, "valid", MatchCriteria.EQUALS, true));
+
+        subSelect.addToSelection(f.getColumn(offerLocation));
+        subSelect.addCriteria(new MatchCriteria(
+                f.getColumn(offerValid), MatchCriteria.EQUALS, Literal.of(true)));
 
         // add subselect to original query
-        select.addCriteria(new InCriteria(warehouses, "location", subSelect));
+        select.addCriteria(new InCriteria(w.getColumn(warehouseLocation), subSelect));
 
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT "
-                + "    orders_table.id , "
-                + "    orders_table.total_price , "
-                + "    warehouses_table.location  "
-                + "FROM "
-                + "    orders_table , "
-                + "    warehouses_table  "
-                + "WHERE "
-                + "    orders_table.status = 'processed' AND "
-                + "    orders_table.items < 5 AND "
-                + "    orders_table.delivery IN ( "
-                + "        'post', 'fedex', 'goat' "
-                + "    ) AND "
-                + "    orders_table.warehouse_id = warehouses_table.id AND "
-                + "    warehouses_table.size = 'big' AND "
-                + "    warehouses_table.location IN ( "
-                + "        SELECT "
-                + "            offers_table.location  "
-                + "        FROM "
-                + "            offers_table  "
-                + "        WHERE "
-                + "            offers_table.valid = true  "
-                + "    )"));
+        assertEquals("SELECT\n"
+                + "    o.id as a,\n"
+                + "    o.total_price as b,\n"
+                + "    w.location as c\n"
+                + "FROM\n"
+                + "    order o,\n"
+                + "    warehouse w\n"
+                + "WHERE\n"
+                + "    o.status = 'processed' AND\n"
+                + "    o.items < 5 AND\n"
+                + "    o.delivery IN ('post', 'fedex', 'goat') AND\n"
+                + "    o.warehouse_id = w.id AND\n"
+                + "    w.size = 'big' AND\n"
+                + "    w.location IN ((\n"
+                + "        SELECT\n"
+                + "            f.location as a\n"
+                + "        FROM\n"
+                + "            offer f\n"
+                + "        WHERE\n"
+                + "            f.valid = true\n"
+                + "    ))", select.toString());
     }
 }

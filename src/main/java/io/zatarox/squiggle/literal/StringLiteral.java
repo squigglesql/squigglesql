@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,38 +15,23 @@
  */
 package io.zatarox.squiggle.literal;
 
-import io.zatarox.squiggle.Literal;
-import io.zatarox.squiggle.output.Output;
+import io.zatarox.squiggle.Output;
 
 public class StringLiteral extends Literal {
 
-    private final String literalValue;
+    private final Object value;
 
-    public StringLiteral(String literalValue) {
-        this.literalValue = literalValue;
+    StringLiteral(Object value) {
+        this.value = value;
     }
 
     @Override
-    public void write(Output out) {
-        out.print(quote(literalValue));
+    public boolean isNull() {
+        return false;
     }
 
-    protected String quote(String s) {
-        if (s == null) {
-            return "null";
-        }
-
-        StringBuilder str = new StringBuilder();
-        str.append('\'');
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '\\'
-                    || s.charAt(i) == '\"'
-                    || s.charAt(i) == '\'') {
-                str.append('\\');
-            }
-            str.append(s.charAt(i));
-        }
-        str.append('\'');
-        return str.toString();
+    @Override
+    public void write(Output output) {
+        output.write('\'').write(value.toString().replace("'", "''")).write('\'');
     }
 }

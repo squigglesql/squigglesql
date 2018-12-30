@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,26 @@
  */
 package io.zatarox.squiggle.literal;
 
-import java.math.BigDecimal;
+import io.zatarox.squiggle.Output;
 
-public class BigDecimalLiteral extends LiteralWithSameRepresentationInJavaAndSql {
+public class RawLiteral extends Literal {
 
-    public BigDecimalLiteral(BigDecimal literalValue) {
-        super(literalValue);
+    static final Literal TRUE = new RawLiteral(true);
+    static final Literal FALSE = new RawLiteral(false);
+
+    private final Object value;
+
+    RawLiteral(Object value) {
+        this.value = value;
+    }
+
+    @Override
+    public boolean isNull() {
+        return false;
+    }
+
+    @Override
+    public void write(Output output) {
+        output.write(value.toString());
     }
 }

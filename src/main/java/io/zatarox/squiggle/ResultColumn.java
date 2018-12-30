@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2019 Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,27 @@ package io.zatarox.squiggle;
 
 import java.util.Set;
 
-import io.zatarox.squiggle.output.Outputable;
+public class ResultColumn implements Outputable, TableReference {
 
-/**
- * A literal value, such as a number, string or boolean.
- */
-public abstract class Literal implements Outputable, Matchable, Selectable {
+    private final Selectable selectable;
+    private final String alias;
+
+    ResultColumn(Selectable selectable, String alias) {
+        this.selectable = selectable;
+        this.alias = alias;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
 
     @Override
-    public void addReferencedTablesTo(Set<Table> tables) {
+    public void write(Output output) {
+        output.write(selectable).write(" as ").write(alias);
+    }
+
+    @Override
+    public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
+        selectable.addReferencedTableAccessorsTo(tableAccessors);
     }
 }

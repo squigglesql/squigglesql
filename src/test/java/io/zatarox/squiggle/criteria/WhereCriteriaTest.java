@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,87 +17,91 @@ package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.SelectQuery;
 import io.zatarox.squiggle.Table;
-import static org.junit.Assert.assertThat;
-
+import io.zatarox.squiggle.TableAccessor;
+import io.zatarox.squiggle.TableColumn;
+import io.zatarox.squiggle.literal.Literal;
 import org.junit.Test;
 
-import org.hamcrest.text.IsEqualIgnoringWhiteSpace;
+import static org.junit.Assert.assertEquals;
 
 public class WhereCriteriaTest {
 
     @Test
     public void whereCriteria() {
-        Table people = new Table("people");
+        Table employee = new Table("employee");
+        TableColumn firstName = employee.getColumn("first_name");
+        TableColumn lastName = employee.getColumn("last_name");
+        TableColumn height = employee.getColumn("height");
+        TableColumn department = employee.getColumn("department");
+        TableColumn age = employee.getColumn("age");
+
+        TableAccessor e = employee.getAccessor("e");
 
         SelectQuery select = new SelectQuery();
 
-        select.addColumn(people, "firstname");
-        select.addColumn(people, "lastname");
+        select.addToSelection(e.getColumn(firstName));
+        select.addToSelection(e.getColumn(lastName));
 
-        select.addCriteria(
-                new MatchCriteria(people, "height", MatchCriteria.GREATER, 1.8));
-        select.addCriteria(
-                new InCriteria(people, "department", new String[]{"I.T.", "Cooking"}));
-        select.addCriteria(
-                new BetweenCriteria(people.getColumn("age"), 18, 30));
+        select.addCriteria(new MatchCriteria(e.getColumn(height), MatchCriteria.GREATER, Literal.of(1.8)));
+        select.addCriteria(new InCriteria(e.getColumn(department), Literal.of("I.T."), Literal.of("Cooking")));
+        select.addCriteria(new BetweenCriteria(e.getColumn(age), Literal.of(18), Literal.of(30)));
 
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT "
-                + "    people.firstname , "
-                + "    people.lastname "
-                + "FROM "
-                + "    people "
-                + "WHERE "
-                + "    people.height > 1.8 AND "
-                + "    people.department IN ( "
-                + "        'I.T.', 'Cooking' "
-                + "    ) AND"
-                + "    people.age BETWEEN 18 AND 30"));
+        assertEquals("SELECT\n"
+                + "    e.first_name as a,\n"
+                + "    e.last_name as b\n"
+                + "FROM\n"
+                + "    employee e\n"
+                + "WHERE\n"
+                + "    e.height > 1.8 AND\n"
+                + "    e.department IN ('I.T.', 'Cooking') AND\n"
+                + "    e.age BETWEEN 18 AND 30", select.toString());
 
     }
 
     @Test
     public void nullCriteria() {
-        Table people = new Table("people");
+        Table employee = new Table("employee");
+        TableColumn name = employee.getColumn("name");
+        TableColumn age = employee.getColumn("age");
+
+        TableAccessor e = employee.getAccessor("e");
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(people.getWildcard());
+        select.addCriteria(new IsNullCriteria(e.getColumn(name)));
+        select.addCriteria(new IsNotNullCriteria(e.getColumn(age)));
 
-        select.addCriteria(
-                new IsNullCriteria(people.getColumn("name")));
-        select.addCriteria(
-                new IsNotNullCriteria(people.getColumn("age")));
-
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT "
-                + "    people.* "
-                + "FROM "
-                + "    people "
-                + "WHERE "
-                + "    people.name IS NULL AND "
-                + "    people.age IS NOT NULL"));
+        assertEquals("SELECT 1\n"
+                + "FROM\n"
+                + "    employee e\n"
+                + "WHERE\n"
+                + "    e.name IS NULL AND\n"
+                + "    e.age IS NOT NULL", select.toString());
     }
 
     @Test
     public void betweenCriteriaWithColumns() {
-        Table rivers = new Table("rivers");
+        Table river = new Table("river");
+        TableColumn name = river.getColumn("name");
+        TableColumn level = river.getColumn("level");
+        TableColumn lowerLimit = river.getColumn("lower_limit");
+        TableColumn upperLimit = river.getColumn("upper_limit");
+
+        TableAccessor r = river.getAccessor("r");
 
         SelectQuery select = new SelectQuery();
 
-        select.addColumn(rivers, "name");
-        select.addColumn(rivers, "level");
+        select.addToSelection(r.getColumn(name));
+        select.addToSelection(r.getColumn(level));
 
-        select.addCriteria(
-                new BetweenCriteria(rivers.getColumn("level"), rivers.getColumn("lower_limit"), rivers.getColumn("upper_limit")));
+        select.addCriteria(new BetweenCriteria(r.getColumn(level), r.getColumn(lowerLimit), r.getColumn(upperLimit)));
 
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT "
-                + "    rivers.name , "
-                + "    rivers.level "
-                + "FROM "
-                + "    rivers "
-                + "WHERE "
-                + "    rivers.level BETWEEN rivers.lower_limit AND rivers.upper_limit"));
+        assertEquals("SELECT\n"
+                + "    r.name as a,\n"
+                + "    r.level as b\n"
+                + "FROM\n"
+                + "    river r\n"
+                + "WHERE\n"
+                + "    r.level BETWEEN r.lower_limit AND r.upper_limit", select.toString());
     }
 }

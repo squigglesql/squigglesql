@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,57 +16,59 @@
 package io.zatarox.squiggle;
 
 import io.zatarox.squiggle.criteria.BetweenCriteria;
-import static org.junit.Assert.assertThat;
-
+import io.zatarox.squiggle.literal.Literal;
 import org.junit.Test;
 
-import io.zatarox.squiggle.literal.IntegerLiteral;
-import io.zatarox.squiggle.literal.StringLiteral;
-import org.hamcrest.text.IsEqualIgnoringWhiteSpace;
+import static org.junit.Assert.assertEquals;
 
 public class FunctionsTest {
 
     @Test
     public void functions() {
+        Table table = new Table("table");
+        TableColumn column = table.getColumn("column");
+
+        TableAccessor t = table.getAccessor("t");
+
         SelectQuery select = new SelectQuery();
 
-        Table table = new Table("t");
-
         select.addToSelection(new FunctionCall("sheep"));
-        select.addToSelection(new FunctionCall("cheese", new IntegerLiteral(10)));
-        select.addToSelection(new FunctionCall("tomato", new StringLiteral("red"), table.getColumn("c")));
+        select.addToSelection(new FunctionCall("cheese", Literal.of(10)));
+        select.addToSelection(new FunctionCall("tomato", Literal.of("red"), t.getColumn(column)));
 
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT "
-                + "    sheep() , "
-                + "    cheese(10) , "
-                + "    tomato('red', t.c) "
-                + "FROM "
-                + "    t "));
-
+        assertEquals("SELECT\n"
+                + "    sheep() as a,\n"
+                + "    cheese(10) as b,\n"
+                + "    tomato('red', t.column) as c\n"
+                + "FROM\n"
+                + "    table t", select.toString());
     }
 
     @Test
     public void usingFunctionsInMatchCriteria() {
         Table cards = new Table("credit_cards");
+        TableColumn numberColumn = cards.getColumn("number");
+        TableColumn issueColumn = cards.getColumn("issue");
+        TableColumn issueDate = cards.getColumn("issue_date");
+        TableColumn expiryDate = cards.getColumn("expiry_date");
+
+        TableAccessor c = cards.getAccessor("c");
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(cards.getColumn("number"));
-        select.addToSelection(cards.getColumn("issue"));
+        select.addToSelection(c.getColumn(numberColumn));
+        select.addToSelection(c.getColumn(issueColumn));
 
-        select.addCriteria(
-                new BetweenCriteria(new FunctionCall("getDate"),
-                        cards.getColumn("issue_date"), cards.getColumn("expiry_date")));
+        select.addCriteria(new BetweenCriteria(
+                new FunctionCall("getDate"), c.getColumn(issueDate), c.getColumn(expiryDate)));
 
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT "
-                + "    credit_cards.number , "
-                + "    credit_cards.issue "
-                + "FROM "
-                + "    credit_cards "
-                + "WHERE "
-                + "    getDate() BETWEEN credit_cards.issue_date AND credit_cards.expiry_date"));
+        assertEquals("SELECT\n"
+                + "    c.number as a,\n"
+                + "    c.issue as b\n"
+                + "FROM\n"
+                + "    credit_cards c\n"
+                + "WHERE\n"
+                + "    getDate() BETWEEN c.issue_date AND c.expiry_date", select.toString());
     }
 
     @Test
@@ -74,8 +76,7 @@ public class FunctionsTest {
         SelectQuery select = new SelectQuery();
         select.addToSelection(new FunctionCall("getdate"));
 
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT"
-                + "    getdate()"));
+        assertEquals("SELECT\n"
+                + "    getdate() as a", select.toString());
     }
 }

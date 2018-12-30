@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.zatarox.squiggle.literal;
+package io.zatarox.squiggle.criteria;
 
-public class IntegerLiteral extends LiteralWithSameRepresentationInJavaAndSql {
+import io.zatarox.squiggle.Criteria;
 
-    public IntegerLiteral(long literalValue) {
-        super(literalValue);
+import java.util.Collection;
+
+public class OrCriteria extends CriteriaGroup {
+
+    public OrCriteria(Collection<Criteria> criterias) {
+        super(criterias);
+    }
+
+    public OrCriteria(Criteria... criterias) {
+        super(criterias);
+    }
+
+    @Override
+    protected String getOperator() {
+        return " OR";
     }
 }

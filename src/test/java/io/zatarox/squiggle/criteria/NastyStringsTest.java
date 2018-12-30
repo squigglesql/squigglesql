@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,30 +17,34 @@ package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.SelectQuery;
 import io.zatarox.squiggle.Table;
-
-import org.hamcrest.text.IsEqualIgnoringWhiteSpace;
-import static org.junit.Assert.assertThat;
+import io.zatarox.squiggle.TableAccessor;
+import io.zatarox.squiggle.TableColumn;
+import io.zatarox.squiggle.literal.Literal;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class NastyStringsTest {
 
     @Test
     public void testNastyStrings() {
         Table people = new Table("people");
+        TableColumn firstName = people.getColumn("first_name");
+        TableColumn foo = people.getColumn("foo");
+
+        TableAccessor p = people.getAccessor("p");
 
         SelectQuery select = new SelectQuery();
 
-        select.addColumn(people, "firstname");
+        select.addToSelection(p.getColumn(firstName));
 
-        select.addCriteria(
-                new MatchCriteria(people, "foo", MatchCriteria.GREATER, "I've got a quote"));
+        select.addCriteria(new MatchCriteria(p.getColumn(foo), MatchCriteria.GREATER, Literal.of("I've got a quote")));
 
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT\n"
-                + "    people.firstname\n"
+        assertEquals("SELECT\n"
+                + "    p.first_name as a\n"
                 + "FROM\n"
-                + "    people\n"
+                + "    people p\n"
                 + "WHERE\n"
-                + "    people.foo > 'I\\'ve got a quote'"));
+                + "    p.foo > 'I''ve got a quote'", select.toString());
     }
 }

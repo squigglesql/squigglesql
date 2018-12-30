@@ -15,28 +15,42 @@
  */
 package io.zatarox.squiggle.criteria;
 
+import io.zatarox.squiggle.CollectionWriter;
 import io.zatarox.squiggle.Criteria;
-import io.zatarox.squiggle.Matchable;
 import io.zatarox.squiggle.Output;
 import io.zatarox.squiggle.TableAccessor;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
 
-public class IsNullCriteria implements Criteria {
+public abstract class CriteriaGroup implements Criteria {
 
-    private final Matchable value;
+    private final Collection<Criteria> criterias;
 
-    public IsNullCriteria(Matchable value) {
-        this.value = value;
+    public CriteriaGroup(Collection<Criteria> criterias) {
+        this.criterias = criterias;
     }
+
+    public CriteriaGroup(Criteria... criterias) {
+        this.criterias = Arrays.asList(criterias);
+    }
+
+    protected abstract String getOperator();
 
     @Override
     public void write(Output output) {
-        output.write(value).write(" IS NULL");
+        if (criterias.isEmpty()) {
+            output.write("1 = 1");
+            return;
+        }
+        CollectionWriter.writeCollection(output, criterias, getOperator(), true, true);
     }
 
     @Override
     public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
-        value.addReferencedTableAccessorsTo(tableAccessors);
+        for (Criteria criteria : criterias) {
+            criteria.addReferencedTableAccessorsTo(tableAccessors);
+        }
     }
 }

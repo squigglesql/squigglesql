@@ -16,27 +16,26 @@
 package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.Criteria;
-import io.zatarox.squiggle.Matchable;
 import io.zatarox.squiggle.Output;
 import io.zatarox.squiggle.TableAccessor;
 
 import java.util.Set;
 
-public class IsNullCriteria implements Criteria {
+public class NotCriteria implements Criteria {
 
-    private final Matchable value;
+    private final Criteria criteria;
 
-    public IsNullCriteria(Matchable value) {
-        this.value = value;
+    public NotCriteria(Criteria criteria) {
+        this.criteria = criteria;
     }
 
     @Override
     public void write(Output output) {
-        output.write(value).write(" IS NULL");
+        output.write("NOT ").write(criteria);
     }
 
     @Override
     public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
-        value.addReferencedTableAccessorsTo(tableAccessors);
+        criteria.addReferencedTableAccessorsTo(tableAccessors);
     }
 }

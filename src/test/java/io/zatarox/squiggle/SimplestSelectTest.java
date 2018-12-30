@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,62 +15,63 @@
  */
 package io.zatarox.squiggle;
 
-import static org.junit.Assert.assertThat;
-
 import org.junit.Test;
 
-import org.hamcrest.text.IsEqualIgnoringWhiteSpace;
+import static org.junit.Assert.assertEquals;
 
 public class SimplestSelectTest {
 
     @Test
     public void simpleSelect() {
         Table people = new Table("people");
+        TableColumn firstName = people.getColumn("first_name");
+        TableColumn lastName = people.getColumn("last_name");
+        TableColumn age = people.getColumn("age");
+
+        TableAccessor p = people.getAccessor("p");
 
         SelectQuery select = new SelectQuery();
 
-        select.addColumn(people, "firstname");
-        select.addColumn(people, "lastname");
+        select.addToSelection(p.getColumn(firstName));
+        select.addToSelection(p.getColumn(lastName));
+        ResultColumn ageResult = select.addToSelection(p.getColumn(age));
 
-        select.addOrder(people, "age", Order.DESCENDING);
+        select.addOrder(ageResult, Order.DESCENDING);
 
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT  people.firstname , people.lastname "
-                + "FROM people "
-                + "ORDER BY people.age DESC"));
-    }
-
-    @Test
-    public void simpleSelectAllColumns() {
-        Table people = new Table("people");
-
-        SelectQuery select = new SelectQuery();
-        select.setAllColumns(true);
-        select.addColumn(people, "firstname");
-        select.addColumn(people, "lastname");
-
-        select.addOrder(people, "age", Order.DESCENDING);
-
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT * "
-                        + "FROM people "
-                        + "ORDER BY people.age DESC"));
+        assertEquals("SELECT\n"
+                + "    p.first_name as a,\n"
+                + "    p.last_name as b,\n"
+                + "    p.age as c\n"
+                + "FROM\n"
+                + "    people p\n"
+                + "ORDER BY\n"
+                + "    c DESC", select.toString());
     }
 
     @Test
     public void simpleSelectDistinct() {
         Table people = new Table("people");
+        TableColumn firstName = people.getColumn("first_name");
+        TableColumn lastName = people.getColumn("last_name");
+        TableColumn age = people.getColumn("age");
 
-        SelectQuery select = new SelectQuery();
-        select.setDistinct(true);
-        select.addColumn(people, "firstname");
-        select.addColumn(people, "lastname");
+        TableAccessor p = people.getAccessor("p");
 
-        select.addOrder(people, "age", Order.DESCENDING);
+        SelectQuery select = new SelectQuery(true);
 
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT DISTINCT people.firstname , people.lastname "
-                        + "FROM people "
-                        + "ORDER BY people.age DESC"));
+        select.addToSelection(p.getColumn(firstName));
+        select.addToSelection(p.getColumn(lastName));
+        ResultColumn ageResult = select.addToSelection(p.getColumn(age));
+
+        select.addOrder(ageResult, Order.DESCENDING);
+
+        assertEquals("SELECT DISTINCT\n"
+                + "    p.first_name as a,\n"
+                + "    p.last_name as b,\n"
+                + "    p.age as c\n"
+                + "FROM\n"
+                + "    people p\n"
+                + "ORDER BY\n"
+                + "    c DESC", select.toString());
     }
 }

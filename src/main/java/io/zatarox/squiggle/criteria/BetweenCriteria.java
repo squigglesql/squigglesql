@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,69 +17,30 @@ package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.Criteria;
 import io.zatarox.squiggle.Matchable;
-import io.zatarox.squiggle.Table;
-import io.zatarox.squiggle.literal.BigDecimalLiteral;
-import io.zatarox.squiggle.literal.DateTimeLiteral;
-import io.zatarox.squiggle.literal.FloatLiteral;
-import io.zatarox.squiggle.literal.IntegerLiteral;
-import io.zatarox.squiggle.output.Output;
+import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.TableAccessor;
 
-import java.math.BigDecimal;
-import java.sql.Date;
 import java.util.Set;
 
-/**
- * Class BetweenCriteria is a Criteria extension that generates the SQL syntax
- * for a BETWEEN operator in an SQL Where clause.
- */
 public class BetweenCriteria implements Criteria {
 
-    private final Matchable column;
-    private final Matchable lower, upper;
+    private final Matchable value, lower, upper;
 
-    /**
-     * Initializes a new BetweenCriteria with an operand and the upper and lower
-     * bounds of the SQL BETWEEN operator.
-     *
-     * @param operand the first operand to the SQL BETWEEN operator that the
-     * operator uses to test whether the column falls within the given range.
-     * The SQL type of the column must be DECIMAL or NUMERIC.
-     * @param lower the lower bound of the BETWEEN operator
-     * @param upper the upper bound of the BETWEEN operator
-     */
-    public BetweenCriteria(Matchable operand, Matchable lower, Matchable upper) {
-        this.column = operand;
+    public BetweenCriteria(Matchable value, Matchable lower, Matchable upper) {
+        this.value = value;
         this.lower = lower;
         this.upper = upper;
     }
 
-    public BetweenCriteria(Matchable operand, BigDecimal lower, BigDecimal upper) {
-        this(operand, new BigDecimalLiteral(lower), new BigDecimalLiteral(upper));
-    }
-
-    public BetweenCriteria(Matchable column, Date upper, Date lower) {
-        this(column, new DateTimeLiteral(upper), new DateTimeLiteral(lower));
-    }
-
-    public BetweenCriteria(Matchable column, double lower, double upper) {
-        this(column, new FloatLiteral(lower), new FloatLiteral(upper));
-    }
-
-    public BetweenCriteria(Matchable column, long lower, long upper) {
-        this(column, new IntegerLiteral(lower), new IntegerLiteral(upper));
-    }
-
     @Override
     public void write(Output out) {
-        column.write(out);
-        out.print(" BETWEEN ");
-        lower.write(out);
-        out.print(" AND ");
-        upper.write(out);
+        out.write(value).write(" BETWEEN ").write(lower).write(" AND ").write(upper);
     }
 
     @Override
-    public void addReferencedTablesTo(Set<Table> tables) {
-        column.addReferencedTablesTo(tables);
+    public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
+        value.addReferencedTableAccessorsTo(tableAccessors);
+        lower.addReferencedTableAccessorsTo(tableAccessors);
+        upper.addReferencedTableAccessorsTo(tableAccessors);
     }
 }

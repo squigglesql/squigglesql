@@ -15,195 +15,102 @@
  */
 package io.zatarox.squiggle;
 
-import io.zatarox.squiggle.criteria.MatchCriteria;
-import io.zatarox.squiggle.output.Output;
-import io.zatarox.squiggle.output.Outputable;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SelectQuery extends Query implements ValueSet {
+public class SelectQuery extends Query implements Matchable {
 
-    private final List<Selectable> selection = new ArrayList<Selectable>();
-    private final List<Criteria> criteria = new ArrayList<Criteria>();
-    private final List<Order> order = new ArrayList<Order>();
+    private final List<ResultColumn> selection = new ArrayList<ResultColumn>();
+    private final List<Criteria> criterias = new ArrayList<Criteria>();
+    private final List<Order> orders = new ArrayList<Order>();
 
-    private boolean isDistinct = false;
-    private boolean isAllColumns = false;
+    private final boolean isDistinct;
 
-    public List<Table> listTables() {
-        LinkedHashSet<Table> tables = new LinkedHashSet<Table>();
-        addReferencedTablesTo(tables);
-        return new ArrayList<Table>(tables);
+    public SelectQuery() {
+        this(false);
     }
 
-    public void addToSelection(Selectable selectable) {
-        selection.add(selectable);
+    public SelectQuery(boolean isDistinct) {
+        this.isDistinct = isDistinct;
     }
 
-    /**
-     * Syntax sugar for addToSelection(Column).
-     */
-    public void addColumn(Table table, String columname) {
-        addToSelection(table.getColumn(columname));
-    }
-
-    public void removeFromSelection(Selectable selectable) {
-        selection.remove(selectable);
-    }
-
-    /**
-     * @return a list of {@link Selectable} objects.
-     */
-    public List<Selectable> listSelection() {
-        return Collections.unmodifiableList(selection);
-    }
-
-    public boolean isDistinct() {
-        return isDistinct;
-    }
-
-    public void setDistinct(boolean distinct) {
-        isDistinct = distinct;
-    }
-
-    public boolean isAllColumns() {
-        return isAllColumns;
-    }
-
-    public void setAllColumns(boolean allColumns) {
-        isAllColumns = allColumns;
+    public ResultColumn addToSelection(Selectable selectable) {
+        ResultColumn resultColumn = new ResultColumn(selectable, AliasGenerator.generateAlias(selection.size()));
+        selection.add(resultColumn);
+        return resultColumn;
     }
 
     public void addCriteria(Criteria criteria) {
-        this.criteria.add(criteria);
+        this.criterias.add(criteria);
     }
 
-    public void removeCriteria(Criteria criteria) {
-        this.criteria.remove(criteria);
-    }
-
-    public List<Criteria> listCriteria() {
-        return Collections.unmodifiableList(criteria);
-    }
-
-    /**
-     * Syntax sugar for addCriteria(JoinCriteria)
-     */
-    public void addJoin(Table srcTable, String srcColumnname, Table destTable, String destColumnname) {
-        addCriteria(new MatchCriteria(srcTable.getColumn(srcColumnname), MatchCriteria.EQUALS, destTable.getColumn(destColumnname)));
-    }
-
-    /**
-     * Syntax sugar for addCriteria(JoinCriteria)
-     */
-    public void addJoin(Table srcTable, String srcColumnName, String operator, Table destTable, String destColumnName) {
-        addCriteria(new MatchCriteria(srcTable.getColumn(srcColumnName), operator, destTable.getColumn(destColumnName)));
-    }
-
-    public void addOrder(Order order) {
-        this.order.add(order);
-    }
-
-    /**
-     * Syntax sugar for addOrder(Order).
-     */
-    public void addOrder(Table table, String columnname, boolean ascending) {
-        addOrder(new Order(table.getColumn(columnname), ascending));
-    }
-
-    public void removeOrder(Order order) {
-        this.order.remove(order);
-    }
-
-    public List<Order> listOrder() {
-        return Collections.unmodifiableList(order);
+    public void addOrder(ResultColumn resultColumn, boolean ascending) {
+        this.orders.add(new Order(resultColumn, ascending));
     }
 
     @Override
-    public void write(Output out) {
-        out.print("SELECT");
+    public boolean isNull() {
+        return false; // no way to find out...
+    }
+
+    @Override
+    public void write(Output output) {
+        boolean nested = !output.isEmpty();
+        if (nested) {
+            output.writeln('(').indent();
+        }
+
+        output.write("SELECT");
         if (isDistinct) {
-            out.print(" DISTINCT");
+            output.write(" DISTINCT");
         }
 
-        if (isAllColumns) {
-            out.print(" *").println();
+        if (selection.isEmpty()) {
+            output.writeln(" 1");
         } else {
-            out.println();
-            appendIndentedList(out, selection, ",");
+            CollectionWriter.writeCollection(output, selection, ",", false, true);
         }
 
-        Set<Table> tables = findAllUsedTables();
-        if (!tables.isEmpty()) {
-            out.println("FROM");
-            appendIndentedList(out, tables, ",");
+        List<TableAccessor> tableAccessors = findAllUsedTableAccessors();
+        if (!tableAccessors.isEmpty()) {
+            output.write("FROM");
+            CollectionWriter.writeCollection(output, tableAccessors, ",", false, true);
         }
 
         // Add criteria
-        if (criteria.size() > 0) {
-            out.println("WHERE");
-            appendIndentedList(out, criteria, "AND");
+        if (criterias.size() > 0) {
+            output.write("WHERE");
+            CollectionWriter.writeCollection(output, criterias, " AND", false, true);
         }
 
         // Add order
-        if (order.size() > 0) {
-            out.println("ORDER BY");
-            appendIndentedList(out, order, ",");
+        if (orders.size() > 0) {
+            output.write("ORDER BY");
+            CollectionWriter.writeCollection(output, orders, ",", false, true);
+        }
+
+        if (nested) {
+            output.writeln().unindent().write(')');
         }
     }
 
-    private void appendIndentedList(Output out, Collection<? extends Outputable> things, String seperator) {
-        out.indent();
-        appendList(out, things, seperator);
-        out.unindent();
+    @Override
+    public void addReferencedTableAccessorsTo(Set<TableAccessor> tables) {
     }
 
-    /**
-     * Iterate through a Collection and append all entries (using .toString())
-     * to a StringBuffer.
-     */
-    private void appendList(Output out, Collection<? extends Outputable> collection, String seperator) {
-        Iterator<? extends Outputable> i = collection.iterator();
-        boolean hasNext = i.hasNext();
-
-        while (hasNext) {
-            Outputable curr = (Outputable) i.next();
-            hasNext = i.hasNext();
-            curr.write(out);
-            out.print(' ');
-            if (hasNext) {
-                out.print(seperator);
-            }
-            out.println();
+    private List<TableAccessor> findAllUsedTableAccessors() {
+        Set<TableAccessor> tables = new HashSet<TableAccessor>();
+        for (ResultColumn resultColumn : selection) {
+            resultColumn.addReferencedTableAccessorsTo(tables);
         }
-    }
-
-    /**
-     * Find all the tables used in the query (from columns, criteria and order).
-     *
-     * @return Set of {@link io.zatarox.squiggle.Table}s
-     */
-    private Set<Table> findAllUsedTables() {
-        Set<Table> tables = new LinkedHashSet<Table>();
-        addReferencedTablesTo(tables);
-        return tables;
-    }
-
-    public void addReferencedTablesTo(Set<Table> tables) {
-        for (Selectable s : selection) {
-            s.addReferencedTablesTo(tables);
+        for (Criteria criteria : criterias) {
+            criteria.addReferencedTableAccessorsTo(tables);
         }
-        for (Criteria c : criteria) {
-            c.addReferencedTablesTo(tables);
-        }
-        for (Order o : order) {
-            o.addReferencedTablesTo(tables);
-        }
+        List<TableAccessor> tableList = new ArrayList<TableAccessor>(tables);
+        Collections.sort(tableList, new TableAccessor.Comparator());
+        return tableList;
     }
 }

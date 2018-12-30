@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
+ * Copyright 2019 Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,14 +22,19 @@ import java.sql.SQLException;
 
 public class BooleanParameter extends Parameter {
 
-    private final boolean value;
+    private final Boolean value;
 
-    public BooleanParameter(boolean value) {
+    public BooleanParameter(Boolean value) {
         this.value = value;
     }
 
     @Override
     public void setValue(PreparedStatement statement, int index) throws SQLException {
         statement.setBoolean(index, value);
+    }
+
+    @Override
+    public boolean isNull() {
+        return value == null;
     }
 }

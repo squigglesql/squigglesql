@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,44 +15,24 @@
  */
 package io.zatarox.squiggle;
 
-import java.util.Set;
-
-import io.zatarox.squiggle.output.Output;
-import io.zatarox.squiggle.output.Outputable;
-
-/**
- * ORDER BY clause. See SelectQuery.addOrder(Order).
- */
-public class Order implements Outputable {
+class Order implements Outputable {
 
     public static final boolean ASCENDING = true;
     public static final boolean DESCENDING = false;
 
-    private final Column column;
+    private final ResultColumn column;
     private final boolean ascending;
 
-    /**
-     * @param column Column to order by.
-     * @param ascending Order.ASCENDING or Order.DESCENDING
-     */
-    public Order(Column column, boolean ascending) {
+    Order(ResultColumn column, boolean ascending) {
         this.column = column;
         this.ascending = ascending;
     }
 
-    public Projection getColumn() {
-        return column;
-    }
-
     @Override
-    public void write(Output out) {
-        column.write(out);
+    public void write(Output output) {
+        output.write(column.getAlias());
         if (!ascending) {
-            out.print(" DESC");
+            output.write(" DESC");
         }
-    }
-
-    public void addReferencedTablesTo(Set<Table> tables) {
-        column.addReferencedTablesTo(tables);
     }
 }

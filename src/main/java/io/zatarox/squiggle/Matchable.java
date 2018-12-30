@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,13 @@
  */
 package io.zatarox.squiggle;
 
-import java.util.Set;
-
-import io.zatarox.squiggle.output.Outputable;
-
 /**
  * Something that can be part of a match expression in a where clause
  */
-public interface Matchable extends Outputable {
+public interface Matchable extends Outputable, TableReference {
 
-    void addReferencedTablesTo(Set<Table> tables);
+    /**
+     * In SQL, null is matched via IS NULL operator. Prepared statements such as "value = ?" don't work.
+     */
+    boolean isNull();
 }

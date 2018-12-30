@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,40 +17,50 @@ package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.SelectQuery;
 import io.zatarox.squiggle.Table;
-
-import static org.junit.Assert.assertThat;
-import org.hamcrest.text.IsEqualIgnoringWhiteSpace;
+import io.zatarox.squiggle.TableAccessor;
+import io.zatarox.squiggle.TableColumn;
+import io.zatarox.squiggle.literal.Literal;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class SubSelectTest {
 
     @Test
     public void testSubSelect() {
         Table people = new Table("people");
-        Table taxcodes = new Table("taxcodes");
+        TableColumn firstName = people.getColumn("first_name");
+        TableColumn taxCode = people.getColumn("tax_code");
+
+        Table taxCodes = new Table("tax_codes");
+        TableColumn taxCodeId = taxCodes.getColumn("id");
+        TableColumn taxCodeValid = taxCodes.getColumn("valid");
+
+        TableAccessor p = people.getAccessor("p");
+        TableAccessor t = taxCodes.getAccessor("t");
 
         SelectQuery select = new SelectQuery();
-        select.addColumn(people, "firstname");
+
+        select.addToSelection(p.getColumn(firstName));
 
         SelectQuery subSelect = new SelectQuery();
-        subSelect.addColumn(taxcodes, "id");
-        subSelect.addCriteria(new MatchCriteria(taxcodes, "valid", MatchCriteria.EQUALS, true));
+        subSelect.addToSelection(t.getColumn(taxCodeId));
+        subSelect.addCriteria(new MatchCriteria(t.getColumn(taxCodeValid), MatchCriteria.EQUALS, Literal.of(true)));
 
-        select.addCriteria(new InCriteria(people, "taxcode", subSelect));
+        select.addCriteria(new MatchCriteria(p.getColumn(taxCode), MatchCriteria.EQUALS, subSelect));
 
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT "
-                + "    people.firstname "
-                + "FROM "
-                + "    people "
-                + "WHERE "
-                + "    people.taxcode IN ( "
-                + "        SELECT "
-                + "            taxcodes.id "
-                + "        FROM "
-                + "            taxcodes "
-                + "        WHERE "
-                + "            taxcodes.valid = true "
-                + "    )"));
+        assertEquals("SELECT\n"
+                + "    p.first_name as a\n"
+                + "FROM\n"
+                + "    people p\n"
+                + "WHERE\n"
+                + "    p.tax_code = (\n"
+                + "        SELECT\n"
+                + "            t.id as a\n"
+                + "        FROM\n"
+                + "            tax_codes t\n"
+                + "        WHERE\n"
+                + "            t.valid = true\n"
+                + "    )", select.toString());
     }
 }

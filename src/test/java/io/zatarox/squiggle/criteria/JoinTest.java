@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,75 +17,70 @@ package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.SelectQuery;
 import io.zatarox.squiggle.Table;
+import io.zatarox.squiggle.TableAccessor;
+import io.zatarox.squiggle.TableColumn;
 import org.junit.Test;
 
-import static io.zatarox.squiggle.criteria.MatchCriteria.GREATER;
-import org.hamcrest.text.IsEqualIgnoringWhiteSpace;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class JoinTest {
 
     @Test
     public void joinOnForeignKeyRelationship() {
-        Table people = new Table("people");
-        Table departments = new Table("departments");
+        Table employee = new Table("employee");
+        TableColumn employeeFirstName = employee.getColumn("first_name");
+        TableColumn employeeDepartmentId = employee.getColumn("department_id");
 
-        SelectQuery select = new SelectQuery(); // base table
+        Table department = new Table("department");
+        TableColumn departmentId = department.getColumn("id");
+        TableColumn departmentDirector = department.getColumn("director");
 
-        select.addColumn(people, "firstname");
-        select.addColumn(departments, "director");
+        TableAccessor e = employee.getAccessor("e");
+        TableAccessor d = department.getAccessor("d");
 
-        select.addJoin(people, "departmentID", departments, "id");
+        SelectQuery select = new SelectQuery();
 
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT "
-                + "    people.firstname , "
-                + "    departments.director "
-                + "FROM "
-                + "    people , "
-                + "    departments "
-                + "WHERE "
-                + "    people.departmentID = departments.id"));
+        select.addToSelection(e.getColumn(employeeFirstName));
+        select.addToSelection(d.getColumn(departmentDirector));
+
+        select.addCriteria(new MatchCriteria(
+                e.getColumn(employeeDepartmentId), MatchCriteria.EQUALS, d.getColumn(departmentId)));
+
+        assertEquals("SELECT\n"
+                + "    e.first_name as a,\n"
+                + "    d.director as b\n"
+                + "FROM\n"
+                + "    department d,\n"
+                + "    employee e\n"
+                + "WHERE\n"
+                + "    e.department_id = d.id", select.toString());
     }
 
     @Test
     public void joinOnComparison() {
-        Table invoices = new Table("invoices");
-        Table taxPaymentDate = new Table("tax_payment_date");
+        Table invoice = new Table("invoice");
+        TableColumn invoiceNumber = invoice.getColumn("number");
+        TableColumn invoiceDate = invoice.getColumn("date");
 
-        SelectQuery select = new SelectQuery(); // base table
+        Table taxPayment = new Table("tax_payment");
+        TableColumn taxPaymentDate = taxPayment.getColumn("date");
 
-        select.addColumn(invoices, "number");
+        TableAccessor i = invoice.getAccessor("i");
+        TableAccessor t = taxPayment.getAccessor("t");
 
-        select.addJoin(invoices, "date", MatchCriteria.GREATER, taxPaymentDate, "date");
+        SelectQuery select = new SelectQuery();
 
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT "
-                + "    invoices.number "
-                + "FROM "
-                + "    invoices , "
-                + "    tax_payment_date "
-                + "WHERE "
-                + "    invoices.date > tax_payment_date.date"));
-    }
+        select.addToSelection(i.getColumn(invoiceNumber));
 
-    @Test
-    public void doNotHaveToExplicitlyJoinTables() {
-        Table invoices = new Table("invoices");
-        Table taxPaymentDate = new Table("tax_payment_date");
+        select.addCriteria(new MatchCriteria(
+                i.getColumn(invoiceDate), MatchCriteria.GREATER, t.getColumn(taxPaymentDate)));
 
-        SelectQuery select = new SelectQuery(); // base table
-
-        select.addColumn(invoices, "number");
-        select.addCriteria(new MatchCriteria(invoices.getColumn("date"), GREATER, taxPaymentDate.getColumn("date")));
-
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT "
-                + "    invoices.number "
-                + "FROM "
-                + "    invoices , "
-                + "    tax_payment_date "
-                + "WHERE "
-                + "    invoices.date > tax_payment_date.date"));
+        assertEquals("SELECT\n"
+                + "    i.number as a\n"
+                + "FROM\n"
+                + "    invoice i,\n"
+                + "    tax_payment t\n"
+                + "WHERE\n"
+                + "    i.date > t.date", select.toString());
     }
 }

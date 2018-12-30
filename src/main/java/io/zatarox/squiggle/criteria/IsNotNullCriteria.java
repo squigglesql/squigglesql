@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,28 @@
  */
 package io.zatarox.squiggle.criteria;
 
-import java.util.Set;
-
 import io.zatarox.squiggle.Criteria;
 import io.zatarox.squiggle.Matchable;
-import io.zatarox.squiggle.Table;
-import io.zatarox.squiggle.output.Output;
+import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.TableAccessor;
+
+import java.util.Set;
 
 public class IsNotNullCriteria implements Criteria {
 
-    private final Matchable matched;
+    private final Matchable value;
 
-    public IsNotNullCriteria(Matchable matched) {
-        this.matched = matched;
+    public IsNotNullCriteria(Matchable value) {
+        this.value = value;
     }
 
     @Override
-    public void write(Output out) {
-        matched.write(out);
-        out.print(" IS NOT NULL");
+    public void write(Output output) {
+        output.write(value).write(" IS NOT NULL");
     }
 
     @Override
-    public void addReferencedTablesTo(Set<Table> tables) {
-        matched.addReferencedTablesTo(tables);
+    public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
+        value.addReferencedTableAccessorsTo(tableAccessors);
     }
 }

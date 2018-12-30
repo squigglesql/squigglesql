@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,37 +15,49 @@
  */
 package io.zatarox.squiggle.criteria;
 
-import io.zatarox.squiggle.Criteria;
 import io.zatarox.squiggle.SelectQuery;
 import io.zatarox.squiggle.Table;
-import io.zatarox.squiggle.WildCardColumn;
-import org.hamcrest.text.IsEqualIgnoringWhiteSpace;
-
+import io.zatarox.squiggle.TableAccessor;
+import io.zatarox.squiggle.TableColumn;
+import io.zatarox.squiggle.literal.Literal;
 import org.junit.Test;
-import static org.junit.Assert.assertThat;
+
+import static org.junit.Assert.assertEquals;
 
 public class OrAndTest {
 
     @Test
     public void orAnd() {
         Table user = new Table("user");
+        TableColumn userId = user.getColumn("id");
+        TableColumn userName = user.getColumn("name");
+        TableColumn userFeet = user.getColumn("feet");
+
+        TableAccessor u = user.getAccessor("u");
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(new WildCardColumn(user));
+        select.addToSelection(u.getColumn(userId));
 
-        Criteria name = new MatchCriteria(user, "name", MatchCriteria.LIKE, "a%");
-        Criteria id = new MatchCriteria(user, "id", MatchCriteria.EQUALS, 12345);
-        Criteria feet = new MatchCriteria(user, "feet", MatchCriteria.EQUALS, "smelly");
+        select.addCriteria(new OrCriteria(
+                new MatchCriteria(u.getColumn(userName), MatchCriteria.LIKE, Literal.of("a%")),
+                new AndCriteria(
+                        new MatchCriteria(u.getColumn(userId), MatchCriteria.EQUALS, Literal.of(12345)),
+                        new MatchCriteria(u.getColumn(userFeet), MatchCriteria.EQUALS, Literal.of("smelly"))
+                )
+        ));
 
-        select.addCriteria(new OR(name, new AND(id, feet)));
-
-        assertThat(select.toString(), IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace(
-                "SELECT "
-                + "    user.* "
-                + "FROM "
-                + "    user "
-                + "WHERE "
-                + "    ( user.name LIKE 'a%' OR ( user.id = 12345 AND user.feet = 'smelly' ) )"));
+        assertEquals("SELECT\n"
+                + "    u.id as a\n"
+                + "FROM\n"
+                + "    user u\n"
+                + "WHERE\n"
+                + "    (\n"
+                + "        u.name LIKE 'a%' OR\n"
+                + "        (\n"
+                + "            u.id = 12345 AND\n"
+                + "            u.feet = 'smelly'\n"
+                + "        )\n"
+                + "    )", select.toString());
     }
 }

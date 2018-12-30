@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2019 Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.zatarox.squiggle.literal;
+package io.zatarox.squiggle;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+/**
+ * Any object that can output itself as part of the final query should implement
+ * this interface.
+ */
+public interface Outputable {
 
-public class DateTimeLiteral extends StringLiteral {
-
-    private static final String FORMAT = "yyyy-MM-dd HH:mm:ss.S";
-
-    public DateTimeLiteral(Date literalValue) {
-        super(new SimpleDateFormat(FORMAT).format(literalValue));
-    }
+    void write(Output output);
 }

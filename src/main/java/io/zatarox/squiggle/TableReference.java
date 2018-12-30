@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2019 Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.zatarox.squiggle.literal;
+package io.zatarox.squiggle;
 
-public class BooleanLiteral extends LiteralWithSameRepresentationInJavaAndSql {
+import java.util.Set;
 
-    public static final BooleanLiteral TRUE = new BooleanLiteral(true);
-    public static final BooleanLiteral FALSE = new BooleanLiteral(false);
+public interface TableReference {
 
-    public BooleanLiteral(boolean literalValue) {
-        this(Boolean.valueOf(literalValue));
-    }
-
-    public BooleanLiteral(Boolean literalValue) {
-        super(literalValue);
-    }
+    void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors);
 }

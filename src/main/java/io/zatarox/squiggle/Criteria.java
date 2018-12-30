@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,5 @@
  */
 package io.zatarox.squiggle;
 
-import io.zatarox.squiggle.output.Outputable;
-
-import java.util.Set;
-
-public interface Criteria extends Outputable {
-
-    public void addReferencedTablesTo(Set<Table> tables);
+public interface Criteria extends Outputable, TableReference {
 }

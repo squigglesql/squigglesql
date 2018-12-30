@@ -15,27 +15,24 @@
  */
 package io.zatarox.squiggle;
 
-import io.zatarox.squiggle.output.Output;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Set;
 
-public class Parameter implements Matchable {
+public abstract class Parameter implements Matchable {
 
     @Override
-    public void write(Output out) {
-        out.print("?");
-        out.addParameter(this);
+    public void write(Output output) {
+        if (isNull()) {
+            output.write("null");
+            return;
+        }
+        output.write("?").addParameter(this);
     }
 
     @Override
-    public void addReferencedTablesTo(Set<Table> tables) {
+    public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
     }
 
-    public void setValue(PreparedStatement statement, int index) throws SQLException {
-        // This method should be abstract. However, for back compatibility reasons, we can't make the class abstract.
-        // TODO: Redefine it as an abstract method in Squiggle 4.
-        throw new RuntimeException("Can not compile the query due to presence of abstract (untyped) parameters.");
-    }
+    public abstract void setValue(PreparedStatement statement, int index) throws SQLException;
 }

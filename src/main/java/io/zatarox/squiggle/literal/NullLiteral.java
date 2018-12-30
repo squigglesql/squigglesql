@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2019 Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,22 @@
  */
 package io.zatarox.squiggle.literal;
 
-public class FloatLiteral extends LiteralWithSameRepresentationInJavaAndSql {
+import io.zatarox.squiggle.Output;
 
-    public FloatLiteral(double literalValue) {
-        super(literalValue);
+public class NullLiteral extends Literal {
+
+    static final Literal INSTANCE = new NullLiteral();
+
+    private NullLiteral() {
+    }
+
+    @Override
+    public boolean isNull() {
+        return true;
+    }
+
+    @Override
+    public void write(Output output) {
+        output.write("null");
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
+ * Copyright 2019 Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,15 @@
  */
 package io.zatarox.squiggle;
 
-import io.zatarox.squiggle.output.Output;
-import io.zatarox.squiggle.output.Outputable;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public abstract class Query implements Outputable {
+public abstract class Query {
 
     public static final String DEFAULT_INDENT = "    ";
+
+    protected abstract void write(Output output);
 
     @Override
     public String toString() {

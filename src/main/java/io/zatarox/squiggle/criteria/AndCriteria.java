@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.zatarox.squiggle.literal;
+package io.zatarox.squiggle.criteria;
 
-import io.zatarox.squiggle.Literal;
-import io.zatarox.squiggle.output.Output;
+import io.zatarox.squiggle.Criteria;
 
-public abstract class LiteralWithSameRepresentationInJavaAndSql extends Literal {
+import java.util.Collection;
 
-    private final Object literalValue;
+public class AndCriteria extends CriteriaGroup {
 
-    protected LiteralWithSameRepresentationInJavaAndSql(Object literalValue) {
-        this.literalValue = literalValue;
+    public AndCriteria(Collection<Criteria> criterias) {
+        super(criterias);
+    }
+
+    public AndCriteria(Criteria... criterias) {
+        super(criterias);
     }
 
     @Override
-    public void write(Output out) {
-        out.print(literalValue);
+    protected String getOperator() {
+        return " AND";
     }
 }

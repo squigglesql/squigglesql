@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,24 +15,24 @@
  */
 package io.zatarox.squiggle;
 
-import java.util.Set;
-
 /**
- * What can be selected from a table.
+ * Column that belongs to a table.
  */
-public abstract class Projection implements Selectable {
+public class TableColumn {
 
     private final Table table;
+    private final String name;
 
-    public Projection(Table table) {
+    TableColumn(Table table, String name) {
         this.table = table;
+        this.name = name;
     }
 
     public Table getTable() {
         return table;
     }
 
-    public void addReferencedTablesTo(Set<Table> tables) {
-        tables.add(table);
+    public String getName() {
+        return name;
     }
 }

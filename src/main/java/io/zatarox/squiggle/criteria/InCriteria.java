@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,69 +15,45 @@
  */
 package io.zatarox.squiggle.criteria;
 
-import io.zatarox.squiggle.*;
-import io.zatarox.squiggle.output.Output;
+import io.zatarox.squiggle.CollectionWriter;
+import io.zatarox.squiggle.Criteria;
+import io.zatarox.squiggle.Matchable;
+import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.TableAccessor;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
 
 public class InCriteria implements Criteria {
 
-    private final Matchable matched;
-    private final ValueSet valueSet;
+    private final Matchable value;
+    private final Collection<Matchable> options;
 
-    public InCriteria(Matchable matchable, ValueSet valueSet) {
-        this.matched = matchable;
-        this.valueSet = valueSet;
+    public InCriteria(Matchable value, Collection<Matchable> options) {
+        this.value = value;
+        this.options = options;
     }
 
-    public InCriteria(Matchable column, String... values) {
-        this.matched = column;
-        this.valueSet = new LiteralValueSet(values);
-    }
-
-    public InCriteria(Matchable column, long... values) {
-        this.matched = column;
-        this.valueSet = new LiteralValueSet(values);
-    }
-
-    public InCriteria(Matchable column, double... values) {
-        this.matched = column;
-        this.valueSet = new LiteralValueSet(values);
-    }
-
-    public InCriteria(Table table, String columnname, ValueSet valueSet) {
-        this(table.getColumn(columnname), valueSet);
-    }
-
-    public InCriteria(Table table, String columnname, String[] values) {
-        this(table.getColumn(columnname), values);
-    }
-
-    public InCriteria(Table table, String columnname, double[] values) {
-        this(table.getColumn(columnname), values);
-    }
-
-    public InCriteria(Table table, String columnname, long[] values) {
-        this(table.getColumn(columnname), values);
-    }
-
-    public Matchable getMatched() {
-        return matched;
+    public InCriteria(Matchable value, Matchable... options) {
+        this(value, Arrays.asList(options));
     }
 
     @Override
-    public void write(Output out) {
-        matched.write(out);
-        out.println(" IN (");
-        out.indent();
-        valueSet.write(out);
-        out.println();
-        out.unindent();
-        out.print(")");
+    public void write(Output output) {
+        if (options.isEmpty()) {
+            output.write("1 = 1");
+            return;
+        }
+        output.write(value).write(" IN ");
+        CollectionWriter.writeCollection(output, options, ", ", true, false);
     }
 
     @Override
-    public void addReferencedTablesTo(Set<Table> tables) {
-        matched.addReferencedTablesTo(tables);
+    public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
+        value.addReferencedTableAccessorsTo(tableAccessors);
+        for (Matchable option : options) {
+            option.addReferencedTableAccessorsTo(tableAccessors);
+        }
     }
 }

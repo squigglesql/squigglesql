@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 Joe Walnes, Guillaume Chauvet.
+ * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,9 @@
  */
 package io.zatarox.squiggle;
 
-import java.util.Set;
-
-import io.zatarox.squiggle.output.Outputable;
-
 /**
- * Something that can be returned from a select query
+ * Something that can be returned from a select query.
+ * Basically, this is any matchable element except a parameter.
  */
-public interface Selectable extends Outputable {
-
-    void addReferencedTablesTo(Set<Table> tables);
+public interface Selectable extends Matchable {
 }
