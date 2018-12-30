@@ -15,43 +15,39 @@
  */
 package io.zatarox.squiggle;
 
-import io.zatarox.squiggle.criteria.MatchCriteria;
+import io.zatarox.squiggle.literal.Literal;
 import io.zatarox.squiggle.mock.MockStatement;
 import io.zatarox.squiggle.mock.MockStatementCompiler;
 import io.zatarox.squiggle.parameter.IntegerParameter;
-import io.zatarox.squiggle.query.SelectQuery;
+import io.zatarox.squiggle.parameter.StringParameter;
+import io.zatarox.squiggle.query.InsertQuery;
 import org.junit.Test;
 
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
 
-public class StatementTest {
+public class InsertQueryTest {
 
     @Test
-    public void testStatement() throws SQLException {
+    public void testInsertQuery() throws SQLException {
         Table employee = new Table("employee");
-        TableColumn name = employee.getColumn("name");
+        TableColumn firstName = employee.getColumn("first_name");
+        TableColumn lastName = employee.getColumn("last_name");
         TableColumn age = employee.getColumn("age");
 
-        TableReference e = employee.createReference("e");
+        InsertQuery query = new InsertQuery(employee);
 
-        SelectQuery select = new SelectQuery();
+        query.addValue(firstName, new StringParameter("John"));
+        query.addValue(lastName, Literal.of("Smith"));
+        query.addValue(age, new IntegerParameter(30));
 
-        select.addToSelection(e.getColumn(name));
+        MockStatement statement = query.toStatement(new MockStatementCompiler());
 
-        select.addCriteria(new MatchCriteria(e.getColumn(age), MatchCriteria.LESS, new IntegerParameter(30)));
-
-        MockStatement statement = select.toStatement(new MockStatementCompiler());
-
-        assertEquals("SELECT\n"
-                + "    e.name as a\n"
-                + "FROM\n"
-                + "    employee e\n"
-                + "WHERE\n"
-                + "    e.age < ?", statement.getQuery());
-
-        assertEquals(1, statement.getParameters().size());
-        assertEquals(30, statement.getParameters().get(0));
+        assertEquals("INSERT INTO employee(first_name, last_name, age) "
+                + "VALUES (?, 'Smith', ?)", statement.getQuery());
+        assertEquals(2, statement.getParameters().size());
+        assertEquals("John", statement.getParameters().get(0));
+        assertEquals(30, statement.getParameters().get(1));
     }
 }

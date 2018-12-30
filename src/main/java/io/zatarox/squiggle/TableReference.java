@@ -40,7 +40,7 @@ public class TableReference implements Outputable {
 
     public TableColumnReference getColumn(TableColumn column) {
         if (column == null) {
-            throw new RuntimeException("Can not create a reference to a null column.");
+            throw new NullPointerException("Can not create a reference to a null column.");
         }
         TableColumnReference reference = columnReferenceCache.get(column);
         if (reference == null) {
