@@ -15,7 +15,10 @@
  */
 package io.zatarox.squiggle;
 
+import io.zatarox.squiggle.alias.AliasGenerator;
+import io.zatarox.squiggle.alias.Aliasable;
 import io.zatarox.squiggle.alias.Alphabet;
+import io.zatarox.squiggle.alias.PreferredAliases;
 import org.junit.Test;
 
 import static io.zatarox.squiggle.alias.AliasGenerator.generateAlphabetic;
@@ -26,7 +29,7 @@ public class AliasGeneratorTest {
     private static final Alphabet ALPHABET = new Alphabet('a', 3);
 
     @Test
-    public void uniqueAlias() {
+    public void testAlphabetic() {
         assertEquals("a", generateAlphabetic(0, ALPHABET));
         assertEquals("b", generateAlphabetic(1, ALPHABET));
         assertEquals("c", generateAlphabetic(2, ALPHABET));
@@ -43,5 +46,33 @@ public class AliasGeneratorTest {
         assertEquals("aab", generateAlphabetic(13, ALPHABET));
         assertEquals("aac", generateAlphabetic(14, ALPHABET));
         assertEquals("aba", generateAlphabetic(15, ALPHABET));
+    }
+
+    @Test
+    public void testAliasable() {
+        AliasGenerator generator = new AliasGenerator(ALPHABET);
+        assertEquals("h", generator.generateAlias(new MockAliasable("hello")));
+        assertEquals("he", generator.generateAlias(new MockAliasable("hello")));
+        assertEquals("hel", generator.generateAlias(new MockAliasable("h_ello")));
+        assertEquals("a", generator.generateAlias(new MockAliasable("hello")));
+        assertEquals("ab", generator.generateAlias(new MockAliasable("abstract")));
+        assertEquals("b", generator.generateAlias(new MockAliasable("behemoth")));
+        assertEquals("c", generator.generateAlias(new MockAliasable("hello")));
+        assertEquals("be", generator.generateAlias(new MockAliasable("behemoth")));
+        assertEquals("aa", generator.generateAlias(new MockAliasable("hello")));
+    }
+
+    private static class MockAliasable implements Aliasable {
+
+        private final String name;
+
+        MockAliasable(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public Iterable<String> getPreferredAliases() {
+            return new PreferredAliases(name);
+        }
     }
 }

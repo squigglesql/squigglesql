@@ -22,7 +22,7 @@ public class PreferredAliases implements Iterable<String> {
     private final String base;
 
     public PreferredAliases(String base) {
-        this.base = base;
+        this.base = base.replace("_", "");
     }
 
     @Override
