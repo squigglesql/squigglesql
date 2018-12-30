@@ -35,27 +35,36 @@ public class SelectQuery extends Query implements Matchable {
     private final List<Criteria> criterias = new ArrayList<Criteria>();
     private final List<Order> orders = new ArrayList<Order>();
 
-    private final boolean isDistinct;
+    private final boolean distinct;
 
     public SelectQuery() {
         this(false);
     }
 
-    public SelectQuery(boolean isDistinct) {
-        this.isDistinct = isDistinct;
+    public SelectQuery(boolean distinct) {
+        this.distinct = distinct;
     }
 
     public ResultColumn addToSelection(Selectable selectable) {
+        if (selectable == null) {
+            throw new NullPointerException("Selection can not be null.");
+        }
         ResultColumn resultColumn = new ResultColumn(selectable, AliasGenerator.generateAlias(selection.size()));
         selection.add(resultColumn);
         return resultColumn;
     }
 
     public void addCriteria(Criteria criteria) {
+        if (criteria == null) {
+            throw new NullPointerException("Criteria can not be null.");
+        }
         this.criterias.add(criteria);
     }
 
     public void addOrder(ResultColumn resultColumn, boolean ascending) {
+        if (resultColumn == null) {
+            throw new NullPointerException("Ordering column can not be null.");
+        }
         this.orders.add(new Order(resultColumn, ascending));
     }
 
@@ -67,7 +76,7 @@ public class SelectQuery extends Query implements Matchable {
         }
 
         output.write("SELECT");
-        if (isDistinct) {
+        if (distinct) {
             output.write(" DISTINCT");
         }
 
@@ -83,14 +92,12 @@ public class SelectQuery extends Query implements Matchable {
             CollectionWriter.writeCollection(output, tableReferences, ",", false, true);
         }
 
-        // Add criteria
-        if (criterias.size() > 0) {
+        if (!criterias.isEmpty()) {
             output.write("WHERE");
             CollectionWriter.writeCollection(output, criterias, " AND", false, true);
         }
 
-        // Add order
-        if (orders.size() > 0) {
+        if (!orders.isEmpty()) {
             output.write("ORDER BY");
             CollectionWriter.writeCollection(output, orders, ",", false, true);
         }
