@@ -20,30 +20,35 @@ import io.zatarox.squiggle.QueryCompiler;
 import io.zatarox.squiggle.Selectable;
 import io.zatarox.squiggle.TableReference;
 import io.zatarox.squiggle.TableReferred;
+import io.zatarox.squiggle.alias.Aliasable;
 
+import java.util.Collections;
 import java.util.Set;
 
-public class ResultColumn implements Compilable, TableReferred {
+public class ResultColumn implements Aliasable, Compilable, TableReferred {
 
     private final Selectable selectable;
-    private final String alias;
 
-    ResultColumn(Selectable selectable, String alias) {
+    ResultColumn(Selectable selectable) {
         this.selectable = selectable;
-        this.alias = alias;
-    }
-
-    public String getAlias() {
-        return alias;
     }
 
     @Override
     public void compile(QueryCompiler compiler) {
-        compiler.write(selectable).write(" as ").write(alias);
+        compiler.write(selectable);
+        String alias = compiler.getAlias(this);
+        if (alias != null) {
+            compiler.write(" as ").write(alias);
+        }
     }
 
     @Override
     public void collectTableReferences(Set<TableReference> tableReferences) {
         selectable.collectTableReferences(tableReferences);
+    }
+
+    @Override
+    public Iterable<String> getPreferredAliases() {
+        return Collections.emptyList();
     }
 }

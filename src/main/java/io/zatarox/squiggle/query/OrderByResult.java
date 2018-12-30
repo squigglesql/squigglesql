@@ -15,10 +15,12 @@
  */
 package io.zatarox.squiggle.query;
 
-import io.zatarox.squiggle.Compilable;
+import io.zatarox.squiggle.BaseOrder;
 import io.zatarox.squiggle.QueryCompiler;
 
-public class OrderByResult implements Compilable {
+import java.util.Set;
+
+public class OrderByResult implements BaseOrder {
 
     private final ResultColumn column;
     private final boolean ascending;
@@ -30,9 +32,14 @@ public class OrderByResult implements Compilable {
 
     @Override
     public void compile(QueryCompiler compiler) {
-        compiler.write(column.getAlias());
+        compiler.write(compiler.getAlias(column));
         if (!ascending) {
             compiler.write(" DESC");
         }
+    }
+
+    @Override
+    public void collectResultReferences(Set<ResultColumn> resultReferences) {
+        resultReferences.add(column);
     }
 }

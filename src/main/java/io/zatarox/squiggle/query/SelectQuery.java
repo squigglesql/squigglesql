@@ -15,7 +15,7 @@
  */
 package io.zatarox.squiggle.query;
 
-import io.zatarox.squiggle.Compilable;
+import io.zatarox.squiggle.BaseOrder;
 import io.zatarox.squiggle.Matchable;
 import io.zatarox.squiggle.Output;
 import io.zatarox.squiggle.QueryCompiler;
@@ -37,7 +37,7 @@ public class SelectQuery extends Query implements Matchable {
 
     private final List<ResultColumn> selection = new ArrayList<ResultColumn>();
     private final List<Criteria> criterias = new ArrayList<Criteria>();
-    private final List<Compilable> orders = new ArrayList<Compilable>();
+    private final List<BaseOrder> orders = new ArrayList<BaseOrder>();
 
     private final boolean distinct;
 
@@ -53,8 +53,7 @@ public class SelectQuery extends Query implements Matchable {
         if (selectable == null) {
             throw new NullPointerException("Selection can not be null.");
         }
-        ResultColumn resultColumn = new ResultColumn(selectable,
-                AliasGenerator.generateAlphabetic(selection.size(), RESULT_COLUMN_ALIAS_ALPHABET));
+        ResultColumn resultColumn = new ResultColumn(selectable);
         selection.add(resultColumn);
         return resultColumn;
     }
@@ -94,8 +93,10 @@ public class SelectQuery extends Query implements Matchable {
     @Override
     protected void compile(Output output) {
         Set<TableReference> tableReferences = findTableReferences();
+        Set<ResultColumn> resultReferences = findResultReferences();
         QueryCompiler compiler = new QueryCompiler(output,
-                AliasGenerator.generateAliases(tableReferences, TABLE_REFERENCE_ALIAS_ALPHABET));
+                AliasGenerator.generateAliases(tableReferences, TABLE_REFERENCE_ALIAS_ALPHABET),
+                AliasGenerator.generateAliases(resultReferences, RESULT_COLUMN_ALIAS_ALPHABET));
 
         compiler.write("SELECT");
         if (distinct) {
@@ -125,13 +126,21 @@ public class SelectQuery extends Query implements Matchable {
     }
 
     private Set<TableReference> findTableReferences() {
-        Set<TableReference> tables = new LinkedHashSet<TableReference>();
+        Set<TableReference> references = new LinkedHashSet<TableReference>();
         for (ResultColumn resultColumn : selection) {
-            resultColumn.collectTableReferences(tables);
+            resultColumn.collectTableReferences(references);
         }
         for (Criteria criteria : criterias) {
-            criteria.collectTableReferences(tables);
+            criteria.collectTableReferences(references);
         }
-        return tables;
+        return references;
+    }
+
+    private Set<ResultColumn> findResultReferences() {
+        Set<ResultColumn> references = new LinkedHashSet<ResultColumn>();
+        for (BaseOrder order : orders) {
+            order.collectResultReferences(references);
+        }
+        return references;
     }
 }

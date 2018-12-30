@@ -46,7 +46,7 @@ public class StatementTest {
         MockStatement statement = select.toStatement(new MockStatementCompiler());
 
         assertEquals("SELECT\n"
-                + "    e.name as a\n"
+                + "    e.name\n"
                 + "FROM\n"
                 + "    employee e\n"
                 + "WHERE\n"

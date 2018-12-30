@@ -47,8 +47,8 @@ public class WhereCriteriaTest {
         select.addCriteria(new BetweenCriteria(e.getColumn(employeeAge), Literal.of(18), Literal.of(30)));
 
         assertEquals("SELECT\n"
-                + "    e.first_name as a,\n"
-                + "    e.last_name as b\n"
+                + "    e.first_name,\n"
+                + "    e.last_name\n"
                 + "FROM\n"
                 + "    employee e\n"
                 + "WHERE\n"
@@ -97,8 +97,8 @@ public class WhereCriteriaTest {
         select.addCriteria(new BetweenCriteria(r.getColumn(riverLevel), r.getColumn(riverLowerLimit), r.getColumn(riverUpperLimit)));
 
         assertEquals("SELECT\n"
-                + "    r.name as a,\n"
-                + "    r.level as b\n"
+                + "    r.name,\n"
+                + "    r.level\n"
                 + "FROM\n"
                 + "    river r\n"
                 + "WHERE\n"

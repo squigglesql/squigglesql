@@ -38,9 +38,9 @@ public class FunctionsTest {
         select.addToSelection(new FunctionCall("tomato", Literal.of("red"), t.getColumn(column)));
 
         assertEquals("SELECT\n"
-                + "    sheep() as a,\n"
-                + "    cheese(10) as b,\n"
-                + "    tomato('red', t.column) as c\n"
+                + "    sheep(),\n"
+                + "    cheese(10),\n"
+                + "    tomato('red', t.column)\n"
                 + "FROM\n"
                 + "    table t", select.toString());
     }
@@ -64,8 +64,8 @@ public class FunctionsTest {
                 new FunctionCall("getDate"), c.getColumn(cardIssueDate), c.getColumn(cardExpiryDate)));
 
         assertEquals("SELECT\n"
-                + "    c.number as a,\n"
-                + "    c.issue as b\n"
+                + "    c.number,\n"
+                + "    c.issue\n"
                 + "FROM\n"
                 + "    credit_card c\n"
                 + "WHERE\n"
@@ -78,6 +78,6 @@ public class FunctionsTest {
         select.addToSelection(new FunctionCall("getdate"));
 
         assertEquals("SELECT\n"
-                + "    getdate() as a", select.toString());
+                + "    getdate()", select.toString());
     }
 }

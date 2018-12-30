@@ -48,7 +48,7 @@ public class OrAndTest {
         ));
 
         assertEquals("SELECT\n"
-                + "    u.id as a\n"
+                + "    u.id\n"
                 + "FROM\n"
                 + "    user u\n"
                 + "WHERE\n"

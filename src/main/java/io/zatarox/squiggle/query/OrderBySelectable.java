@@ -15,15 +15,17 @@
  */
 package io.zatarox.squiggle.query;
 
-import io.zatarox.squiggle.Compilable;
+import io.zatarox.squiggle.BaseOrder;
 import io.zatarox.squiggle.QueryCompiler;
 import io.zatarox.squiggle.Selectable;
+
+import java.util.Set;
 
 /**
  * TODO: Find a way to implement deep ordering by ResultColumn, such as:
  * SELECT e.first_name as a, e.last_name as b FROM employee e ORDER BY concat(a, b)
  */
-public class OrderBySelectable implements Compilable {
+public class OrderBySelectable implements BaseOrder {
 
     private final Selectable selectable;
     private final boolean ascending;
@@ -39,5 +41,9 @@ public class OrderBySelectable implements Compilable {
         if (!ascending) {
             compiler.write(" DESC");
         }
+    }
+
+    @Override
+    public void collectResultReferences(Set<ResultColumn> resultReferences) {
     }
 }

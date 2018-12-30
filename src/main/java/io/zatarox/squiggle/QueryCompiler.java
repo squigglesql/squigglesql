@@ -16,6 +16,7 @@
 package io.zatarox.squiggle;
 
 import io.zatarox.squiggle.parameter.Parameter;
+import io.zatarox.squiggle.query.ResultColumn;
 
 import java.util.Collections;
 import java.util.Map;
@@ -27,14 +28,21 @@ public class QueryCompiler {
 
     private final Output output;
     private final Map<TableReference, String> tableReferenceAliases;
+    private final Map<ResultColumn, String> resultColumnAliases;
 
     public QueryCompiler(Output output) {
         this(output, Collections.<TableReference, String>emptyMap());
     }
 
     public QueryCompiler(Output output, Map<TableReference, String> tableReferenceAliases) {
+        this(output, tableReferenceAliases, null);
+    }
+
+    public QueryCompiler(Output output, Map<TableReference, String> tableReferenceAliases,
+                         Map<ResultColumn, String> resultColumnAliases) {
         this.output = output;
         this.tableReferenceAliases = tableReferenceAliases;
+        this.resultColumnAliases = resultColumnAliases;
     }
 
     public Output getOutput() {
@@ -43,6 +51,10 @@ public class QueryCompiler {
 
     public String getAlias(TableReference tableReference) {
         return tableReferenceAliases.get(tableReference);
+    }
+
+    public String getAlias(ResultColumn resultColumn) {
+        return resultColumnAliases.get(resultColumn);
     }
 
     public QueryCompiler write(char c) {

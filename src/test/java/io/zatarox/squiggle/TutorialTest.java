@@ -85,9 +85,9 @@ public class TutorialTest {
         select.addCriteria(new InCriteria(w.getColumn(warehouseLocation), subSelect));
 
         assertEquals("SELECT\n"
-                + "    o.id as a,\n"
-                + "    o.total_price as b,\n"
-                + "    w.location as c\n"
+                + "    o.id,\n"
+                + "    o.total_price,\n"
+                + "    w.location\n"
                 + "FROM\n"
                 + "    order o,\n"
                 + "    warehouse w\n"
@@ -99,7 +99,7 @@ public class TutorialTest {
                 + "    w.size = 'big' AND\n"
                 + "    w.location IN ((\n"
                 + "        SELECT\n"
-                + "            o.location as a\n"
+                + "            o.location\n"
                 + "        FROM\n"
                 + "            offer o\n"
                 + "        WHERE\n"

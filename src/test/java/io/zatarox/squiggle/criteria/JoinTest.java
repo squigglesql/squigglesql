@@ -47,8 +47,8 @@ public class JoinTest {
                 e.getColumn(employeeDepartmentId), MatchCriteria.EQUALS, d.getColumn(departmentId)));
 
         assertEquals("SELECT\n"
-                + "    e.first_name as a,\n"
-                + "    d.director as b\n"
+                + "    e.first_name,\n"
+                + "    d.director\n"
                 + "FROM\n"
                 + "    employee e,\n"
                 + "    department d\n"
@@ -76,7 +76,7 @@ public class JoinTest {
                 i.getColumn(invoiceDate), MatchCriteria.GREATER, t.getColumn(taxPaymentDate)));
 
         assertEquals("SELECT\n"
-                + "    i.number as a\n"
+                + "    i.number\n"
                 + "FROM\n"
                 + "    invoice i,\n"
                 + "    tax_payment t\n"

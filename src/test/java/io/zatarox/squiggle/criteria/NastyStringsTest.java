@@ -41,7 +41,7 @@ public class NastyStringsTest {
         select.addCriteria(new MatchCriteria(e.getColumn(employeeFee), MatchCriteria.GREATER, Literal.of("I've got a quote")));
 
         assertEquals("SELECT\n"
-                + "    e.name as a\n"
+                + "    e.name\n"
                 + "FROM\n"
                 + "    employee e\n"
                 + "WHERE\n"

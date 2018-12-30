@@ -50,13 +50,13 @@ public class SubSelectTest {
         select.addCriteria(new MatchCriteria(e.getColumn(employeeTaxCode), MatchCriteria.EQUALS, subSelect));
 
         assertEquals("SELECT\n"
-                + "    e.name as a\n"
+                + "    e.name\n"
                 + "FROM\n"
                 + "    employee e\n"
                 + "WHERE\n"
                 + "    e.tax_code = (\n"
                 + "        SELECT\n"
-                + "            t.id as a\n"
+                + "            t.id\n"
                 + "        FROM\n"
                 + "            tax_code t\n"
                 + "        WHERE\n"

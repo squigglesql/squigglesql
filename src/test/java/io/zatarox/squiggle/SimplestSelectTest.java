@@ -43,13 +43,13 @@ public class SimplestSelectTest {
                 p.getColumn(employeeFirstName), p.getColumn(employeeLastName)), Order.ASCENDING);
 
         assertEquals("SELECT\n"
-                + "    e.first_name as a,\n"
-                + "    e.last_name as b,\n"
-                + "    e.age as c\n"
+                + "    e.first_name,\n"
+                + "    e.last_name,\n"
+                + "    e.age as a\n"
                 + "FROM\n"
                 + "    employee e\n"
                 + "ORDER BY\n"
-                + "    c DESC,\n"
+                + "    a DESC,\n"
                 + "    concat(e.first_name, e.last_name)", select.toString());
     }
 
@@ -67,8 +67,8 @@ public class SimplestSelectTest {
         select.addToSelection(p.getColumn(employeeLastName));
 
         assertEquals("SELECT DISTINCT\n"
-                + "    e.first_name as a,\n"
-                + "    e.last_name as b\n"
+                + "    e.first_name,\n"
+                + "    e.last_name\n"
                 + "FROM\n"
                 + "    employee e", select.toString());
     }
