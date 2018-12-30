@@ -18,15 +18,12 @@ package io.zatarox.squiggle.query;
 import io.zatarox.squiggle.Output;
 import io.zatarox.squiggle.Outputable;
 
-public class Order implements Outputable {
-
-    public static final boolean ASCENDING = true;
-    public static final boolean DESCENDING = false;
+public class OrderByResult implements Outputable {
 
     private final ResultColumn column;
     private final boolean ascending;
 
-    Order(ResultColumn column, boolean ascending) {
+    OrderByResult(ResultColumn column, boolean ascending) {
         this.column = column;
         this.ascending = ascending;
     }

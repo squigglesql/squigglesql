@@ -15,7 +15,6 @@
  */
 package io.zatarox.squiggle;
 
-import io.zatarox.squiggle.query.Order;
 import io.zatarox.squiggle.query.ResultColumn;
 import io.zatarox.squiggle.query.SelectQuery;
 import org.junit.Test;
@@ -40,6 +39,7 @@ public class SimplestSelectTest {
         ResultColumn ageResult = select.addToSelection(p.getColumn(age));
 
         select.addOrder(ageResult, Order.DESCENDING);
+        select.addOrder(new FunctionCall("concat", p.getColumn(firstName), p.getColumn(lastName)), Order.ASCENDING);
 
         assertEquals("SELECT\n"
                 + "    p.first_name as a,\n"
@@ -48,7 +48,8 @@ public class SimplestSelectTest {
                 + "FROM\n"
                 + "    people p\n"
                 + "ORDER BY\n"
-                + "    c DESC", select.toString());
+                + "    c DESC,\n"
+                + "    concat(p.first_name, p.last_name)", select.toString());
     }
 
     @Test

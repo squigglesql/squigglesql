@@ -17,6 +17,7 @@ package io.zatarox.squiggle.query;
 
 import io.zatarox.squiggle.Matchable;
 import io.zatarox.squiggle.Output;
+import io.zatarox.squiggle.Outputable;
 import io.zatarox.squiggle.Selectable;
 import io.zatarox.squiggle.TableReference;
 import io.zatarox.squiggle.criteria.Criteria;
@@ -33,7 +34,7 @@ public class SelectQuery extends Query implements Matchable {
 
     private final List<ResultColumn> selection = new ArrayList<ResultColumn>();
     private final List<Criteria> criterias = new ArrayList<Criteria>();
-    private final List<Order> orders = new ArrayList<Order>();
+    private final List<Outputable> orders = new ArrayList<Outputable>();
 
     private final boolean distinct;
 
@@ -65,7 +66,14 @@ public class SelectQuery extends Query implements Matchable {
         if (resultColumn == null) {
             throw new NullPointerException("Ordering column can not be null.");
         }
-        this.orders.add(new Order(resultColumn, ascending));
+        this.orders.add(new OrderByResult(resultColumn, ascending));
+    }
+
+    public void addOrder(Selectable selectable, boolean ascending) {
+        if (selectable == null) {
+            throw new NullPointerException("Ordering criteria can not be null.");
+        }
+        this.orders.add(new OrderBySelectable(selectable, ascending));
     }
 
     @Override
