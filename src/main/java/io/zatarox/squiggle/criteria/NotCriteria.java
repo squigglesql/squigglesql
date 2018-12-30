@@ -17,7 +17,7 @@ package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.Criteria;
 import io.zatarox.squiggle.Output;
-import io.zatarox.squiggle.TableAccessor;
+import io.zatarox.squiggle.TableReference;
 
 import java.util.Set;
 
@@ -35,7 +35,7 @@ public class NotCriteria implements Criteria {
     }
 
     @Override
-    public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
-        criteria.addReferencedTableAccessorsTo(tableAccessors);
+    public void collectTableReferences(Set<TableReference> tableReferences) {
+        criteria.collectTableReferences(tableReferences);
     }
 }

@@ -17,27 +17,7 @@ package io.zatarox.squiggle;
 
 import java.util.Set;
 
-public class ResultColumn implements Outputable, TableReferred {
+public interface TableReferred {
 
-    private final Selectable selectable;
-    private final String alias;
-
-    ResultColumn(Selectable selectable, String alias) {
-        this.selectable = selectable;
-        this.alias = alias;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
-
-    @Override
-    public void write(Output output) {
-        output.write(selectable).write(" as ").write(alias);
-    }
-
-    @Override
-    public void collectTableReferences(Set<TableReference> tableReferences) {
-        selectable.collectTableReferences(tableReferences);
-    }
+    void collectTableReferences(Set<TableReference> tableReferences);
 }

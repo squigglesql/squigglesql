@@ -20,6 +20,9 @@ public class Table {
     private final String name;
 
     public Table(String name) {
+        if (name == null || name.equals("")) {
+            throw new RuntimeException("Table name can not be empty.");
+        }
         this.name = name;
     }
 
@@ -28,10 +31,31 @@ public class Table {
     }
 
     public TableColumn getColumn(String columnName) {
+        if (columnName == null || columnName.equals("")) {
+            throw new RuntimeException("Table column name can not be empty.");
+        }
         return new TableColumn(this, columnName);
     }
 
-    public TableAccessor getAccessor(String alias) {
-        return new TableAccessor(this, alias);
+    public TableReference createReference(String alias) {
+        if (alias == null || alias.equals("")) {
+            throw new RuntimeException("Table alias can not be empty.");
+        }
+        return new TableReference(this, alias);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Table table = (Table) o;
+
+        return name.equals(table.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 }

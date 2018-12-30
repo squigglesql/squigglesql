@@ -28,7 +28,7 @@ public class SimplestSelectTest {
         TableColumn lastName = people.getColumn("last_name");
         TableColumn age = people.getColumn("age");
 
-        TableAccessor p = people.getAccessor("p");
+        TableReference p = people.createReference("p");
 
         SelectQuery select = new SelectQuery();
 
@@ -55,7 +55,7 @@ public class SimplestSelectTest {
         TableColumn lastName = people.getColumn("last_name");
         TableColumn age = people.getColumn("age");
 
-        TableAccessor p = people.getAccessor("p");
+        TableReference p = people.createReference("p");
 
         SelectQuery select = new SelectQuery(true);
 

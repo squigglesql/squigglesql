@@ -19,7 +19,7 @@ import io.zatarox.squiggle.CollectionWriter;
 import io.zatarox.squiggle.Criteria;
 import io.zatarox.squiggle.Matchable;
 import io.zatarox.squiggle.Output;
-import io.zatarox.squiggle.TableAccessor;
+import io.zatarox.squiggle.TableReference;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,10 +50,10 @@ public class InCriteria implements Criteria {
     }
 
     @Override
-    public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
-        value.addReferencedTableAccessorsTo(tableAccessors);
+    public void collectTableReferences(Set<TableReference> tableReferences) {
+        value.collectTableReferences(tableReferences);
         for (Matchable option : options) {
-            option.addReferencedTableAccessorsTo(tableAccessors);
+            option.collectTableReferences(tableReferences);
         }
     }
 }

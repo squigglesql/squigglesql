@@ -17,8 +17,8 @@ package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.SelectQuery;
 import io.zatarox.squiggle.Table;
-import io.zatarox.squiggle.TableAccessor;
 import io.zatarox.squiggle.TableColumn;
+import io.zatarox.squiggle.TableReference;
 import io.zatarox.squiggle.literal.Literal;
 import org.junit.Test;
 
@@ -36,8 +36,8 @@ public class SubSelectTest {
         TableColumn taxCodeId = taxCodes.getColumn("id");
         TableColumn taxCodeValid = taxCodes.getColumn("valid");
 
-        TableAccessor p = people.getAccessor("p");
-        TableAccessor t = taxCodes.getAccessor("t");
+        TableReference p = people.createReference("p");
+        TableReference t = taxCodes.createReference("t");
 
         SelectQuery select = new SelectQuery();
 

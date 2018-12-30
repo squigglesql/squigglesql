@@ -28,7 +28,7 @@ public class FunctionsTest {
         Table table = new Table("table");
         TableColumn column = table.getColumn("column");
 
-        TableAccessor t = table.getAccessor("t");
+        TableReference t = table.createReference("t");
 
         SelectQuery select = new SelectQuery();
 
@@ -52,7 +52,7 @@ public class FunctionsTest {
         TableColumn issueDate = cards.getColumn("issue_date");
         TableColumn expiryDate = cards.getColumn("expiry_date");
 
-        TableAccessor c = cards.getAccessor("c");
+        TableReference c = cards.createReference("c");
 
         SelectQuery select = new SelectQuery();
 

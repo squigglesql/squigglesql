@@ -49,9 +49,9 @@ public class FunctionCall implements Selectable {
     }
 
     @Override
-    public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
+    public void collectTableReferences(Set<TableReference> tableReferences) {
         for (Matchable argument : arguments) {
-            argument.addReferencedTableAccessorsTo(tableAccessors);
+            argument.collectTableReferences(tableReferences);
         }
     }
 }

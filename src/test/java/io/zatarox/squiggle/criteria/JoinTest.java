@@ -17,8 +17,8 @@ package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.SelectQuery;
 import io.zatarox.squiggle.Table;
-import io.zatarox.squiggle.TableAccessor;
 import io.zatarox.squiggle.TableColumn;
+import io.zatarox.squiggle.TableReference;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -35,8 +35,8 @@ public class JoinTest {
         TableColumn departmentId = department.getColumn("id");
         TableColumn departmentDirector = department.getColumn("director");
 
-        TableAccessor e = employee.getAccessor("e");
-        TableAccessor d = department.getAccessor("d");
+        TableReference e = employee.createReference("e");
+        TableReference d = department.createReference("d");
 
         SelectQuery select = new SelectQuery();
 
@@ -65,8 +65,8 @@ public class JoinTest {
         Table taxPayment = new Table("tax_payment");
         TableColumn taxPaymentDate = taxPayment.getColumn("date");
 
-        TableAccessor i = invoice.getAccessor("i");
-        TableAccessor t = taxPayment.getAccessor("t");
+        TableReference i = invoice.createReference("i");
+        TableReference t = taxPayment.createReference("t");
 
         SelectQuery select = new SelectQuery();
 

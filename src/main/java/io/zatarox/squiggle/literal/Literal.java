@@ -16,7 +16,7 @@
 package io.zatarox.squiggle.literal;
 
 import io.zatarox.squiggle.Selectable;
-import io.zatarox.squiggle.TableAccessor;
+import io.zatarox.squiggle.TableReference;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -24,7 +24,7 @@ import java.util.Set;
 public abstract class Literal implements Selectable {
 
     @Override
-    public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
+    public void collectTableReferences(Set<TableReference> tableReferences) {
     }
 
     public static Literal ofNull() {

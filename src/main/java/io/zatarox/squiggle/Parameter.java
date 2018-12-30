@@ -31,7 +31,7 @@ public abstract class Parameter implements Matchable {
     }
 
     @Override
-    public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
+    public void collectTableReferences(Set<TableReference> tableReferences) {
     }
 
     public abstract void setValue(PreparedStatement statement, int index) throws SQLException;

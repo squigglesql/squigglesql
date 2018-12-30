@@ -17,8 +17,8 @@ package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.SelectQuery;
 import io.zatarox.squiggle.Table;
-import io.zatarox.squiggle.TableAccessor;
 import io.zatarox.squiggle.TableColumn;
+import io.zatarox.squiggle.TableReference;
 import io.zatarox.squiggle.literal.Literal;
 import org.junit.Test;
 
@@ -35,7 +35,7 @@ public class WhereCriteriaTest {
         TableColumn department = employee.getColumn("department");
         TableColumn age = employee.getColumn("age");
 
-        TableAccessor e = employee.getAccessor("e");
+        TableReference e = employee.createReference("e");
 
         SelectQuery select = new SelectQuery();
 
@@ -64,7 +64,7 @@ public class WhereCriteriaTest {
         TableColumn name = employee.getColumn("name");
         TableColumn age = employee.getColumn("age");
 
-        TableAccessor e = employee.getAccessor("e");
+        TableReference e = employee.createReference("e");
 
         SelectQuery select = new SelectQuery();
 
@@ -87,7 +87,7 @@ public class WhereCriteriaTest {
         TableColumn lowerLimit = river.getColumn("lower_limit");
         TableColumn upperLimit = river.getColumn("upper_limit");
 
-        TableAccessor r = river.getAccessor("r");
+        TableReference r = river.createReference("r");
 
         SelectQuery select = new SelectQuery();
 

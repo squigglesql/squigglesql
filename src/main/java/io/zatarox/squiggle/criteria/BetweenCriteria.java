@@ -18,7 +18,7 @@ package io.zatarox.squiggle.criteria;
 import io.zatarox.squiggle.Criteria;
 import io.zatarox.squiggle.Matchable;
 import io.zatarox.squiggle.Output;
-import io.zatarox.squiggle.TableAccessor;
+import io.zatarox.squiggle.TableReference;
 
 import java.util.Set;
 
@@ -38,9 +38,9 @@ public class BetweenCriteria implements Criteria {
     }
 
     @Override
-    public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
-        value.addReferencedTableAccessorsTo(tableAccessors);
-        lower.addReferencedTableAccessorsTo(tableAccessors);
-        upper.addReferencedTableAccessorsTo(tableAccessors);
+    public void collectTableReferences(Set<TableReference> tableReferences) {
+        value.collectTableReferences(tableReferences);
+        lower.collectTableReferences(tableReferences);
+        upper.collectTableReferences(tableReferences);
     }
 }

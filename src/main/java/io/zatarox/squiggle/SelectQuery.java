@@ -74,10 +74,10 @@ public class SelectQuery extends Query implements Matchable {
             CollectionWriter.writeCollection(output, selection, ",", false, true);
         }
 
-        List<TableAccessor> tableAccessors = findAllUsedTableAccessors();
-        if (!tableAccessors.isEmpty()) {
+        List<TableReference> tableReferences = getTableReferences();
+        if (!tableReferences.isEmpty()) {
             output.write("FROM");
-            CollectionWriter.writeCollection(output, tableAccessors, ",", false, true);
+            CollectionWriter.writeCollection(output, tableReferences, ",", false, true);
         }
 
         // Add criteria
@@ -98,19 +98,19 @@ public class SelectQuery extends Query implements Matchable {
     }
 
     @Override
-    public void addReferencedTableAccessorsTo(Set<TableAccessor> tables) {
+    public void collectTableReferences(Set<TableReference> tables) {
     }
 
-    private List<TableAccessor> findAllUsedTableAccessors() {
-        Set<TableAccessor> tables = new HashSet<TableAccessor>();
+    private List<TableReference> getTableReferences() {
+        Set<TableReference> tables = new HashSet<TableReference>();
         for (ResultColumn resultColumn : selection) {
-            resultColumn.addReferencedTableAccessorsTo(tables);
+            resultColumn.collectTableReferences(tables);
         }
         for (Criteria criteria : criterias) {
-            criteria.addReferencedTableAccessorsTo(tables);
+            criteria.collectTableReferences(tables);
         }
-        List<TableAccessor> tableList = new ArrayList<TableAccessor>(tables);
-        Collections.sort(tableList, new TableAccessor.Comparator());
+        List<TableReference> tableList = new ArrayList<TableReference>(tables);
+        Collections.sort(tableList, new TableReference.Comparator());
         return tableList;
     }
 }

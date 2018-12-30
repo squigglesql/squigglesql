@@ -18,7 +18,7 @@ package io.zatarox.squiggle.criteria;
 import io.zatarox.squiggle.CollectionWriter;
 import io.zatarox.squiggle.Criteria;
 import io.zatarox.squiggle.Output;
-import io.zatarox.squiggle.TableAccessor;
+import io.zatarox.squiggle.TableReference;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,9 +48,9 @@ public abstract class CriteriaGroup implements Criteria {
     }
 
     @Override
-    public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
+    public void collectTableReferences(Set<TableReference> tableReferences) {
         for (Criteria criteria : criterias) {
-            criteria.addReferencedTableAccessorsTo(tableAccessors);
+            criteria.collectTableReferences(tableReferences);
         }
     }
 }

@@ -17,8 +17,8 @@ package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.SelectQuery;
 import io.zatarox.squiggle.Table;
-import io.zatarox.squiggle.TableAccessor;
 import io.zatarox.squiggle.TableColumn;
+import io.zatarox.squiggle.TableReference;
 import io.zatarox.squiggle.literal.Literal;
 import org.junit.Test;
 
@@ -33,7 +33,7 @@ public class OrAndTest {
         TableColumn userName = user.getColumn("name");
         TableColumn userFeet = user.getColumn("feet");
 
-        TableAccessor u = user.getAccessor("u");
+        TableReference u = user.createReference("u");
 
         SelectQuery select = new SelectQuery();
 

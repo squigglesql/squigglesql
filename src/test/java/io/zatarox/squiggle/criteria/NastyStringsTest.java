@@ -17,8 +17,8 @@ package io.zatarox.squiggle.criteria;
 
 import io.zatarox.squiggle.SelectQuery;
 import io.zatarox.squiggle.Table;
-import io.zatarox.squiggle.TableAccessor;
 import io.zatarox.squiggle.TableColumn;
+import io.zatarox.squiggle.TableReference;
 import io.zatarox.squiggle.literal.Literal;
 import org.junit.Test;
 
@@ -32,7 +32,7 @@ public class NastyStringsTest {
         TableColumn firstName = people.getColumn("first_name");
         TableColumn foo = people.getColumn("foo");
 
-        TableAccessor p = people.getAccessor("p");
+        TableReference p = people.createReference("p");
 
         SelectQuery select = new SelectQuery();
 

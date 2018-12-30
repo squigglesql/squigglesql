@@ -18,7 +18,7 @@ package io.zatarox.squiggle.criteria;
 import io.zatarox.squiggle.Criteria;
 import io.zatarox.squiggle.Matchable;
 import io.zatarox.squiggle.Output;
-import io.zatarox.squiggle.TableAccessor;
+import io.zatarox.squiggle.TableReference;
 
 import java.util.Set;
 
@@ -48,8 +48,8 @@ public class MatchCriteria implements Criteria {
     }
 
     @Override
-    public void addReferencedTableAccessorsTo(Set<TableAccessor> tableAccessors) {
-        left.addReferencedTableAccessorsTo(tableAccessors);
-        right.addReferencedTableAccessorsTo(tableAccessors);
+    public void collectTableReferences(Set<TableReference> tableReferences) {
+        left.collectTableReferences(tableReferences);
+        right.collectTableReferences(tableReferences);
     }
 }

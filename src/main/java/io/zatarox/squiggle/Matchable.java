@@ -18,7 +18,7 @@ package io.zatarox.squiggle;
 /**
  * Something that can be part of a match expression in a where clause
  */
-public interface Matchable extends Outputable, TableReference {
+public interface Matchable extends Outputable, TableReferred {
 
     /**
      * In SQL, null is matched via IS NULL operator. Prepared statements such as "value = ?" don't work.
