@@ -31,9 +31,4 @@ public class StringParameter extends Parameter {
     public void addValue(Parametrized builder) throws SQLException {
         builder.addString(value);
     }
-
-    @Override
-    public boolean isNull() {
-        return value == null;
-    }
 }

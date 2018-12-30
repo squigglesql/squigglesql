@@ -25,11 +25,6 @@ public class NullLiteral extends Literal {
     }
 
     @Override
-    public boolean isNull() {
-        return true;
-    }
-
-    @Override
     public void write(Output output) {
         output.write("null");
     }

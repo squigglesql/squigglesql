@@ -36,11 +36,6 @@ public class TableColumnReference implements Selectable {
     }
 
     @Override
-    public boolean isNull() {
-        return false;
-    }
-
-    @Override
     public void write(Output output) {
         output.write(tableReference.getAlias()).write('.').write(column.getName());
     }

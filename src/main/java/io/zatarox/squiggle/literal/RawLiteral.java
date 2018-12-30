@@ -29,11 +29,6 @@ public class RawLiteral extends Literal {
     }
 
     @Override
-    public boolean isNull() {
-        return false;
-    }
-
-    @Override
     public void write(Output output) {
         output.write(value.toString());
     }

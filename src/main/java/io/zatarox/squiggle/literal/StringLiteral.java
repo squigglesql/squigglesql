@@ -26,11 +26,6 @@ public class StringLiteral extends Literal {
     }
 
     @Override
-    public boolean isNull() {
-        return false;
-    }
-
-    @Override
     public void write(Output output) {
         output.write('\'').write(value.toString().replace("'", "''")).write('\'');
     }

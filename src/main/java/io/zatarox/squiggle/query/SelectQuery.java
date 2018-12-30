@@ -60,11 +60,6 @@ public class SelectQuery extends Query implements Matchable {
     }
 
     @Override
-    public boolean isNull() {
-        return false; // no way to find out...
-    }
-
-    @Override
     public void write(Output output) {
         boolean nested = !output.isEmpty();
         if (nested) {

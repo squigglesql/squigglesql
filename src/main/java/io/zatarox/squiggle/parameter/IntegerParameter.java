@@ -16,9 +16,4 @@ public class IntegerParameter extends Parameter {
     public void addValue(Parametrized builder) throws SQLException {
         builder.addInteger(value);
     }
-
-    @Override
-    public boolean isNull() {
-        return false;
-    }
 }

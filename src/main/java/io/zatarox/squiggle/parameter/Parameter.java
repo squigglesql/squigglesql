@@ -27,10 +27,6 @@ public abstract class Parameter implements Matchable {
 
     @Override
     public void write(Output output) {
-        if (isNull()) {
-            output.write("null");
-            return;
-        }
         output.write("?").addParameter(this);
     }
 

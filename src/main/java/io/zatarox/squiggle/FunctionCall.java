@@ -36,11 +36,6 @@ public class FunctionCall implements Selectable {
     }
 
     @Override
-    public boolean isNull() {
-        return false; // no way to find out...
-    }
-
-    @Override
     public void write(Output output) {
         output.write(function);
         if (arguments.isEmpty()) {

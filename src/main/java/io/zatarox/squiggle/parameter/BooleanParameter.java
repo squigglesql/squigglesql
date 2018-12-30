@@ -31,9 +31,4 @@ public class BooleanParameter extends Parameter {
     public void addValue(Parametrized builder) throws SQLException {
         builder.addBoolean(value);
     }
-
-    @Override
-    public boolean isNull() {
-        return value == null;
-    }
 }
