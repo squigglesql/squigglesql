@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2019 Joe Walnes, Guillaume Chauvet, Egor Nepomnyaschih.
+ * Copyright 2019 Egor Nepomnyaschih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,25 @@
  */
 package io.zatarox.squiggle;
 
-/**
- * Something that can be returned from a select query.
- * Basically, this is any matchable element except a parameter.
- *
- * Unfortunately, this is just a shallow type protection, not a deep one.
- * For example, you can build the following invalid SQL request at the moment:
- *
- *     SELECT digest(?, 'sha256');
- *
- * Because FunctionCall is a Selectable item accepting any Matchable item as input.
- *
- * TODO: Find a way to implement deep protection.
- */
-public interface Selectable extends Matchable {
+import java.util.Set;
+
+public class TypeCast implements Selectable {
+
+    private final Matchable value;
+    private final String type;
+
+    public TypeCast(Matchable value, String type) {
+        this.value = value;
+        this.type = type;
+    }
+
+    @Override
+    public void write(Output output) {
+        output.write(value).write("::").write(type);
+    }
+
+    @Override
+    public void collectTableReferences(Set<TableReference> tableReferences) {
+        value.collectTableReferences(tableReferences);
+    }
 }

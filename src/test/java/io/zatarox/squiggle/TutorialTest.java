@@ -55,7 +55,7 @@ public class TutorialTest {
 
         // matches
         select.addCriteria(new MatchCriteria(
-                o.getColumn(orderStatus), MatchCriteria.EQUALS, Literal.of("processed")));
+                o.getColumn(orderStatus), MatchCriteria.EQUALS, new TypeCast(Literal.of("processed"), "status")));
         select.addCriteria(new MatchCriteria(
                 o.getColumn(orderItems), MatchCriteria.LESS, Literal.of(5)));
         select.addCriteria(new InCriteria(o.getColumn(orderDelivery),
@@ -92,7 +92,7 @@ public class TutorialTest {
                 + "    order o,\n"
                 + "    warehouse w\n"
                 + "WHERE\n"
-                + "    o.status = 'processed' AND\n"
+                + "    o.status = 'processed'::status AND\n"
                 + "    o.items < 5 AND\n"
                 + "    o.delivery IN ('post', 'fedex', 'goat') AND\n"
                 + "    o.warehouse_id = w.id AND\n"
