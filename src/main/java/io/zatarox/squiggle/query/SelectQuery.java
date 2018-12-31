@@ -53,7 +53,7 @@ public class SelectQuery extends Query implements Matchable {
         if (selectable == null) {
             throw new NullPointerException("Selection can not be null.");
         }
-        ResultColumn resultColumn = new ResultColumn(selectable);
+        ResultColumn resultColumn = new ResultColumn(selectable, selection.size() + 1);
         selection.add(resultColumn);
         return resultColumn;
     }

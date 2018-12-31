@@ -28,9 +28,15 @@ import java.util.Set;
 public class ResultColumn implements Aliasable, Compilable, TableReferred {
 
     private final Selectable selectable;
+    private final int index;
 
-    ResultColumn(Selectable selectable) {
+    ResultColumn(Selectable selectable, int index) {
         this.selectable = selectable;
+        this.index = index;
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     @Override

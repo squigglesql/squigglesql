@@ -21,14 +21,14 @@ import java.sql.SQLException;
 
 public class StringParameter extends Parameter {
 
-    private final String value;
+    private final Object value;
 
-    public StringParameter(String value) {
+    public StringParameter(Object value) {
         this.value = value;
     }
 
     @Override
     public void addValue(Parametrized builder) throws SQLException {
-        builder.addString(value);
+        builder.addString(String.valueOf(value));
     }
 }
