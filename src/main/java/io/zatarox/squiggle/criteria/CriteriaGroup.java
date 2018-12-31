@@ -27,11 +27,11 @@ public abstract class CriteriaGroup implements Criteria {
 
     private final Collection<Criteria> criterias;
 
-    public CriteriaGroup(Collection<Criteria> criterias) {
+    CriteriaGroup(Collection<Criteria> criterias) {
         this.criterias = criterias;
     }
 
-    public CriteriaGroup(Criteria... criterias) {
+    CriteriaGroup(Criteria... criterias) {
         this.criterias = Arrays.asList(criterias);
     }
 

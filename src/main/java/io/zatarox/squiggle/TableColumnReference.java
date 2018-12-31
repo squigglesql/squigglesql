@@ -52,8 +52,7 @@ public class TableColumnReference implements Selectable {
 
         TableColumnReference that = (TableColumnReference) o;
 
-        if (!column.equals(that.column)) return false;
-        return tableReference.equals(that.tableReference);
+        return column.equals(that.column) && tableReference.equals(that.tableReference);
     }
 
     @Override

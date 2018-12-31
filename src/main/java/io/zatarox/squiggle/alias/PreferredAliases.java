@@ -35,7 +35,7 @@ public class PreferredAliases implements Iterable<String> {
         private final String base;
         private int nextSymbol = 0;
 
-        public Iterator(String base) {
+        Iterator(String base) {
             this.base = base;
         }
 
