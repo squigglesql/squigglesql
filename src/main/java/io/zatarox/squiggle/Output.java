@@ -34,7 +34,7 @@ public class Output {
     private final StringBuffer currentIndent = new StringBuffer();
     private boolean newLineComing;
 
-    private final List<Parameter> parameters = new ArrayList<Parameter>();
+    private final List<Parameter> parameters = new ArrayList<>();
 
     public Output(String indent) {
         this.indent = indent;

@@ -32,8 +32,8 @@ import java.util.Set;
 public class UpdateQuery extends Query {
 
     private final TableReference tableReference;
-    private final List<Assignment> assignments = new ArrayList<Assignment>();
-    private final List<Criteria> criterias = new ArrayList<Criteria>();
+    private final List<Assignment> assignments = new ArrayList<>();
+    private final List<Criteria> criterias = new ArrayList<>();
 
     public UpdateQuery(TableReference tableReference) {
         if (tableReference == null) {
@@ -82,7 +82,7 @@ public class UpdateQuery extends Query {
     }
 
     private Set<TableReference> findTableReferences() {
-        Set<TableReference> tables = new LinkedHashSet<TableReference>();
+        Set<TableReference> tables = new LinkedHashSet<>();
         for (Criteria criteria : criterias) {
             criteria.collectTableReferences(tables);
         }

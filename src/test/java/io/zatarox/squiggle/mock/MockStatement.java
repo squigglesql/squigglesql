@@ -24,7 +24,7 @@ import java.util.List;
 public class MockStatement implements StatementBuilder<MockStatement> {
 
     private final String query;
-    private final List<Object> parameters = new ArrayList<Object>();
+    private final List<Object> parameters = new ArrayList<>();
 
     MockStatement(String query) {
         this.query = query;

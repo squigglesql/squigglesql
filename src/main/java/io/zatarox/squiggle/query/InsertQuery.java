@@ -29,8 +29,8 @@ import java.util.List;
 public class InsertQuery extends Query {
 
     private final Table table;
-    private final List<TableColumn> columns = new ArrayList<TableColumn>();
-    private final List<Matchable> values = new ArrayList<Matchable>();
+    private final List<TableColumn> columns = new ArrayList<>();
+    private final List<Matchable> values = new ArrayList<>();
 
     public InsertQuery(Table table) {
         if (table == null) {

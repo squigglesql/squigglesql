@@ -35,9 +35,9 @@ public class SelectQuery extends Query implements Matchable {
 
     private static final Alphabet RESULT_COLUMN_ALIAS_ALPHABET = new Alphabet('a', 19);
 
-    private final List<ResultColumn> selection = new ArrayList<ResultColumn>();
-    private final List<Criteria> criterias = new ArrayList<Criteria>();
-    private final List<BaseOrder> orders = new ArrayList<BaseOrder>();
+    private final List<ResultColumn> selection = new ArrayList<>();
+    private final List<Criteria> criterias = new ArrayList<>();
+    private final List<BaseOrder> orders = new ArrayList<>();
 
     private final boolean distinct;
 
@@ -126,7 +126,7 @@ public class SelectQuery extends Query implements Matchable {
     }
 
     private Set<TableReference> findTableReferences() {
-        Set<TableReference> references = new LinkedHashSet<TableReference>();
+        Set<TableReference> references = new LinkedHashSet<>();
         for (ResultColumn resultColumn : selection) {
             resultColumn.collectTableReferences(references);
         }
@@ -137,7 +137,7 @@ public class SelectQuery extends Query implements Matchable {
     }
 
     private Set<ResultColumn> findResultReferences() {
-        Set<ResultColumn> references = new LinkedHashSet<ResultColumn>();
+        Set<ResultColumn> references = new LinkedHashSet<>();
         for (BaseOrder order : orders) {
             order.collectResultReferences(references);
         }

@@ -24,7 +24,7 @@ import java.util.Set;
 public class AliasGenerator {
 
     private final Alphabet alphabet;
-    private final Set<String> usedAliases = new HashSet<String>();
+    private final Set<String> usedAliases = new HashSet<>();
     private int nextAlphabeticIndex = 0;
 
     public AliasGenerator(Alphabet alphabet) {
@@ -48,7 +48,7 @@ public class AliasGenerator {
     }
 
     private <T extends Aliasable> Map<T, String> generateAliases(Collection<? extends T> collection) {
-        Map<T, String> aliases = new HashMap<T, String>();
+        Map<T, String> aliases = new HashMap<>();
         for (T item : collection) {
             aliases.put(item, generateAlias(item));
         }

@@ -25,7 +25,7 @@ public class TableReference implements Aliasable, Compilable {
 
     private final Table table;
 
-    private final Map<TableColumn, TableColumnReference> columnReferenceCache = new HashMap<TableColumn, TableColumnReference>();
+    private final Map<TableColumn, TableColumnReference> columnReferenceCache = new HashMap<>();
 
     TableReference(Table table) {
         this.table = table;

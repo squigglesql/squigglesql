@@ -31,7 +31,7 @@ public class QueryCompiler {
     private final Map<ResultColumn, String> resultColumnAliases;
 
     public QueryCompiler(Output output) {
-        this(output, Collections.<TableReference, String>emptyMap());
+        this(output, Collections.emptyMap());
     }
 
     public QueryCompiler(Output output, Map<TableReference, String> tableReferenceAliases) {
