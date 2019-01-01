@@ -30,14 +30,14 @@ public class Table {
         return name;
     }
 
-    public TableColumn getColumn(String columnName) {
+    public TableColumn get(String columnName) {
         if (columnName == null || columnName.equals("")) {
             throw new RuntimeException("Table column name can not be empty.");
         }
         return new TableColumn(this, columnName);
     }
 
-    public TableReference createReference() {
+    public TableReference refer() {
         return new TableReference(this);
     }
 

@@ -61,7 +61,7 @@ public class MockStatement implements StatementBuilder<MockStatement> {
     }
 
     @Override
-    public void addTimestamp(Timestamp value) throws SQLException {
+    public void addTimestamp(Timestamp value) {
         parameters.add(value);
     }
 }

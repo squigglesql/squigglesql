@@ -26,63 +26,63 @@ import static org.junit.Assert.assertEquals;
 public class TutorialTest {
 
     @Test
-    public void tutorial() {
+    public void testTutorial() {
         // define tables
         Table order = new Table("order");
-        TableColumn orderId = order.getColumn("id");
-        TableColumn orderTotalPrice = order.getColumn("total_price");
-        TableColumn orderStatus = order.getColumn("status");
-        TableColumn orderItems = order.getColumn("items");
-        TableColumn orderDelivery = order.getColumn("delivery");
-        TableColumn orderWarehouseId = order.getColumn("warehouse_id");
+        TableColumn orderId = order.get("id");
+        TableColumn orderTotalPrice = order.get("total_price");
+        TableColumn orderStatus = order.get("status");
+        TableColumn orderItems = order.get("items");
+        TableColumn orderDelivery = order.get("delivery");
+        TableColumn orderWarehouseId = order.get("warehouse_id");
 
         Table warehouse = new Table("warehouse");
-        TableColumn warehouseId = warehouse.getColumn("id");
-        TableColumn warehouseSize = warehouse.getColumn("size");
-        TableColumn warehouseLocation = warehouse.getColumn("location");
+        TableColumn warehouseId = warehouse.get("id");
+        TableColumn warehouseSize = warehouse.get("size");
+        TableColumn warehouseLocation = warehouse.get("location");
 
         Table offer = new Table("offer");
-        TableColumn offerLocation = offer.getColumn("location");
-        TableColumn offerValid = offer.getColumn("valid");
+        TableColumn offerLocation = offer.get("location");
+        TableColumn offerValid = offer.get("valid");
 
         // basic query
-        TableReference o = order.createReference();
+        TableReference o = order.refer();
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(o.getColumn(orderId));
-        select.addToSelection(o.getColumn(orderTotalPrice));
+        select.addToSelection(o.get(orderId));
+        select.addToSelection(o.get(orderTotalPrice));
 
         // matches
         select.addCriteria(new MatchCriteria(
-                o.getColumn(orderStatus), MatchCriteria.EQUALS, new TypeCast(Literal.of("processed"), "status")));
+                o.get(orderStatus), MatchCriteria.EQUALS, new TypeCast(Literal.of("processed"), "status")));
         select.addCriteria(new MatchCriteria(
-                o.getColumn(orderItems), MatchCriteria.LESS, Literal.of(5)));
-        select.addCriteria(new InCriteria(o.getColumn(orderDelivery),
+                o.get(orderItems), MatchCriteria.LESS, Literal.of(5)));
+        select.addCriteria(new InCriteria(o.get(orderDelivery),
                 Literal.of("post"), Literal.of("fedex"), Literal.of("goat")));
 
         // join
-        TableReference w = warehouse.createReference();
+        TableReference w = warehouse.refer();
 
         select.addCriteria(new MatchCriteria(
-                o.getColumn(orderWarehouseId), MatchCriteria.EQUALS, w.getColumn(warehouseId)));
+                o.get(orderWarehouseId), MatchCriteria.EQUALS, w.get(warehouseId)));
 
         // use joined table
-        select.addToSelection(w.getColumn(warehouseLocation));
+        select.addToSelection(w.get(warehouseLocation));
         select.addCriteria(new MatchCriteria(
-                w.getColumn(warehouseSize), MatchCriteria.EQUALS, Literal.of("big")));
+                w.get(warehouseSize), MatchCriteria.EQUALS, Literal.of("big")));
 
         // build subselect query
-        TableReference f = offer.createReference();
+        TableReference f = offer.refer();
 
         SelectQuery subSelect = new SelectQuery();
 
-        subSelect.addToSelection(f.getColumn(offerLocation));
+        subSelect.addToSelection(f.get(offerLocation));
         subSelect.addCriteria(new MatchCriteria(
-                f.getColumn(offerValid), MatchCriteria.EQUALS, Literal.of(true)));
+                f.get(offerValid), MatchCriteria.EQUALS, Literal.of(true)));
 
         // add subselect to original query
-        select.addCriteria(new InCriteria(w.getColumn(warehouseLocation), subSelect));
+        select.addCriteria(new InCriteria(w.get(warehouseLocation), subSelect));
 
         assertEquals("SELECT\n"
                 + "    o.id,\n"

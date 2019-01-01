@@ -31,16 +31,16 @@ public class UpdateQueryTest {
     @Test
     public void testUpdateQuery() throws SQLException {
         Table employee = new Table("employee");
-        TableColumn employeeId = employee.getColumn("id");
-        TableColumn employeeStatus = employee.getColumn("status");
-        TableColumn employeeStatusChangedAt = employee.getColumn("status_changed_at");
+        TableColumn employeeId = employee.get("id");
+        TableColumn employeeStatus = employee.get("status");
+        TableColumn employeeStatusChangedAt = employee.get("status_changed_at");
 
         Table session = new Table("session");
-        TableColumn sessionId = session.getColumn("id");
-        TableColumn sessionEmployeeId = session.getColumn("employee_id");
+        TableColumn sessionId = session.get("id");
+        TableColumn sessionEmployeeId = session.get("employee_id");
 
-        TableReference e = employee.createReference();
-        TableReference s = session.createReference();
+        TableReference e = employee.refer();
+        TableReference s = session.refer();
 
         UpdateQuery query = new UpdateQuery(e);
 
@@ -48,9 +48,9 @@ public class UpdateQueryTest {
         query.addValue(employeeStatusChangedAt, new FunctionCall("now"));
 
         query.addCriteria(new MatchCriteria(
-                e.getColumn(employeeId), MatchCriteria.EQUALS, s.getColumn(sessionEmployeeId)));
+                e.get(employeeId), MatchCriteria.EQUALS, s.get(sessionEmployeeId)));
         query.addCriteria(new MatchCriteria(
-                s.getColumn(sessionId), MatchCriteria.EQUALS, new StringParameter("<session_id_value>")));
+                s.get(sessionId), MatchCriteria.EQUALS, new StringParameter("<session_id_value>")));
 
         MockStatement statement = query.toStatement(new MockStatementCompiler());
 

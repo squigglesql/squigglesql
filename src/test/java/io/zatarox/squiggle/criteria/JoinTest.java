@@ -26,25 +26,25 @@ import static org.junit.Assert.assertEquals;
 public class JoinTest {
 
     @Test
-    public void joinOnForeignKeyRelationship() {
+    public void testJoinBySelection() {
         Table employee = new Table("employee");
-        TableColumn employeeFirstName = employee.getColumn("first_name");
-        TableColumn employeeDepartmentId = employee.getColumn("department_id");
+        TableColumn employeeFirstName = employee.get("first_name");
+        TableColumn employeeDepartmentId = employee.get("department_id");
 
         Table department = new Table("department");
-        TableColumn departmentId = department.getColumn("id");
-        TableColumn departmentDirector = department.getColumn("director");
+        TableColumn departmentId = department.get("id");
+        TableColumn departmentDirector = department.get("director");
 
-        TableReference e = employee.createReference();
-        TableReference d = department.createReference();
+        TableReference e = employee.refer();
+        TableReference d = department.refer();
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(e.getColumn(employeeFirstName));
-        select.addToSelection(d.getColumn(departmentDirector));
+        select.addToSelection(e.get(employeeFirstName));
+        select.addToSelection(d.get(departmentDirector));
 
         select.addCriteria(new MatchCriteria(
-                e.getColumn(employeeDepartmentId), MatchCriteria.EQUALS, d.getColumn(departmentId)));
+                e.get(employeeDepartmentId), MatchCriteria.EQUALS, d.get(departmentId)));
 
         assertEquals("SELECT\n"
                 + "    e.first_name,\n"
@@ -57,23 +57,23 @@ public class JoinTest {
     }
 
     @Test
-    public void joinOnComparison() {
+    public void testJoinByCriteria() {
         Table invoice = new Table("invoice");
-        TableColumn invoiceNumber = invoice.getColumn("number");
-        TableColumn invoiceDate = invoice.getColumn("date");
+        TableColumn invoiceNumber = invoice.get("number");
+        TableColumn invoiceDate = invoice.get("date");
 
         Table taxPayment = new Table("tax_payment");
-        TableColumn taxPaymentDate = taxPayment.getColumn("date");
+        TableColumn taxPaymentDate = taxPayment.get("date");
 
-        TableReference i = invoice.createReference();
-        TableReference t = taxPayment.createReference();
+        TableReference i = invoice.refer();
+        TableReference t = taxPayment.refer();
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(i.getColumn(invoiceNumber));
+        select.addToSelection(i.get(invoiceNumber));
 
         select.addCriteria(new MatchCriteria(
-                i.getColumn(invoiceDate), MatchCriteria.GREATER, t.getColumn(taxPaymentDate)));
+                i.get(invoiceDate), MatchCriteria.GREATER, t.get(taxPaymentDate)));
 
         assertEquals("SELECT\n"
                 + "    i.number\n"

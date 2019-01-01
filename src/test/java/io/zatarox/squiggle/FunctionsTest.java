@@ -25,17 +25,17 @@ import static org.junit.Assert.assertEquals;
 public class FunctionsTest {
 
     @Test
-    public void functions() {
+    public void testFunctions() {
         Table table = new Table("table");
-        TableColumn column = table.getColumn("column");
+        TableColumn column = table.get("column");
 
-        TableReference t = table.createReference();
+        TableReference t = table.refer();
 
         SelectQuery select = new SelectQuery();
 
         select.addToSelection(new FunctionCall("sheep"));
         select.addToSelection(new FunctionCall("cheese", Literal.of(10)));
-        select.addToSelection(new FunctionCall("tomato", Literal.of("red"), t.getColumn(column)));
+        select.addToSelection(new FunctionCall("tomato", Literal.of("red"), t.get(column)));
 
         assertEquals("SELECT\n"
                 + "    sheep(),\n"
@@ -46,22 +46,22 @@ public class FunctionsTest {
     }
 
     @Test
-    public void usingFunctionsInMatchCriteria() {
+    public void testFunctionsInCriteria() {
         Table card = new Table("credit_card");
-        TableColumn cardNumber = card.getColumn("number");
-        TableColumn cardIssue = card.getColumn("issue");
-        TableColumn cardIssueDate = card.getColumn("issue_date");
-        TableColumn cardExpiryDate = card.getColumn("expiry_date");
+        TableColumn cardNumber = card.get("number");
+        TableColumn cardIssue = card.get("issue");
+        TableColumn cardIssueDate = card.get("issue_date");
+        TableColumn cardExpiryDate = card.get("expiry_date");
 
-        TableReference c = card.createReference();
+        TableReference c = card.refer();
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(c.getColumn(cardNumber));
-        select.addToSelection(c.getColumn(cardIssue));
+        select.addToSelection(c.get(cardNumber));
+        select.addToSelection(c.get(cardIssue));
 
         select.addCriteria(new BetweenCriteria(
-                new FunctionCall("getDate"), c.getColumn(cardIssueDate), c.getColumn(cardExpiryDate)));
+                new FunctionCall("getDate"), c.get(cardIssueDate), c.get(cardExpiryDate)));
 
         assertEquals("SELECT\n"
                 + "    c.number,\n"
@@ -73,7 +73,7 @@ public class FunctionsTest {
     }
 
     @Test
-    public void selectingFunctionThatDoesNotReferToTables() {
+    public void testFunctionThatDoesNotReferToTables() {
         SelectQuery select = new SelectQuery();
         select.addToSelection(new FunctionCall("getdate"));
 

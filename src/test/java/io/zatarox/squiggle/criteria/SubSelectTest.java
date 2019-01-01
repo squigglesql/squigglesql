@@ -29,25 +29,25 @@ public class SubSelectTest {
     @Test
     public void testSubSelect() {
         Table employee = new Table("employee");
-        TableColumn employeeName = employee.getColumn("name");
-        TableColumn employeeTaxCode = employee.getColumn("tax_code");
+        TableColumn employeeName = employee.get("name");
+        TableColumn employeeTaxCode = employee.get("tax_code");
 
         Table taxCode = new Table("tax_code");
-        TableColumn taxCodeId = taxCode.getColumn("id");
-        TableColumn taxCodeValid = taxCode.getColumn("valid");
+        TableColumn taxCodeId = taxCode.get("id");
+        TableColumn taxCodeValid = taxCode.get("valid");
 
-        TableReference e = employee.createReference();
-        TableReference t = taxCode.createReference();
+        TableReference e = employee.refer();
+        TableReference t = taxCode.refer();
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(e.getColumn(employeeName));
+        select.addToSelection(e.get(employeeName));
 
         SelectQuery subSelect = new SelectQuery();
-        subSelect.addToSelection(t.getColumn(taxCodeId));
-        subSelect.addCriteria(new MatchCriteria(t.getColumn(taxCodeValid), MatchCriteria.EQUALS, Literal.of(true)));
+        subSelect.addToSelection(t.get(taxCodeId));
+        subSelect.addCriteria(new MatchCriteria(t.get(taxCodeValid), MatchCriteria.EQUALS, Literal.of(true)));
 
-        select.addCriteria(new MatchCriteria(e.getColumn(employeeTaxCode), MatchCriteria.EQUALS, subSelect));
+        select.addCriteria(new MatchCriteria(e.get(employeeTaxCode), MatchCriteria.EQUALS, subSelect));
 
         assertEquals("SELECT\n"
                 + "    e.name\n"

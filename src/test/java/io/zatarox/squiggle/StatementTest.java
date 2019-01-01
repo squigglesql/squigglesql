@@ -31,17 +31,17 @@ public class StatementTest {
     @Test
     public void testStatement() throws SQLException {
         Table employee = new Table("employee");
-        TableColumn employeeName = employee.getColumn("name");
-        TableColumn employeeAge = employee.getColumn("age");
+        TableColumn employeeName = employee.get("name");
+        TableColumn employeeAge = employee.get("age");
 
-        TableReference e = employee.createReference();
+        TableReference e = employee.refer();
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(e.getColumn(employeeName));
+        select.addToSelection(e.get(employeeName));
 
         select.addCriteria(new MatchCriteria(
-                e.getColumn(employeeAge), MatchCriteria.LESS, new IntegerParameter(30)));
+                e.get(employeeAge), MatchCriteria.LESS, new IntegerParameter(30)));
 
         MockStatement statement = select.toStatement(new MockStatementCompiler());
 

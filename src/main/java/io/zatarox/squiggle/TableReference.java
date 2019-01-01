@@ -35,7 +35,7 @@ public class TableReference implements Aliasable, Compilable {
         return table;
     }
 
-    public TableColumnReference getColumn(TableColumn column) {
+    public TableColumnReference get(TableColumn column) {
         if (column == null) {
             throw new NullPointerException("Can not create a reference to a null column.");
         }
