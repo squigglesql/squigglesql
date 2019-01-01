@@ -23,15 +23,13 @@ import java.sql.SQLException;
 
 public abstract class Query {
 
-    private static final String DEFAULT_INDENT = "    ";
-
     static final Alphabet TABLE_REFERENCE_ALIAS_ALPHABET = new Alphabet('t', 7);
 
     protected abstract void compile(Output output);
 
     @Override
     public String toString() {
-        return toString(DEFAULT_INDENT);
+        return toString(Output.DEFAULT_INDENT);
     }
 
     public String toString(String indent) {
@@ -39,7 +37,7 @@ public abstract class Query {
     }
 
     public <S> S toStatement(StatementCompiler<S> compiler) throws SQLException {
-        return compile(DEFAULT_INDENT).toStatement(compiler);
+        return compile(Output.DEFAULT_INDENT).toStatement(compiler);
     }
 
     private Output compile(String indent) {

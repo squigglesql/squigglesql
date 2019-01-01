@@ -28,6 +28,8 @@ import java.util.List;
  */
 public class Output {
 
+    public static final String DEFAULT_INDENT = "    ";
+
     private final String indent;
 
     private final StringBuffer result = new StringBuffer();
@@ -35,6 +37,10 @@ public class Output {
     private boolean newLineComing;
 
     private final List<Parameter> parameters = new ArrayList<Parameter>();
+
+    public Output() {
+        this(DEFAULT_INDENT);
+    }
 
     public Output(String indent) {
         this.indent = indent;

@@ -26,17 +26,17 @@ public abstract class CollectionWriter {
     public static void writeCollection(QueryCompiler compiler, Collection<? extends Compilable> collection,
                                        String separator, boolean brackets, boolean multiLine) {
         if (collection.isEmpty()) {
-            throw new RuntimeException("Can't write empty collection as SQL.");
+            throw new IllegalArgumentException("Can't write empty collection as SQL.");
         }
         Iterator<? extends Compilable> iterator = collection.iterator();
         Compilable compilable = iterator.next();
         if (!iterator.hasNext()) {
-            writeOpenBracket(compiler, brackets);
+            writeOpenBracket(compiler, brackets, multiLine);
             compilable.compile(compiler);
-            writeCloseBracket(compiler, brackets);
+            writeCloseBracket(compiler, brackets, multiLine);
             return;
         }
-        writeOpenBracket(compiler, brackets);
+        writeOpenBracket(compiler, brackets, multiLine);
         indent(compiler, brackets, multiLine);
         while (true) {
             compilable.compile(compiler);
@@ -47,21 +47,21 @@ public abstract class CollectionWriter {
             compilable = iterator.next();
         }
         unindent(compiler, brackets, multiLine);
-        writeCloseBracket(compiler, brackets);
+        writeCloseBracket(compiler, brackets, multiLine);
     }
 
-    private static void writeOpenBracket(QueryCompiler compiler, boolean brackets) {
+    private static void writeOpenBracket(QueryCompiler compiler, boolean brackets, boolean multiLine) {
         if (brackets) {
             compiler.write('(');
-        } else {
+        } else if (multiLine) {
             compiler.writeln().indent();
         }
     }
 
-    private static void writeCloseBracket(QueryCompiler compiler, boolean brackets) {
+    private static void writeCloseBracket(QueryCompiler compiler, boolean brackets, boolean multiLine) {
         if (brackets) {
             compiler.write(')');
-        } else {
+        } else if (multiLine) {
             compiler.writeln().unindent();
         }
     }
