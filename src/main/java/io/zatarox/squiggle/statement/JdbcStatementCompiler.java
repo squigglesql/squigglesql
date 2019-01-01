@@ -3,6 +3,7 @@ package io.zatarox.squiggle.statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 
 public class JdbcStatementCompiler implements StatementCompiler<PreparedStatement> {
@@ -55,6 +56,11 @@ public class JdbcStatementCompiler implements StatementCompiler<PreparedStatemen
         public void addString(String value) throws SQLException {
             // setNull is unnecessary https://stackoverflow.com/a/1357449/851159
             statement.setString(++lastIndex, value);
+        }
+
+        @Override
+        public void addTimestamp(Timestamp value) throws SQLException {
+            statement.setTimestamp(++lastIndex, value);
         }
     }
 }

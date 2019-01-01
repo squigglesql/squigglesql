@@ -17,6 +17,8 @@ package io.zatarox.squiggle.mock;
 
 import io.zatarox.squiggle.statement.StatementBuilder;
 
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +57,11 @@ public class MockStatement implements StatementBuilder<MockStatement> {
 
     @Override
     public void addString(String value) {
+        parameters.add(value);
+    }
+
+    @Override
+    public void addTimestamp(Timestamp value) throws SQLException {
         parameters.add(value);
     }
 }
