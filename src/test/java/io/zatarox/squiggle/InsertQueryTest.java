@@ -32,9 +32,9 @@ public class InsertQueryTest {
     @Test
     public void testInsertQuery() throws SQLException {
         Table employee = new Table("employee");
-        TableColumn employeeFirstName = employee.getColumn("first_name");
-        TableColumn employeeLastName = employee.getColumn("last_name");
-        TableColumn employeeAge = employee.getColumn("age");
+        TableColumn employeeFirstName = employee.get("first_name");
+        TableColumn employeeLastName = employee.get("last_name");
+        TableColumn employeeAge = employee.get("age");
 
         InsertQuery query = new InsertQuery(employee);
 

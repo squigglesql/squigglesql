@@ -26,21 +26,21 @@ public class SimplestSelectTest {
     @Test
     public void simpleSelect() {
         Table employee = new Table("employee");
-        TableColumn employeeFirstName = employee.getColumn("first_name");
-        TableColumn employeeLastName = employee.getColumn("last_name");
-        TableColumn employeeAge = employee.getColumn("age");
+        TableColumn employeeFirstName = employee.get("first_name");
+        TableColumn employeeLastName = employee.get("last_name");
+        TableColumn employeeAge = employee.get("age");
 
-        TableReference p = employee.createReference();
+        TableReference p = employee.refer();
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(p.getColumn(employeeFirstName));
-        select.addToSelection(p.getColumn(employeeLastName));
-        ResultColumn ageResult = select.addToSelection(p.getColumn(employeeAge));
+        select.addToSelection(p.get(employeeFirstName));
+        select.addToSelection(p.get(employeeLastName));
+        ResultColumn ageResult = select.addToSelection(p.get(employeeAge));
 
         select.addOrder(ageResult, Order.DESCENDING);
         select.addOrder(new FunctionCall("concat",
-                p.getColumn(employeeFirstName), p.getColumn(employeeLastName)), Order.ASCENDING);
+                p.get(employeeFirstName), p.get(employeeLastName)), Order.ASCENDING);
 
         assertEquals("SELECT\n"
                 + "    e.first_name,\n"
@@ -56,15 +56,15 @@ public class SimplestSelectTest {
     @Test
     public void simpleSelectDistinct() {
         Table employee = new Table("employee");
-        TableColumn employeeFirstName = employee.getColumn("first_name");
-        TableColumn employeeLastName = employee.getColumn("last_name");
+        TableColumn employeeFirstName = employee.get("first_name");
+        TableColumn employeeLastName = employee.get("last_name");
 
-        TableReference p = employee.createReference();
+        TableReference p = employee.refer();
 
         SelectQuery select = new SelectQuery(true);
 
-        select.addToSelection(p.getColumn(employeeFirstName));
-        select.addToSelection(p.getColumn(employeeLastName));
+        select.addToSelection(p.get(employeeFirstName));
+        select.addToSelection(p.get(employeeLastName));
 
         assertEquals("SELECT DISTINCT\n"
                 + "    e.first_name,\n"

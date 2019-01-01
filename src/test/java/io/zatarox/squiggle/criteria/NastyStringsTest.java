@@ -29,16 +29,16 @@ public class NastyStringsTest {
     @Test
     public void testNastyStrings() {
         Table employee = new Table("employee");
-        TableColumn employeeName = employee.getColumn("name");
-        TableColumn employeeFee = employee.getColumn("foo");
+        TableColumn employeeName = employee.get("name");
+        TableColumn employeeFee = employee.get("foo");
 
-        TableReference e = employee.createReference();
+        TableReference e = employee.refer();
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(e.getColumn(employeeName));
+        select.addToSelection(e.get(employeeName));
 
-        select.addCriteria(new MatchCriteria(e.getColumn(employeeFee), MatchCriteria.GREATER, Literal.of("I've got a quote")));
+        select.addCriteria(new MatchCriteria(e.get(employeeFee), MatchCriteria.GREATER, Literal.of("I've got a quote")));
 
         assertEquals("SELECT\n"
                 + "    e.name\n"

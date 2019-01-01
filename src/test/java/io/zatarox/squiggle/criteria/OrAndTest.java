@@ -29,21 +29,21 @@ public class OrAndTest {
     @Test
     public void orAnd() {
         Table user = new Table("user");
-        TableColumn userId = user.getColumn("id");
-        TableColumn userName = user.getColumn("name");
-        TableColumn userFeet = user.getColumn("feet");
+        TableColumn userId = user.get("id");
+        TableColumn userName = user.get("name");
+        TableColumn userFeet = user.get("feet");
 
-        TableReference u = user.createReference();
+        TableReference u = user.refer();
 
         SelectQuery select = new SelectQuery();
 
-        select.addToSelection(u.getColumn(userId));
+        select.addToSelection(u.get(userId));
 
         select.addCriteria(new OrCriteria(
-                new MatchCriteria(u.getColumn(userName), MatchCriteria.LIKE, Literal.of("a%")),
+                new MatchCriteria(u.get(userName), MatchCriteria.LIKE, Literal.of("a%")),
                 new AndCriteria(
-                        new MatchCriteria(u.getColumn(userId), MatchCriteria.EQUALS, Literal.of(12345)),
-                        new MatchCriteria(u.getColumn(userFeet), MatchCriteria.EQUALS, Literal.of("smelly"))
+                        new MatchCriteria(u.get(userId), MatchCriteria.EQUALS, Literal.of(12345)),
+                        new MatchCriteria(u.get(userFeet), MatchCriteria.EQUALS, Literal.of("smelly"))
                 )
         ));
 
