@@ -22,7 +22,7 @@ public class CollectionWriterTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testEmpty() {
-        CollectionWriter.writeCollection(compiler, Collections.<Compilable>emptyList(), ", ", false, false);
+        CollectionWriter.writeCollection(compiler, Collections.emptyList(), ", ", false, false);
     }
 
     @Test
@@ -116,7 +116,7 @@ public class CollectionWriterTest {
     }
 
     private Collection<MockCompilable> generate(int count) {
-        List<MockCompilable> result = new ArrayList<MockCompilable>(count);
+        List<MockCompilable> result = new ArrayList<>(count);
         for (int i = 1; i <= count; ++i) {
             result.add(new MockCompilable(i));
         }
