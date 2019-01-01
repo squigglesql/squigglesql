@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 public class TutorialTest {
 
     @Test
-    public void tutorial() {
+    public void testTutorial() {
         // define tables
         Table order = new Table("order");
         TableColumn orderId = order.get("id");

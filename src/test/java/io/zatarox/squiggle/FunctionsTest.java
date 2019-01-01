@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 public class FunctionsTest {
 
     @Test
-    public void functions() {
+    public void testFunctions() {
         Table table = new Table("table");
         TableColumn column = table.get("column");
 
@@ -46,7 +46,7 @@ public class FunctionsTest {
     }
 
     @Test
-    public void usingFunctionsInMatchCriteria() {
+    public void testFunctionsInCriteria() {
         Table card = new Table("credit_card");
         TableColumn cardNumber = card.get("number");
         TableColumn cardIssue = card.get("issue");
@@ -73,7 +73,7 @@ public class FunctionsTest {
     }
 
     @Test
-    public void selectingFunctionThatDoesNotReferToTables() {
+    public void testFunctionThatDoesNotReferToTables() {
         SelectQuery select = new SelectQuery();
         select.addToSelection(new FunctionCall("getdate"));
 

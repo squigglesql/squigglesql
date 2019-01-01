@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 public class OrAndTest {
 
     @Test
-    public void orAnd() {
+    public void testOrAnd() {
         Table user = new Table("user");
         TableColumn userId = user.get("id");
         TableColumn userName = user.get("name");

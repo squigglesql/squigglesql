@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 public class JoinTest {
 
     @Test
-    public void joinOnForeignKeyRelationship() {
+    public void testJoinBySelection() {
         Table employee = new Table("employee");
         TableColumn employeeFirstName = employee.get("first_name");
         TableColumn employeeDepartmentId = employee.get("department_id");
@@ -57,7 +57,7 @@ public class JoinTest {
     }
 
     @Test
-    public void joinOnComparison() {
+    public void testJoinByCriteria() {
         Table invoice = new Table("invoice");
         TableColumn invoiceNumber = invoice.get("number");
         TableColumn invoiceDate = invoice.get("date");
