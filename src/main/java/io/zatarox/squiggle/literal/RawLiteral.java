@@ -19,6 +19,7 @@ import io.zatarox.squiggle.QueryCompiler;
 
 public class RawLiteral extends Literal {
 
+    static final Literal NULL = new RawLiteral(null);
     static final Literal TRUE = new RawLiteral(true);
     static final Literal FALSE = new RawLiteral(false);
 
@@ -30,6 +31,6 @@ public class RawLiteral extends Literal {
 
     @Override
     public void compile(QueryCompiler compiler) {
-        compiler.write(value.toString());
+        compiler.write(String.valueOf(value));
     }
 }
