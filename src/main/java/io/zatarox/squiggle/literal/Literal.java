@@ -40,7 +40,7 @@ public abstract class Literal implements Selectable {
     }
 
     public static Literal ofNull() {
-        return NullLiteral.INSTANCE;
+        return RawLiteral.NULL;
     }
 
     public static Literal of(boolean value) {
@@ -48,7 +48,7 @@ public abstract class Literal implements Selectable {
     }
 
     public static Literal of(Boolean value) {
-        return value == null ? NullLiteral.INSTANCE : of(value.booleanValue());
+        return value == null ? RawLiteral.NULL : of(value.booleanValue());
     }
 
     public static Literal of(byte value) {
@@ -56,7 +56,7 @@ public abstract class Literal implements Selectable {
     }
 
     public static Literal of(Byte value) {
-        return value == null ? NullLiteral.INSTANCE : new RawLiteral(value);
+        return value == null ? RawLiteral.NULL : new RawLiteral(value);
     }
 
     public static Literal of(short value) {
@@ -64,7 +64,7 @@ public abstract class Literal implements Selectable {
     }
 
     public static Literal of(Short value) {
-        return value == null ? NullLiteral.INSTANCE : new RawLiteral(value);
+        return value == null ? RawLiteral.NULL : new RawLiteral(value);
     }
 
     public static Literal of(int value) {
@@ -72,7 +72,7 @@ public abstract class Literal implements Selectable {
     }
 
     public static Literal of(Integer value) {
-        return value == null ? NullLiteral.INSTANCE : new RawLiteral(value);
+        return value == null ? RawLiteral.NULL : new RawLiteral(value);
     }
 
     public static Literal of(long value) {
@@ -80,7 +80,7 @@ public abstract class Literal implements Selectable {
     }
 
     public static Literal of(Long value) {
-        return value == null ? NullLiteral.INSTANCE : new RawLiteral(value);
+        return value == null ? RawLiteral.NULL : new RawLiteral(value);
     }
 
     public static Literal of(float value) {
@@ -88,7 +88,7 @@ public abstract class Literal implements Selectable {
     }
 
     public static Literal of(Float value) {
-        return value == null ? NullLiteral.INSTANCE : new RawLiteral(value);
+        return value == null ? RawLiteral.NULL : new RawLiteral(value);
     }
 
     public static Literal of(double value) {
@@ -96,15 +96,15 @@ public abstract class Literal implements Selectable {
     }
 
     public static Literal of(Double value) {
-        return value == null ? NullLiteral.INSTANCE : new RawLiteral(value);
+        return value == null ? RawLiteral.NULL : new RawLiteral(value);
     }
 
     public static Literal of(BigDecimal value) {
-        return value == null ? NullLiteral.INSTANCE : new RawLiteral(value);
+        return value == null ? RawLiteral.NULL : new RawLiteral(value);
     }
 
     public static Literal of(String value) {
-        return value == null ? NullLiteral.INSTANCE : new StringLiteral(value);
+        return value == null ? RawLiteral.NULL : new StringLiteral(value);
     }
 
     public static Literal of(Instant value) {
@@ -136,7 +136,7 @@ public abstract class Literal implements Selectable {
     }
 
     public static Literal unsafe(String sql) {
-        return sql == null ? NullLiteral.INSTANCE : new RawLiteral(sql);
+        return sql == null ? RawLiteral.NULL : new RawLiteral(sql);
     }
 
     // TODO: byte[], Date/Time (with or without timezone)
