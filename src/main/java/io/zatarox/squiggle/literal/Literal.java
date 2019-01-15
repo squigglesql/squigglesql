@@ -17,8 +17,20 @@ package io.zatarox.squiggle.literal;
 
 import io.zatarox.squiggle.Selectable;
 import io.zatarox.squiggle.TableReference;
+import io.zatarox.squiggle.literal.time.DateLiteral;
+import io.zatarox.squiggle.literal.time.TimeLiteral;
+import io.zatarox.squiggle.literal.time.TimeWithTimeZoneLiteral;
+import io.zatarox.squiggle.literal.time.TimestampLiteral;
+import io.zatarox.squiggle.literal.time.TimestampWithTimeZoneLiteral;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 public abstract class Literal implements Selectable {
@@ -93,6 +105,34 @@ public abstract class Literal implements Selectable {
 
     public static Literal of(String value) {
         return value == null ? NullLiteral.INSTANCE : new StringLiteral(value);
+    }
+
+    public static Literal of(Instant value) {
+        return value == null ? NullLiteral.INSTANCE : new TimestampWithTimeZoneLiteral(value);
+    }
+
+    public static Literal of(LocalDate value) {
+        return value == null ? NullLiteral.INSTANCE : new DateLiteral(value);
+    }
+
+    public static Literal of(LocalTime value) {
+        return value == null ? NullLiteral.INSTANCE : new TimeLiteral(value);
+    }
+
+    public static Literal of(LocalDateTime value) {
+        return value == null ? NullLiteral.INSTANCE : new TimestampLiteral(value);
+    }
+
+    public static Literal of(ZonedDateTime value) {
+        return value == null ? NullLiteral.INSTANCE : new TimestampWithTimeZoneLiteral(value);
+    }
+
+    public static Literal of(OffsetDateTime value) {
+        return value == null ? NullLiteral.INSTANCE : new TimestampWithTimeZoneLiteral(value);
+    }
+
+    public static Literal of(OffsetTime value) {
+        return value == null ? NullLiteral.INSTANCE : new TimeWithTimeZoneLiteral(value);
     }
 
     public static Literal unsafe(String sql) {
