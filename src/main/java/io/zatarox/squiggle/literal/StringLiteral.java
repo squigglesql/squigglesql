@@ -15,9 +15,7 @@
  */
 package io.zatarox.squiggle.literal;
 
-import io.zatarox.squiggle.QueryCompiler;
-
-public class StringLiteral extends Literal {
+public class StringLiteral extends AbstractStringLiteral {
 
     private final Object value;
 
@@ -26,7 +24,7 @@ public class StringLiteral extends Literal {
     }
 
     @Override
-    public void compile(QueryCompiler compiler) {
-        compiler.write('\'').write(value.toString().replace("'", "''")).write('\'');
+    protected Object getValue() {
+        return value;
     }
 }
