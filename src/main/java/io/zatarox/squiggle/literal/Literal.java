@@ -108,31 +108,31 @@ public abstract class Literal implements Selectable {
     }
 
     public static Literal of(Instant value) {
-        return value == null ? NullLiteral.INSTANCE : new TimestampWithTimeZoneLiteral(value);
+        return value == null ? RawLiteral.NULL : new TimestampWithTimeZoneLiteral(value);
     }
 
     public static Literal of(LocalDate value) {
-        return value == null ? NullLiteral.INSTANCE : new DateLiteral(value);
+        return value == null ? RawLiteral.NULL : new DateLiteral(value);
     }
 
     public static Literal of(LocalTime value) {
-        return value == null ? NullLiteral.INSTANCE : new TimeLiteral(value);
+        return value == null ? RawLiteral.NULL : new TimeLiteral(value);
     }
 
     public static Literal of(LocalDateTime value) {
-        return value == null ? NullLiteral.INSTANCE : new TimestampLiteral(value);
+        return value == null ? RawLiteral.NULL : new TimestampLiteral(value);
     }
 
     public static Literal of(ZonedDateTime value) {
-        return value == null ? NullLiteral.INSTANCE : new TimestampWithTimeZoneLiteral(value);
+        return value == null ? RawLiteral.NULL : new TimestampWithTimeZoneLiteral(value);
     }
 
     public static Literal of(OffsetDateTime value) {
-        return value == null ? NullLiteral.INSTANCE : new TimestampWithTimeZoneLiteral(value);
+        return value == null ? RawLiteral.NULL : new TimestampWithTimeZoneLiteral(value);
     }
 
     public static Literal of(OffsetTime value) {
-        return value == null ? NullLiteral.INSTANCE : new TimeWithTimeZoneLiteral(value);
+        return value == null ? RawLiteral.NULL : new TimeWithTimeZoneLiteral(value);
     }
 
     public static Literal unsafe(String sql) {
