@@ -18,8 +18,7 @@ package io.zatarox.squiggle;
 import io.zatarox.squiggle.literal.Literal;
 import io.zatarox.squiggle.mock.MockStatement;
 import io.zatarox.squiggle.mock.MockStatementCompiler;
-import io.zatarox.squiggle.parameter.IntegerParameter;
-import io.zatarox.squiggle.parameter.StringParameter;
+import io.zatarox.squiggle.parameter.Parameter;
 import io.zatarox.squiggle.query.InsertQuery;
 import org.junit.Test;
 
@@ -38,9 +37,9 @@ public class InsertQueryTest {
 
         InsertQuery query = new InsertQuery(employee);
 
-        query.addValue(employeeFirstName, new StringParameter("John"));
+        query.addValue(employeeFirstName, Parameter.of("John"));
         query.addValue(employeeLastName, Literal.of("Smith"));
-        query.addValue(employeeAge, new IntegerParameter(30));
+        query.addValue(employeeAge, Parameter.of(30));
 
         MockStatement statement = query.toStatement(new MockStatementCompiler());
 

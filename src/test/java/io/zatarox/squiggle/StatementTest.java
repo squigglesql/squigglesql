@@ -18,7 +18,7 @@ package io.zatarox.squiggle;
 import io.zatarox.squiggle.criteria.MatchCriteria;
 import io.zatarox.squiggle.mock.MockStatement;
 import io.zatarox.squiggle.mock.MockStatementCompiler;
-import io.zatarox.squiggle.parameter.IntegerParameter;
+import io.zatarox.squiggle.parameter.Parameter;
 import io.zatarox.squiggle.query.SelectQuery;
 import org.junit.Test;
 
@@ -41,7 +41,7 @@ public class StatementTest {
         select.addToSelection(e.get(employeeName));
 
         select.addCriteria(new MatchCriteria(
-                e.get(employeeAge), MatchCriteria.LESS, new IntegerParameter(30)));
+                e.get(employeeAge), MatchCriteria.LESS, Parameter.of(30)));
 
         MockStatement statement = select.toStatement(new MockStatementCompiler());
 

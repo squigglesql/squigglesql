@@ -19,16 +19,16 @@ import io.zatarox.squiggle.statement.Parametrized;
 
 import java.sql.SQLException;
 
-class StringParameter extends Parameter {
+class ByteParameter extends Parameter {
 
-    private final Object value;
+    private final byte value;
 
-    StringParameter(Object value) {
+    ByteParameter(byte value) {
         this.value = value;
     }
 
     @Override
     public void addValue(Parametrized builder) throws SQLException {
-        builder.addString(value == null ? null : value.toString());
+        builder.addByte(value);
     }
 }

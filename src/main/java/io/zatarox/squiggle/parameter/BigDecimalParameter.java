@@ -17,18 +17,19 @@ package io.zatarox.squiggle.parameter;
 
 import io.zatarox.squiggle.statement.Parametrized;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 
-class StringParameter extends Parameter {
+class BigDecimalParameter extends Parameter {
 
-    private final Object value;
+    private final BigDecimal value;
 
-    StringParameter(Object value) {
+    BigDecimalParameter(BigDecimal value) {
         this.value = value;
     }
 
     @Override
     public void addValue(Parametrized builder) throws SQLException {
-        builder.addString(value == null ? null : value.toString());
+        builder.addBigDecimal(value);
     }
 }

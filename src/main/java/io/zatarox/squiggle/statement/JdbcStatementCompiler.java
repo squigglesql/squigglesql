@@ -1,10 +1,14 @@
 package io.zatarox.squiggle.statement;
 
+import java.math.BigDecimal;
+import java.sql.Array;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.sql.Timestamp;
-import java.sql.Types;
+import java.util.Calendar;
 
 public class JdbcStatementCompiler implements StatementCompiler<PreparedStatement> {
 
@@ -35,32 +39,79 @@ public class JdbcStatementCompiler implements StatementCompiler<PreparedStatemen
         }
 
         @Override
-        public void addBoolean(Boolean value) throws SQLException {
-            if (value == null) {
-                statement.setNull(++lastIndex, Types.BOOLEAN);
-            } else {
-                statement.setBoolean(++lastIndex, value);
-            }
+        public void addNull(int sqlType) throws SQLException {
+            statement.setNull(++lastIndex, sqlType);
         }
 
         @Override
-        public void addInteger(Integer value) throws SQLException {
-            if (value == null) {
-                statement.setNull(++lastIndex, Types.INTEGER);
-            } else {
-                statement.setInt(++lastIndex, value);
-            }
+        public void addBoolean(boolean value) throws SQLException {
+            statement.setBoolean(++lastIndex, value);
+        }
+
+        @Override
+        public void addByte(byte value) throws SQLException {
+            statement.setByte(++lastIndex, value);
+        }
+
+        @Override
+        public void addShort(short value) throws SQLException {
+            statement.setShort(++lastIndex, value);
+        }
+
+        @Override
+        public void addInteger(int value) throws SQLException {
+            statement.setInt(++lastIndex, value);
+        }
+
+        @Override
+        public void addLong(long value) throws SQLException {
+            statement.setLong(++lastIndex, value);
+        }
+
+        @Override
+        public void addFloat(float value) throws SQLException {
+            statement.setFloat(++lastIndex, value);
+        }
+
+        @Override
+        public void addDouble(double value) throws SQLException {
+            statement.setDouble(++lastIndex, value);
+        }
+
+        // setNull for the following methods is unnecessary https://stackoverflow.com/a/1357449/851159
+        @Override
+        public void addBigDecimal(BigDecimal value) throws SQLException {
+            statement.setBigDecimal(++lastIndex, value);
         }
 
         @Override
         public void addString(String value) throws SQLException {
-            // setNull is unnecessary https://stackoverflow.com/a/1357449/851159
             statement.setString(++lastIndex, value);
         }
 
         @Override
-        public void addTimestamp(Timestamp value) throws SQLException {
-            statement.setTimestamp(++lastIndex, value);
+        public void addTimestamp(Timestamp value, Calendar calendar) throws SQLException {
+            statement.setTimestamp(++lastIndex, value, calendar);
+        }
+
+        @Override
+        public void addTime(Time value, Calendar calendar) throws SQLException {
+            statement.setTime(++lastIndex, value, calendar);
+        }
+
+        @Override
+        public void addDate(Date value, Calendar calendar) throws SQLException {
+            statement.setDate(++lastIndex, value, calendar);
+        }
+
+        @Override
+        public void addArray(Array value) throws SQLException {
+            statement.setArray(++lastIndex, value);
+        }
+
+        @Override
+        public void addBytes(byte[] value) throws SQLException {
+            statement.setBytes(++lastIndex, value);
         }
     }
 }

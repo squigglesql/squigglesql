@@ -13,22 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.zatarox.squiggle.parameter;
+package io.zatarox.squiggle.mock;
 
-import io.zatarox.squiggle.statement.Parametrized;
+import java.util.Calendar;
 
-import java.sql.SQLException;
-
-class StringParameter extends Parameter {
+public class MockWithCalendar {
 
     private final Object value;
+    private final Calendar calendar;
 
-    StringParameter(Object value) {
+    public MockWithCalendar(Object value, Calendar calendar) {
         this.value = value;
+        this.calendar = calendar;
     }
 
-    @Override
-    public void addValue(Parametrized builder) throws SQLException {
-        builder.addString(value == null ? null : value.toString());
+    public Object getValue() {
+        return value;
+    }
+
+    public Calendar getCalendar() {
+        return calendar;
     }
 }

@@ -19,16 +19,16 @@ import io.zatarox.squiggle.statement.Parametrized;
 
 import java.sql.SQLException;
 
-class StringParameter extends Parameter {
+class LongParameter extends Parameter {
 
-    private final Object value;
+    private final long value;
 
-    StringParameter(Object value) {
+    LongParameter(long value) {
         this.value = value;
     }
 
     @Override
     public void addValue(Parametrized builder) throws SQLException {
-        builder.addString(value == null ? null : value.toString());
+        builder.addLong(value);
     }
 }
