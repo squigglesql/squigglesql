@@ -18,17 +18,21 @@ package io.zatarox.squiggle.parameter;
 import io.zatarox.squiggle.statement.Parametrized;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
-class StringParameter extends Parameter {
+class TimestampParameter extends Parameter {
 
-    private final Object value;
+    private final Timestamp value;
+    private final Calendar calendar;
 
-    StringParameter(Object value) {
+    TimestampParameter(Timestamp value, Calendar calendar) {
         this.value = value;
+        this.calendar = calendar;
     }
 
     @Override
     public void addValue(Parametrized builder) throws SQLException {
-        builder.addString(value == null ? null : value.toString());
+        builder.addTimestamp(value, calendar);
     }
 }

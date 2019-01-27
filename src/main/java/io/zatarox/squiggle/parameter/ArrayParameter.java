@@ -17,18 +17,19 @@ package io.zatarox.squiggle.parameter;
 
 import io.zatarox.squiggle.statement.Parametrized;
 
+import java.sql.Array;
 import java.sql.SQLException;
 
-class StringParameter extends Parameter {
+class ArrayParameter extends Parameter {
 
-    private final Object value;
+    private final Array value;
 
-    StringParameter(Object value) {
+    ArrayParameter(Array value) {
         this.value = value;
     }
 
     @Override
     public void addValue(Parametrized builder) throws SQLException {
-        builder.addString(value == null ? null : value.toString());
+        builder.addArray(value);
     }
 }

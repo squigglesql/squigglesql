@@ -13,22 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.zatarox.squiggle.parameter;
+package io.zatarox.squiggle.mock;
 
-import io.zatarox.squiggle.statement.Parametrized;
+public class MockNull {
 
-import java.sql.SQLException;
+    private final int sqlType;
 
-class StringParameter extends Parameter {
-
-    private final Object value;
-
-    StringParameter(Object value) {
-        this.value = value;
+    public MockNull(int sqlType) {
+        this.sqlType = sqlType;
     }
 
-    @Override
-    public void addValue(Parametrized builder) throws SQLException {
-        builder.addString(value == null ? null : value.toString());
+    public int getSqlType() {
+        return sqlType;
     }
 }

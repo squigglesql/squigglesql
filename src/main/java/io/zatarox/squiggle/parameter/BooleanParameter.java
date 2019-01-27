@@ -19,11 +19,14 @@ import io.zatarox.squiggle.statement.Parametrized;
 
 import java.sql.SQLException;
 
-public class BooleanParameter extends Parameter {
+class BooleanParameter extends Parameter {
 
-    private final Boolean value;
+    public static final Parameter TRUE = new BooleanParameter(true);
+    public static final Parameter FALSE = new BooleanParameter(false);
 
-    public BooleanParameter(Boolean value) {
+    private final boolean value;
+
+    BooleanParameter(Boolean value) {
         this.value = value;
     }
 

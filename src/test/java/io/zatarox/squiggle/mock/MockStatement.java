@@ -17,9 +17,14 @@ package io.zatarox.squiggle.mock;
 
 import io.zatarox.squiggle.statement.StatementBuilder;
 
+import java.math.BigDecimal;
+import java.sql.Array;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 // Builder for itself...
@@ -46,22 +51,77 @@ public class MockStatement implements StatementBuilder<MockStatement> {
     }
 
     @Override
-    public void addBoolean(Boolean value) {
+    public void addNull(int sqlType) throws SQLException {
+        parameters.add(new MockNull(sqlType));
+    }
+
+    @Override
+    public void addBoolean(boolean value) throws SQLException {
         parameters.add(value);
     }
 
     @Override
-    public void addInteger(Integer value) {
+    public void addByte(byte value) throws SQLException {
         parameters.add(value);
     }
 
     @Override
-    public void addString(String value) {
+    public void addShort(short value) throws SQLException {
         parameters.add(value);
     }
 
     @Override
-    public void addTimestamp(Timestamp value) {
+    public void addInteger(int value) throws SQLException {
+        parameters.add(value);
+    }
+
+    @Override
+    public void addLong(long value) throws SQLException {
+        parameters.add(value);
+    }
+
+    @Override
+    public void addFloat(float value) throws SQLException {
+        parameters.add(value);
+    }
+
+    @Override
+    public void addDouble(double value) throws SQLException {
+        parameters.add(value);
+    }
+
+    @Override
+    public void addBigDecimal(BigDecimal value) throws SQLException {
+        parameters.add(value);
+    }
+
+    @Override
+    public void addString(String value) throws SQLException {
+        parameters.add(value);
+    }
+
+    @Override
+    public void addTimestamp(Timestamp value, Calendar calendar) throws SQLException {
+        parameters.add(new MockWithCalendar(value, calendar));
+    }
+
+    @Override
+    public void addTime(Time value, Calendar calendar) throws SQLException {
+        parameters.add(new MockWithCalendar(value, calendar));
+    }
+
+    @Override
+    public void addDate(Date value, Calendar calendar) throws SQLException {
+        parameters.add(new MockWithCalendar(value, calendar));
+    }
+
+    @Override
+    public void addArray(Array value) throws SQLException {
+        parameters.add(value);
+    }
+
+    @Override
+    public void addBytes(byte[] value) throws SQLException {
         parameters.add(value);
     }
 }

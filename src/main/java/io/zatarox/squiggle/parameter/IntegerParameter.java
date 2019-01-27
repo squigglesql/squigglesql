@@ -19,11 +19,11 @@ import io.zatarox.squiggle.statement.Parametrized;
 
 import java.sql.SQLException;
 
-public class IntegerParameter extends Parameter {
+class IntegerParameter extends Parameter {
 
-    private final Integer value;
+    private final int value;
 
-    public IntegerParameter(Integer value) {
+    IntegerParameter(int value) {
         this.value = value;
     }
 

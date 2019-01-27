@@ -18,7 +18,7 @@ package io.zatarox.squiggle;
 import io.zatarox.squiggle.criteria.MatchCriteria;
 import io.zatarox.squiggle.mock.MockStatement;
 import io.zatarox.squiggle.mock.MockStatementCompiler;
-import io.zatarox.squiggle.parameter.StringParameter;
+import io.zatarox.squiggle.parameter.Parameter;
 import io.zatarox.squiggle.query.UpdateQuery;
 import org.junit.Test;
 
@@ -44,13 +44,13 @@ public class UpdateQueryTest {
 
         UpdateQuery query = new UpdateQuery(e);
 
-        query.addValue(employeeStatus, new StringParameter("BLOCKED"));
+        query.addValue(employeeStatus, Parameter.of("BLOCKED"));
         query.addValue(employeeStatusChangedAt, new FunctionCall("now"));
 
         query.addCriteria(new MatchCriteria(
                 e.get(employeeId), MatchCriteria.EQUALS, s.get(sessionEmployeeId)));
         query.addCriteria(new MatchCriteria(
-                s.get(sessionId), MatchCriteria.EQUALS, new StringParameter("<session_id_value>")));
+                s.get(sessionId), MatchCriteria.EQUALS, Parameter.of("<session_id_value>")));
 
         MockStatement statement = query.toStatement(new MockStatementCompiler());
 
