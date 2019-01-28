@@ -20,6 +20,7 @@ import io.zatarox.squiggle.query.InsertQuery;
 import io.zatarox.squiggle.query.ResultColumn;
 import io.zatarox.squiggle.query.SelectQuery;
 import io.zatarox.squiggle.statement.JdbcStatementCompiler;
+import io.zatarox.squiggle.util.SquiggleUtils;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -31,6 +32,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -58,6 +67,14 @@ public class ParameterTest {
     private static final Object[] STRING_ARRAY = new Object[]{"a", "b", "c"};
     private static final byte[] BINARY = new byte[]{60, 40, -55, 22, 127, -128, 0, 33};
 
+    private static final Instant INSTANT = Instant.parse("2018-01-02T03:04:05.006Z");
+    private static final LocalDate LOCAL_DATE = LocalDate.of(2018, 1, 2);
+    private static final LocalTime LOCAL_TIME = LocalTime.of(3, 4, 5, 6000000);
+    private static final LocalDateTime LOCAL_DATE_TIME =
+            LocalDateTime.of(2018, 1, 2, 3, 4, 5, 6000000);
+    private static final ZonedDateTime ZONED_DATE_TIME = ZonedDateTime.of(LOCAL_DATE_TIME, ZoneId.of("America/Vancouver"));
+    private static final OffsetDateTime OFFSET_DATE_TIME = OffsetDateTime.of(LOCAL_DATE_TIME, ZoneOffset.ofHours(-8));
+
     private static final Table TABLE = new Table("test_table");
     private static final TableColumn BOOLEAN_COLUMN = TABLE.get("boolean_c");
     private static final TableColumn BYTE_COLUMN = TABLE.get("byte_c");
@@ -76,6 +93,13 @@ public class ParameterTest {
     private static final TableColumn INT_ARRAY_COLUMN = TABLE.get("int_array_c");
     private static final TableColumn STRING_ARRAY_COLUMN = TABLE.get("string_array_c");
     private static final TableColumn BINARY_COLUMN = TABLE.get("binary_c");
+
+    private static final TableColumn INSTANT_COLUMN = TABLE.get("instant_c");
+    private static final TableColumn LOCAL_DATE_COLUMN = TABLE.get("local_date_c");
+    private static final TableColumn LOCAL_TIME_COLUMN = TABLE.get("local_time_c");
+    private static final TableColumn LOCAL_DATE_TIME_COLUMN = TABLE.get("local_date_time_c");
+    private static final TableColumn ZONED_DATE_TIME_COLUMN = TABLE.get("zoned_date_time_c");
+    private static final TableColumn OFFSET_DATE_TIME_COLUMN = TABLE.get("offset_date_time_c");
 
     @Test
     public void testRegularNotNull() throws SQLException {
@@ -287,6 +311,76 @@ public class ParameterTest {
         });
     }
 
+    @Test
+    public void testJava8TimeNotNull() throws SQLException {
+        withJava8TimeTable(connection -> {
+            InsertQuery insert = new InsertQuery(TABLE);
+            insert.addValue(INSTANT_COLUMN, Parameter.of(INSTANT));
+            insert.addValue(LOCAL_DATE_COLUMN, Parameter.of(LOCAL_DATE));
+            insert.addValue(LOCAL_TIME_COLUMN, Parameter.of(LOCAL_TIME));
+            insert.addValue(LOCAL_DATE_TIME_COLUMN, Parameter.of(LOCAL_DATE_TIME));
+            insert.addValue(ZONED_DATE_TIME_COLUMN, Parameter.of(ZONED_DATE_TIME));
+            insert.addValue(OFFSET_DATE_TIME_COLUMN, Parameter.of(OFFSET_DATE_TIME));
+            insert.toStatement(new JdbcStatementCompiler(connection)).executeUpdate();
+
+            TableReference e = TABLE.refer();
+            SelectQuery select = new SelectQuery();
+            ResultColumn instantResult = select.addToSelection(e.get(INSTANT_COLUMN));
+            ResultColumn localDateResult = select.addToSelection(e.get(LOCAL_DATE_COLUMN));
+            ResultColumn localTimeResult = select.addToSelection(e.get(LOCAL_TIME_COLUMN));
+            ResultColumn localDateTimeResult = select.addToSelection(e.get(LOCAL_DATE_TIME_COLUMN));
+            ResultColumn zonedDateTimeResult = select.addToSelection(e.get(ZONED_DATE_TIME_COLUMN));
+            ResultColumn offsetDateTimeResult = select.addToSelection(e.get(OFFSET_DATE_TIME_COLUMN));
+            ResultSet rs = select.toStatement(new JdbcStatementCompiler(connection)).executeQuery();
+
+            assertEquals(true, rs.next());
+            assertEquals(INSTANT, rs.getTimestamp(instantResult.getIndex()).toInstant());
+            assertEquals(LOCAL_DATE, rs.getDate(localDateResult.getIndex()).toLocalDate());
+            assertEquals(LOCAL_TIME, SquiggleUtils.deserialize(rs.getTime(localTimeResult.getIndex())));
+            assertEquals(LOCAL_DATE_TIME, rs.getTimestamp(localDateTimeResult.getIndex()).toLocalDateTime());
+            assertEquals(Instant.from(ZONED_DATE_TIME), rs.getTimestamp(zonedDateTimeResult.getIndex()).toInstant());
+            assertEquals(Instant.from(OFFSET_DATE_TIME), rs.getTimestamp(offsetDateTimeResult.getIndex()).toInstant());
+            assertEquals(false, rs.next());
+
+            return null;
+        });
+    }
+
+    @Test
+    public void testJava8TimeNull() throws SQLException {
+        withJava8TimeTable(connection -> {
+            InsertQuery insert = new InsertQuery(TABLE);
+            insert.addValue(INSTANT_COLUMN, Parameter.of((Instant) null));
+            insert.addValue(LOCAL_DATE_COLUMN, Parameter.of((LocalDate) null));
+            insert.addValue(LOCAL_TIME_COLUMN, Parameter.of((LocalTime) null));
+            insert.addValue(LOCAL_DATE_TIME_COLUMN, Parameter.of((LocalDateTime) null));
+            insert.addValue(ZONED_DATE_TIME_COLUMN, Parameter.of((ZonedDateTime) null));
+            insert.addValue(OFFSET_DATE_TIME_COLUMN, Parameter.of((OffsetDateTime) null));
+            insert.toStatement(new JdbcStatementCompiler(connection)).executeUpdate();
+
+            TableReference e = TABLE.refer();
+            SelectQuery select = new SelectQuery();
+            ResultColumn instantResult = select.addToSelection(e.get(INSTANT_COLUMN));
+            ResultColumn localDateResult = select.addToSelection(e.get(LOCAL_DATE_COLUMN));
+            ResultColumn localTimeResult = select.addToSelection(e.get(LOCAL_TIME_COLUMN));
+            ResultColumn localDateTimeResult = select.addToSelection(e.get(LOCAL_DATE_TIME_COLUMN));
+            ResultColumn zonedDateTimeResult = select.addToSelection(e.get(ZONED_DATE_TIME_COLUMN));
+            ResultColumn offsetDateTimeResult = select.addToSelection(e.get(OFFSET_DATE_TIME_COLUMN));
+            ResultSet rs = select.toStatement(new JdbcStatementCompiler(connection)).executeQuery();
+
+            assertEquals(true, rs.next());
+            assertEquals(null, rs.getTimestamp(instantResult.getIndex()));
+            assertEquals(null, rs.getDate(localDateResult.getIndex()));
+            assertEquals(null, SquiggleUtils.deserialize(rs.getTime(localTimeResult.getIndex())));
+            assertEquals(null, rs.getTimestamp(localDateTimeResult.getIndex()));
+            assertEquals(null, rs.getTimestamp(zonedDateTimeResult.getIndex()));
+            assertEquals(null, rs.getTimestamp(offsetDateTimeResult.getIndex()));
+            assertEquals(false, rs.next());
+
+            return null;
+        });
+    }
+
     private static <T> T withRegularTable(final TestUtils.Mapper<T> mapper) throws SQLException {
         return withTable(mapper, "CREATE TABLE " + TABLE.getName() + " ("
                 + BOOLEAN_COLUMN.getName() + " BOOLEAN,"
@@ -314,6 +408,17 @@ public class ParameterTest {
                 + INT_ARRAY_COLUMN.getName() + " INT[],"
                 + STRING_ARRAY_COLUMN.getName() + " TEXT[],"
                 + BINARY_COLUMN.getName() + " BYTEA"
+                + ")");
+    }
+
+    private static <T> T withJava8TimeTable(final TestUtils.Mapper<T> mapper) throws SQLException {
+        return withTable(mapper, "CREATE TABLE " + TABLE.getName() + " ("
+                + INSTANT_COLUMN.getName() + " TIMESTAMP WITH TIME ZONE,"
+                + LOCAL_DATE_COLUMN.getName() + " DATE,"
+                + LOCAL_TIME_COLUMN.getName() + " TIME(6),"
+                + LOCAL_DATE_TIME_COLUMN.getName() + " TIMESTAMP,"
+                + ZONED_DATE_TIME_COLUMN.getName() + " TIMESTAMP WITH TIME ZONE,"
+                + OFFSET_DATE_TIME_COLUMN.getName() + " TIMESTAMP WITH TIME ZONE"
                 + ")");
     }
 

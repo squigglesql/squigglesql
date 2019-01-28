@@ -19,6 +19,7 @@ import io.zatarox.squiggle.Matchable;
 import io.zatarox.squiggle.QueryCompiler;
 import io.zatarox.squiggle.TableReference;
 import io.zatarox.squiggle.statement.Parametrized;
+import io.zatarox.squiggle.util.SquiggleUtils;
 
 import java.math.BigDecimal;
 import java.sql.Array;
@@ -26,6 +27,12 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Set;
 
@@ -156,4 +163,30 @@ public abstract class Parameter implements Matchable {
     public static Parameter of(byte[] value) {
         return new BytesParameter(value);
     }
+
+    public static Parameter of(Instant value) {
+        return value != null ? of(Timestamp.from(value)) : NullParameter.TIMESTAMP_WITH_TIMEZONE;
+    }
+
+    public static Parameter of(LocalDate value) {
+        return value != null ? of(Date.valueOf(value)) : NullParameter.DATE;
+    }
+
+    public static Parameter of(LocalTime value) {
+        return value != null ? of(SquiggleUtils.serialize(value)) : NullParameter.TIME;
+    }
+
+    public static Parameter of(LocalDateTime value) {
+        return value != null ? of(Timestamp.valueOf(value)) : NullParameter.TIMESTAMP;
+    }
+
+    public static Parameter of(ZonedDateTime value) {
+        return value != null ? of(Timestamp.from(value.toInstant())) : NullParameter.TIMESTAMP_WITH_TIMEZONE;
+    }
+
+    public static Parameter of(OffsetDateTime value) {
+        return value != null ? of(Timestamp.from(value.toInstant())) : NullParameter.TIMESTAMP_WITH_TIMEZONE;
+    }
+
+    // TODO: Add OffsetTime support.
 }
