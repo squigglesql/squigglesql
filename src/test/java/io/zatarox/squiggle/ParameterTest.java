@@ -21,7 +21,6 @@ import io.zatarox.squiggle.query.ResultColumn;
 import io.zatarox.squiggle.query.SelectQuery;
 import io.zatarox.squiggle.statement.JdbcStatementCompiler;
 import io.zatarox.squiggle.util.JdbcUtils;
-import io.zatarox.squiggle.util.SquiggleUtils;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -436,17 +435,19 @@ public class ParameterTest {
             ResultColumn localDateTimeResult = select.addToSelection(e.get(LOCAL_DATE_TIME_COLUMN));
             ResultColumn zonedDateTimeResult = select.addToSelection(e.get(ZONED_DATE_TIME_COLUMN));
             ResultColumn offsetDateTimeResult = select.addToSelection(e.get(OFFSET_DATE_TIME_COLUMN));
-            ResultSet rs = select.toStatement(new JdbcStatementCompiler(connection)).executeQuery();
 
-            assertEquals(true, rs.next());
-            assertEquals(INSTANT, rs.getTimestamp(instantResult.getIndex()).toInstant());
-            assertEquals(LOCAL_DATE, rs.getDate(localDateResult.getIndex()).toLocalDate());
-            assertEquals(LOCAL_TIME, SquiggleUtils.deserialize(rs.getTime(localTimeResult.getIndex())));
-            assertEquals(LOCAL_DATE_TIME, rs.getTimestamp(localDateTimeResult.getIndex()).toLocalDateTime());
-            assertEquals(Instant.from(ZONED_DATE_TIME), rs.getTimestamp(zonedDateTimeResult.getIndex()).toInstant());
-            assertEquals(Instant.from(OFFSET_DATE_TIME), rs.getTimestamp(offsetDateTimeResult.getIndex()).toInstant());
-            assertEquals(false, rs.next());
-
+            try (PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection))) {
+                try (ResultSet rs = statement.executeQuery()) {
+                    assertEquals(true, rs.next());
+                    assertEquals(INSTANT, JdbcUtils.readInstant(rs, instantResult.getIndex()));
+                    assertEquals(LOCAL_DATE, JdbcUtils.readLocalDate(rs, localDateResult.getIndex()));
+                    assertEquals(LOCAL_TIME, JdbcUtils.readLocalTime(rs, localTimeResult.getIndex()));
+                    assertEquals(LOCAL_DATE_TIME, JdbcUtils.readLocalDateTime(rs, localDateTimeResult.getIndex()));
+                    assertEquals(Instant.from(ZONED_DATE_TIME), JdbcUtils.readInstant(rs, zonedDateTimeResult.getIndex()));
+                    assertEquals(Instant.from(OFFSET_DATE_TIME), JdbcUtils.readInstant(rs, offsetDateTimeResult.getIndex()));
+                    assertEquals(false, rs.next());
+                }
+            }
             return null;
         });
     }
@@ -471,17 +472,19 @@ public class ParameterTest {
             ResultColumn localDateTimeResult = select.addToSelection(e.get(LOCAL_DATE_TIME_COLUMN));
             ResultColumn zonedDateTimeResult = select.addToSelection(e.get(ZONED_DATE_TIME_COLUMN));
             ResultColumn offsetDateTimeResult = select.addToSelection(e.get(OFFSET_DATE_TIME_COLUMN));
-            ResultSet rs = select.toStatement(new JdbcStatementCompiler(connection)).executeQuery();
 
-            assertEquals(true, rs.next());
-            assertEquals(null, rs.getTimestamp(instantResult.getIndex()));
-            assertEquals(null, rs.getDate(localDateResult.getIndex()));
-            assertEquals(null, SquiggleUtils.deserialize(rs.getTime(localTimeResult.getIndex())));
-            assertEquals(null, rs.getTimestamp(localDateTimeResult.getIndex()));
-            assertEquals(null, rs.getTimestamp(zonedDateTimeResult.getIndex()));
-            assertEquals(null, rs.getTimestamp(offsetDateTimeResult.getIndex()));
-            assertEquals(false, rs.next());
-
+            try (PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection))) {
+                try (ResultSet rs = statement.executeQuery()) {
+                    assertEquals(true, rs.next());
+                    assertEquals(null, JdbcUtils.readInstant(rs, instantResult.getIndex()));
+                    assertEquals(null, JdbcUtils.readLocalDate(rs, localDateResult.getIndex()));
+                    assertEquals(null, JdbcUtils.readLocalTime(rs, localTimeResult.getIndex()));
+                    assertEquals(null, JdbcUtils.readLocalDateTime(rs, localDateTimeResult.getIndex()));
+                    assertEquals(null, JdbcUtils.readInstant(rs, zonedDateTimeResult.getIndex()));
+                    assertEquals(null, JdbcUtils.readInstant(rs, offsetDateTimeResult.getIndex()));
+                    assertEquals(false, rs.next());
+                }
+            }
             return null;
         });
     }
@@ -547,14 +550,25 @@ public class ParameterTest {
     }
 
     private static <T> T withJava8TimeTable(final TestUtils.Mapper<T> mapper) throws SQLException {
-        return withTable(mapper, "CREATE TABLE " + TABLE.getName() + " ("
-                + INSTANT_COLUMN.getName() + " TIMESTAMP WITH TIME ZONE,"
-                + LOCAL_DATE_COLUMN.getName() + " DATE,"
-                + LOCAL_TIME_COLUMN.getName() + " TIME(6),"
-                + LOCAL_DATE_TIME_COLUMN.getName() + " TIMESTAMP,"
-                + ZONED_DATE_TIME_COLUMN.getName() + " TIMESTAMP WITH TIME ZONE,"
-                + OFFSET_DATE_TIME_COLUMN.getName() + " TIMESTAMP WITH TIME ZONE"
-                + ")");
+        return withTable(mapper, defineTable(
+                new TableColumn[]{
+                        INSTANT_COLUMN,
+                        LOCAL_DATE_COLUMN,
+                        LOCAL_TIME_COLUMN,
+                        LOCAL_DATE_TIME_COLUMN,
+                        ZONED_DATE_TIME_COLUMN,
+                        OFFSET_DATE_TIME_COLUMN
+                },
+                new String[]{
+                        "TIMESTAMP WITH TIME ZONE",
+                        "DATE",
+                        "TIME(6)",
+                        "TIMESTAMP",
+                        "TIMESTAMP WITH TIME ZONE",
+                        "TIMESTAMP WITH TIME ZONE"
+                },
+                false
+        ));
     }
 
     private static <T> T withTable(final TestUtils.Mapper<T> mapper, final String createQuery) throws SQLException {

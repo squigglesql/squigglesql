@@ -7,6 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public abstract class JdbcUtils {
 
@@ -96,5 +100,24 @@ public abstract class JdbcUtils {
 
     public static byte[] readBinary(ResultSet rs, int index) throws SQLException {
         return rs.getBytes(index);
+    }
+
+    public static Instant readInstant(ResultSet rs, int index) throws SQLException {
+        Timestamp timestamp = readTimestamp(rs, index);
+        return timestamp != null ? timestamp.toInstant() : null;
+    }
+
+    public static LocalDate readLocalDate(ResultSet rs, int index) throws SQLException {
+        Date date = readDate(rs, index);
+        return date != null ? date.toLocalDate() : null;
+    }
+
+    public static LocalTime readLocalTime(ResultSet rs, int index) throws SQLException {
+        return SquiggleUtils.deserialize(readTime(rs, index));
+    }
+
+    public static LocalDateTime readLocalDateTime(ResultSet rs, int index) throws SQLException {
+        Timestamp timestamp = readTimestamp(rs, index);
+        return timestamp != null ? timestamp.toLocalDateTime() : null;
     }
 }
