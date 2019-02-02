@@ -20,12 +20,14 @@ import io.zatarox.squiggle.query.InsertQuery;
 import io.zatarox.squiggle.query.ResultColumn;
 import io.zatarox.squiggle.query.SelectQuery;
 import io.zatarox.squiggle.statement.JdbcStatementCompiler;
+import io.zatarox.squiggle.util.JdbcUtils;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -78,7 +80,7 @@ public class ParameterTest {
     private static final TableColumn BINARY_COLUMN = TABLE.get("binary_c");
 
     @Test
-    public void testRegularNotNull() throws SQLException {
+    public void testRegularNotNullByDefinition() throws SQLException {
         withRegularTable(new TestUtils.Mapper<Void>() {
             @Override
             public Void apply(Connection connection) throws SQLException {
@@ -105,23 +107,86 @@ public class ParameterTest {
                 ResultColumn doubleResult = select.addToSelection(e.get(DOUBLE_COLUMN));
                 ResultColumn bigDecimalResult = select.addToSelection(e.get(BIG_DECIMAL_COLUMN));
                 ResultColumn stringResult = select.addToSelection(e.get(STRING_COLUMN));
-                ResultSet rs = select.toStatement(new JdbcStatementCompiler(connection)).executeQuery();
 
-                assertEquals(true, rs.next());
-                assertEquals(BOOLEAN, rs.getBoolean(booleanResult.getIndex()));
-                assertEquals(BYTE, rs.getByte(byteResult.getIndex()));
-                assertEquals(SHORT, rs.getShort(shortResult.getIndex()));
-                assertEquals(INT, rs.getInt(intResult.getIndex()));
-                assertEquals(LONG, rs.getLong(longResult.getIndex()));
-                assertEquals(FLOAT, rs.getFloat(floatResult.getIndex()), 0.0f);
-                assertEquals(DOUBLE, rs.getDouble(doubleResult.getIndex()), 0.0d);
-                assertEquals(BIG_DECIMAL, rs.getBigDecimal(bigDecimalResult.getIndex()));
-                assertEquals(STRING, rs.getString(stringResult.getIndex()));
-                assertEquals(false, rs.next());
-
+                PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection));
+                try {
+                    ResultSet rs = statement.executeQuery();
+                    try {
+                        assertEquals(true, rs.next());
+                        assertEquals(BOOLEAN, JdbcUtils.readBooleanNotNull(rs, booleanResult.getIndex()));
+                        assertEquals(BYTE, JdbcUtils.readByteNotNull(rs, byteResult.getIndex()));
+                        assertEquals(SHORT, JdbcUtils.readShortNotNull(rs, shortResult.getIndex()));
+                        assertEquals(INT, JdbcUtils.readIntegerNotNull(rs, intResult.getIndex()));
+                        assertEquals(LONG, JdbcUtils.readLongNotNull(rs, longResult.getIndex()));
+                        assertEquals(FLOAT, JdbcUtils.readFloatNotNull(rs, floatResult.getIndex()), 0.0f);
+                        assertEquals(DOUBLE, JdbcUtils.readDoubleNotNull(rs, doubleResult.getIndex()), 0.0d);
+                        assertEquals(BIG_DECIMAL, JdbcUtils.readBigDecimal(rs, bigDecimalResult.getIndex()));
+                        assertEquals(STRING, JdbcUtils.readString(rs, stringResult.getIndex()));
+                        assertEquals(false, rs.next());
+                    } finally {
+                        rs.close();
+                    }
+                } finally {
+                    statement.close();
+                }
                 return null;
             }
-        });
+        }, true);
+    }
+
+    @Test
+    public void testRegularNotNullByValue() throws SQLException {
+        withRegularTable(new TestUtils.Mapper<Void>() {
+            @Override
+            public Void apply(Connection connection) throws SQLException {
+                InsertQuery insert = new InsertQuery(TABLE);
+                insert.addValue(BOOLEAN_COLUMN, Parameter.of(BOOLEAN));
+                insert.addValue(BYTE_COLUMN, Parameter.of(BYTE));
+                insert.addValue(SHORT_COLUMN, Parameter.of(SHORT));
+                insert.addValue(INT_COLUMN, Parameter.of(INT));
+                insert.addValue(LONG_COLUMN, Parameter.of(LONG));
+                insert.addValue(FLOAT_COLUMN, Parameter.of(FLOAT));
+                insert.addValue(DOUBLE_COLUMN, Parameter.of(DOUBLE));
+                insert.addValue(BIG_DECIMAL_COLUMN, Parameter.of(BIG_DECIMAL));
+                insert.addValue(STRING_COLUMN, Parameter.of(STRING));
+                insert.toStatement(new JdbcStatementCompiler(connection)).executeUpdate();
+
+                TableReference e = TABLE.refer();
+                SelectQuery select = new SelectQuery();
+                ResultColumn booleanResult = select.addToSelection(e.get(BOOLEAN_COLUMN));
+                ResultColumn byteResult = select.addToSelection(e.get(BYTE_COLUMN));
+                ResultColumn shortResult = select.addToSelection(e.get(SHORT_COLUMN));
+                ResultColumn intResult = select.addToSelection(e.get(INT_COLUMN));
+                ResultColumn longResult = select.addToSelection(e.get(LONG_COLUMN));
+                ResultColumn floatResult = select.addToSelection(e.get(FLOAT_COLUMN));
+                ResultColumn doubleResult = select.addToSelection(e.get(DOUBLE_COLUMN));
+                ResultColumn bigDecimalResult = select.addToSelection(e.get(BIG_DECIMAL_COLUMN));
+                ResultColumn stringResult = select.addToSelection(e.get(STRING_COLUMN));
+
+                PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection));
+                try {
+                    ResultSet rs = statement.executeQuery();
+                    try {
+                        assertEquals(true, rs.next());
+                        assertEquals(BOOLEAN, JdbcUtils.readBooleanNull(rs, booleanResult.getIndex()));
+                        assertEquals((Byte) BYTE, JdbcUtils.readByteNull(rs, byteResult.getIndex()));
+                        assertEquals((Short) SHORT, JdbcUtils.readShortNull(rs, shortResult.getIndex()));
+                        assertEquals((Integer) INT, JdbcUtils.readIntegerNull(rs, intResult.getIndex()));
+                        assertEquals((Long) LONG, JdbcUtils.readLongNull(rs, longResult.getIndex()));
+                        assertEquals(FLOAT, JdbcUtils.readFloatNull(rs, floatResult.getIndex()), 0.0f);
+                        assertEquals(DOUBLE, JdbcUtils.readDoubleNull(rs, doubleResult.getIndex()), 0.0d);
+                        assertEquals(BIG_DECIMAL, rs.getBigDecimal(bigDecimalResult.getIndex()));
+                        assertEquals(STRING, rs.getString(stringResult.getIndex()));
+                        assertEquals(false, rs.next());
+                    } finally {
+                        rs.close();
+                    }
+                } finally {
+                    statement.close();
+                }
+                return null;
+            }
+        }, false);
     }
 
     @Test
@@ -152,23 +217,31 @@ public class ParameterTest {
                 ResultColumn doubleResult = select.addToSelection(e.get(DOUBLE_COLUMN));
                 ResultColumn bigDecimalResult = select.addToSelection(e.get(BIG_DECIMAL_COLUMN));
                 ResultColumn stringResult = select.addToSelection(e.get(STRING_COLUMN));
-                ResultSet rs = select.toStatement(new JdbcStatementCompiler(connection)).executeQuery();
 
-                assertEquals(true, rs.next());
-                assertEquals(null, rs.getObject(booleanResult.getIndex()));
-                assertEquals(null, rs.getObject(byteResult.getIndex()));
-                assertEquals(null, rs.getObject(shortResult.getIndex()));
-                assertEquals(null, rs.getObject(intResult.getIndex()));
-                assertEquals(null, rs.getObject(longResult.getIndex()));
-                assertEquals(null, rs.getObject(floatResult.getIndex()));
-                assertEquals(null, rs.getObject(doubleResult.getIndex()));
-                assertEquals(null, rs.getBigDecimal(bigDecimalResult.getIndex()));
-                assertEquals(null, rs.getString(stringResult.getIndex()));
-                assertEquals(false, rs.next());
-
+                PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection));
+                try {
+                    ResultSet rs = statement.executeQuery();
+                    try {
+                        assertEquals(true, rs.next());
+                        assertEquals(null, JdbcUtils.readBooleanNull(rs, booleanResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readByteNull(rs, byteResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readShortNull(rs, shortResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readIntegerNull(rs, intResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readLongNull(rs, longResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readFloatNull(rs, floatResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readDoubleNull(rs, doubleResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readBigDecimal(rs, bigDecimalResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readString(rs, stringResult.getIndex()));
+                        assertEquals(false, rs.next());
+                    } finally {
+                        rs.close();
+                    }
+                } finally {
+                    statement.close();
+                }
                 return null;
             }
-        });
+        }, false);
     }
 
     @Test
@@ -187,17 +260,25 @@ public class ParameterTest {
                 ResultColumn timestampResult = select.addToSelection(e.get(TIMESTAMP_COLUMN));
                 ResultColumn timeResult = select.addToSelection(e.get(TIME_COLUMN));
                 ResultColumn dateResult = select.addToSelection(e.get(DATE_COLUMN));
-                ResultSet rs = select.toStatement(new JdbcStatementCompiler(connection)).executeQuery();
 
-                assertEquals(true, rs.next());
-                assertEquals(TIMESTAMP, rs.getTimestamp(timestampResult.getIndex()));
-                assertEquals(TIME, rs.getTime(timeResult.getIndex()));
-                assertEquals(DATE, rs.getDate(dateResult.getIndex()));
-                assertEquals(false, rs.next());
-
+                PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection));
+                try {
+                    ResultSet rs = statement.executeQuery();
+                    try {
+                        assertEquals(true, rs.next());
+                        assertEquals(TIMESTAMP, JdbcUtils.readTimestamp(rs, timestampResult.getIndex()));
+                        assertEquals(TIME, JdbcUtils.readTime(rs, timeResult.getIndex()));
+                        assertEquals(DATE, JdbcUtils.readDate(rs, dateResult.getIndex()));
+                        assertEquals(false, rs.next());
+                    } finally {
+                        rs.close();
+                    }
+                } finally {
+                    statement.close();
+                }
                 return null;
             }
-        });
+        }, false);
     }
 
     @Test
@@ -216,17 +297,25 @@ public class ParameterTest {
                 ResultColumn timestampResult = select.addToSelection(e.get(TIMESTAMP_COLUMN));
                 ResultColumn timeResult = select.addToSelection(e.get(TIME_COLUMN));
                 ResultColumn dateResult = select.addToSelection(e.get(DATE_COLUMN));
-                ResultSet rs = select.toStatement(new JdbcStatementCompiler(connection)).executeQuery();
 
-                assertEquals(true, rs.next());
-                assertEquals(null, rs.getTimestamp(timestampResult.getIndex()));
-                assertEquals(null, rs.getTime(timeResult.getIndex()));
-                assertEquals(null, rs.getDate(dateResult.getIndex()));
-                assertEquals(false, rs.next());
-
+                PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection));
+                try {
+                    ResultSet rs = statement.executeQuery();
+                    try {
+                        assertEquals(true, rs.next());
+                        assertEquals(null, JdbcUtils.readTimestamp(rs, timestampResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readTime(rs, timeResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readDate(rs, dateResult.getIndex()));
+                        assertEquals(false, rs.next());
+                    } finally {
+                        rs.close();
+                    }
+                } finally {
+                    statement.close();
+                }
                 return null;
             }
-        });
+        }, false);
     }
 
     @Test
@@ -245,17 +334,25 @@ public class ParameterTest {
                 ResultColumn intArrayResult = select.addToSelection(e.get(INT_ARRAY_COLUMN));
                 ResultColumn stringArrayResult = select.addToSelection(e.get(STRING_ARRAY_COLUMN));
                 ResultColumn binaryResult = select.addToSelection(e.get(BINARY_COLUMN));
-                ResultSet rs = select.toStatement(new JdbcStatementCompiler(connection)).executeQuery();
 
-                assertEquals(true, rs.next());
-                assertArrayEquals(INT_ARRAY, (Integer[]) rs.getArray(intArrayResult.getIndex()).getArray());
-                assertArrayEquals(STRING_ARRAY, (String[]) rs.getArray(stringArrayResult.getIndex()).getArray());
-                assertArrayEquals(BINARY, rs.getBytes(binaryResult.getIndex()));
-                assertEquals(false, rs.next());
-
+                PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection));
+                try {
+                    ResultSet rs = statement.executeQuery();
+                    try {
+                        assertEquals(true, rs.next());
+                        assertArrayEquals(INT_ARRAY, JdbcUtils.readArray(rs, intArrayResult.getIndex()));
+                        assertArrayEquals(STRING_ARRAY, JdbcUtils.readArray(rs, stringArrayResult.getIndex()));
+                        assertArrayEquals(BINARY, JdbcUtils.readBinary(rs, binaryResult.getIndex()));
+                        assertEquals(false, rs.next());
+                    } finally {
+                        rs.close();
+                    }
+                } finally {
+                    statement.close();
+                }
                 return null;
             }
-        });
+        }, false);
     }
 
     @Test
@@ -274,47 +371,85 @@ public class ParameterTest {
                 ResultColumn intArrayResult = select.addToSelection(e.get(INT_ARRAY_COLUMN));
                 ResultColumn stringArrayResult = select.addToSelection(e.get(STRING_ARRAY_COLUMN));
                 ResultColumn binaryResult = select.addToSelection(e.get(BINARY_COLUMN));
-                ResultSet rs = select.toStatement(new JdbcStatementCompiler(connection)).executeQuery();
 
-                assertEquals(true, rs.next());
-                assertEquals(null, rs.getArray(intArrayResult.getIndex()));
-                assertEquals(null, rs.getArray(stringArrayResult.getIndex()));
-                assertEquals(null, rs.getBytes(binaryResult.getIndex()));
-                assertEquals(false, rs.next());
-
+                PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection));
+                try {
+                    ResultSet rs = statement.executeQuery();
+                    try {
+                        assertEquals(true, rs.next());
+                        assertEquals(null, (Object) JdbcUtils.readArray(rs, intArrayResult.getIndex()));
+                        assertEquals(null, (Object) JdbcUtils.readArray(rs, stringArrayResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readBinary(rs, binaryResult.getIndex()));
+                        assertEquals(false, rs.next());
+                    } finally {
+                        rs.close();
+                    }
+                } finally {
+                    statement.close();
+                }
                 return null;
             }
-        });
+        }, false);
     }
 
-    private static <T> T withRegularTable(final TestUtils.Mapper<T> mapper) throws SQLException {
-        return withTable(mapper, "CREATE TABLE " + TABLE.getName() + " ("
-                + BOOLEAN_COLUMN.getName() + " BOOLEAN,"
-                + BYTE_COLUMN.getName() + " SMALLINT," // No TINYINT in PostgreSQL
-                + SHORT_COLUMN.getName() + " SMALLINT,"
-                + INT_COLUMN.getName() + " INT,"
-                + LONG_COLUMN.getName() + " BIGINT,"
-                + FLOAT_COLUMN.getName() + " REAL,"
-                + DOUBLE_COLUMN.getName() + " DOUBLE PRECISION," // No DOUBLE in PostgreSQL
-                + BIG_DECIMAL_COLUMN.getName() + " NUMERIC,"
-                + STRING_COLUMN.getName() + " TEXT"
-                + ")");
+    private static <T> T withRegularTable(final TestUtils.Mapper<T> mapper, final boolean notNull) throws SQLException {
+        return withTable(mapper, defineTable(
+                new TableColumn[]{
+                        BOOLEAN_COLUMN,
+                        BYTE_COLUMN,
+                        SHORT_COLUMN,
+                        INT_COLUMN,
+                        LONG_COLUMN,
+                        FLOAT_COLUMN,
+                        DOUBLE_COLUMN,
+                        BIG_DECIMAL_COLUMN,
+                        STRING_COLUMN
+                },
+                new String[]{
+                        "BOOLEAN",
+                        "SMALLINT", // No TINYINT in PostgreSQL
+                        "SMALLINT",
+                        "INT",
+                        "BIGINT",
+                        "REAL",
+                        "DOUBLE PRECISION", // No DOUBLE in PostgreSQL
+                        "NUMERIC",
+                        "TEXT"
+                },
+                notNull
+        ));
     }
 
-    private static <T> T withTimestampTable(final TestUtils.Mapper<T> mapper) throws SQLException {
-        return withTable(mapper, "CREATE TABLE " + TABLE.getName() + " ("
-                + TIMESTAMP_COLUMN.getName() + " TIMESTAMP,"
-                + TIME_COLUMN.getName() + " TIME,"
-                + DATE_COLUMN.getName() + " DATE"
-                + ")");
+    private static <T> T withTimestampTable(final TestUtils.Mapper<T> mapper, final boolean notNull) throws SQLException {
+        return withTable(mapper, defineTable(
+                new TableColumn[]{
+                        TIMESTAMP_COLUMN,
+                        TIME_COLUMN,
+                        DATE_COLUMN
+                },
+                new String[]{
+                        "TIMESTAMP",
+                        "TIME",
+                        "DATE"
+                },
+                notNull
+        ));
     }
 
-    private static <T> T withComplexTable(final TestUtils.Mapper<T> mapper) throws SQLException {
-        return withTable(mapper, "CREATE TABLE " + TABLE.getName() + " ("
-                + INT_ARRAY_COLUMN.getName() + " INT[],"
-                + STRING_ARRAY_COLUMN.getName() + " TEXT[],"
-                + BINARY_COLUMN.getName() + " BYTEA"
-                + ")");
+    private static <T> T withComplexTable(final TestUtils.Mapper<T> mapper, final boolean notNull) throws SQLException {
+        return withTable(mapper, defineTable(
+                new TableColumn[]{
+                        INT_ARRAY_COLUMN,
+                        STRING_ARRAY_COLUMN,
+                        BINARY_COLUMN
+                },
+                new String[]{
+                        "INT[]",
+                        "TEXT[]",
+                        "BYTEA"
+                },
+                notNull
+        ));
     }
 
     private static <T> T withTable(final TestUtils.Mapper<T> mapper, final String createQuery) throws SQLException {
@@ -339,5 +474,17 @@ public class ParameterTest {
                 return result;
             }
         });
+    }
+
+    private static String defineTable(TableColumn[] columns, String[] types, boolean notNull) {
+        StringBuilder builder = new StringBuilder("CREATE TABLE " + TABLE.getName() + " (");
+        for (int i = 0; i < columns.length; ++i) {
+            if (i != 0) {
+                builder.append(',');
+            }
+            builder.append(columns[i].getName()).append(' ').append(types[i]).append(notNull ? " NOT NULL" : "");
+        }
+        builder.append(')');
+        return builder.toString();
     }
 }
