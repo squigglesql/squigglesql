@@ -33,6 +33,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.sql.Types;
 
 import static org.junit.Assert.*;
 
@@ -211,6 +212,61 @@ public class ParameterTest {
                 insert.addValue(DOUBLE_COLUMN, Parameter.of((Double) null));
                 insert.addValue(BIG_DECIMAL_COLUMN, Parameter.of((BigDecimal) null));
                 insert.addValue(STRING_COLUMN, Parameter.of((String) null));
+                insert.toStatement(new JdbcStatementCompiler(connection)).executeUpdate();
+
+                TableReference e = TABLE.refer();
+                SelectQuery select = new SelectQuery();
+                ResultColumn booleanResult = select.addToSelection(e.get(BOOLEAN_COLUMN));
+                ResultColumn byteResult = select.addToSelection(e.get(BYTE_COLUMN));
+                ResultColumn shortResult = select.addToSelection(e.get(SHORT_COLUMN));
+                ResultColumn intResult = select.addToSelection(e.get(INT_COLUMN));
+                ResultColumn longResult = select.addToSelection(e.get(LONG_COLUMN));
+                ResultColumn floatResult = select.addToSelection(e.get(FLOAT_COLUMN));
+                ResultColumn doubleResult = select.addToSelection(e.get(DOUBLE_COLUMN));
+                ResultColumn bigDecimalResult = select.addToSelection(e.get(BIG_DECIMAL_COLUMN));
+                ResultColumn stringResult = select.addToSelection(e.get(STRING_COLUMN));
+
+                PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection));
+                try {
+                    ResultSet rs = statement.executeQuery();
+                    try {
+                        assertEquals(true, rs.next());
+                        assertEquals(null, JdbcUtils.readBooleanNull(rs, booleanResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readByteNull(rs, byteResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readShortNull(rs, shortResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readIntegerNull(rs, intResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readLongNull(rs, longResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readFloatNull(rs, floatResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readDoubleNull(rs, doubleResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readBigDecimal(rs, bigDecimalResult.getIndex()));
+                        assertEquals(null, JdbcUtils.readString(rs, stringResult.getIndex()));
+                        assertEquals(false, rs.next());
+                    } finally {
+                        rs.close();
+                    }
+                } finally {
+                    statement.close();
+                }
+                return null;
+            }
+        }, false);
+    }
+
+    @Test
+    public void testRegularNullRaw() throws SQLException {
+        withRegularTable(new TestUtils.Mapper<Void>() {
+            @Override
+            public Void apply(Connection connection) throws SQLException {
+                InsertQuery insert = new InsertQuery(TABLE);
+                insert.addValue(BOOLEAN_COLUMN, Parameter.ofNull(Types.BOOLEAN));
+                insert.addValue(BYTE_COLUMN, Parameter.ofNull(Types.TINYINT));
+                insert.addValue(SHORT_COLUMN, Parameter.ofNull(Types.SMALLINT));
+                insert.addValue(INT_COLUMN, Parameter.ofNull(Types.INTEGER));
+                insert.addValue(LONG_COLUMN, Parameter.ofNull(Types.BIGINT));
+                insert.addValue(FLOAT_COLUMN, Parameter.ofNull(Types.REAL));
+                insert.addValue(DOUBLE_COLUMN, Parameter.ofNull(Types.DOUBLE));
+                insert.addValue(BIG_DECIMAL_COLUMN, Parameter.ofNull(Types.NUMERIC));
+                insert.addValue(STRING_COLUMN, Parameter.ofNull(Types.VARCHAR));
                 insert.toStatement(new JdbcStatementCompiler(connection)).executeUpdate();
 
                 TableReference e = TABLE.refer();

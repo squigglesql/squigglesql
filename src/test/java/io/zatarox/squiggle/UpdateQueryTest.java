@@ -16,6 +16,7 @@
 package io.zatarox.squiggle;
 
 import io.zatarox.squiggle.criteria.MatchCriteria;
+import io.zatarox.squiggle.literal.Literal;
 import io.zatarox.squiggle.mock.MockStatement;
 import io.zatarox.squiggle.mock.MockStatementCompiler;
 import io.zatarox.squiggle.parameter.Parameter;
@@ -65,5 +66,33 @@ public class UpdateQueryTest {
         assertEquals(2, statement.getParameters().size());
         assertEquals("BLOCKED", statement.getParameters().get(0));
         assertEquals("<session_id_value>", statement.getParameters().get(1));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullTableReference() {
+        new UpdateQuery(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testWrongColumn() {
+        Table employee = new Table("employee");
+        Table department = new Table("department");
+        TableColumn employeeName = employee.get("name");
+        TableReference d = department.refer();
+        new UpdateQuery(d).addValue(employeeName, Literal.of(1));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullCriteria() {
+        Table employee = new Table("employee");
+        TableReference e = employee.refer();
+        new UpdateQuery(e).addCriteria(null);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testEmptyUpdate() {
+        Table employee = new Table("employee");
+        TableReference e = employee.refer();
+        new UpdateQuery(e).toString();
     }
 }

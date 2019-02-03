@@ -111,7 +111,7 @@ public abstract class Parameter implements Matchable {
     }
 
     public static Parameter of(Timestamp value) {
-        return new TimestampParameter(value, null);
+        return of(value, null);
     }
 
     /**
@@ -124,7 +124,7 @@ public abstract class Parameter implements Matchable {
     }
 
     public static Parameter of(Time value) {
-        return new TimeParameter(value, Calendar.getInstance());
+        return of(value, null);
     }
 
     /**
@@ -137,7 +137,7 @@ public abstract class Parameter implements Matchable {
     }
 
     public static Parameter of(Date value) {
-        return new DateParameter(value, Calendar.getInstance());
+        return of(value, null);
     }
 
     /**

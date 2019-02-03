@@ -34,14 +34,14 @@ public class InsertQuery extends Query {
 
     public InsertQuery(Table table) {
         if (table == null) {
-            throw new NullPointerException("Table can not be empty.");
+            throw new IllegalArgumentException("Table can not be empty.");
         }
         this.table = table;
     }
 
     public void addValue(TableColumn column, Matchable value) {
         if (!column.getTable().equals(table)) {
-            throw new NullPointerException("Can not insert a value to a different database table.");
+            throw new IllegalArgumentException("Can not insert a value to a different database table.");
         }
         columns.add(column);
         values.add(value);
@@ -50,7 +50,7 @@ public class InsertQuery extends Query {
     @Override
     protected void compile(Output output) {
         if (columns.isEmpty()) {
-            throw new RuntimeException("No values specified for insertion.");
+            throw new IllegalStateException("No values specified for insertion.");
         }
 
         QueryCompiler compiler = new QueryCompiler(output);
