@@ -105,4 +105,26 @@ public class CriteriaTest {
                 + "WHERE\n"
                 + "    NOT (r.level BETWEEN r.lower_limit AND r.upper_limit)", select.toString());
     }
+
+    @Test
+    public void testInEmpty() {
+        Table user = new Table("user");
+        TableColumn userId = user.get("id");
+        TableColumn userRole = user.get("role");
+
+        TableReference u = user.refer();
+
+        SelectQuery select = new SelectQuery();
+
+        select.addToSelection(u.get(userId));
+
+        select.addCriteria(new InCriteria(u.get(userRole)));
+
+        assertEquals("SELECT\n"
+                + "    u.id\n"
+                + "FROM\n"
+                + "    user u\n"
+                + "WHERE\n"
+                + "    1 = 1", select.toString());
+    }
 }

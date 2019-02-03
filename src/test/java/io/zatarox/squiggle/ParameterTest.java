@@ -34,8 +34,7 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class ParameterTest {
 
@@ -70,6 +69,14 @@ public class ParameterTest {
     private static final TableColumn DOUBLE_COLUMN = TABLE.get("double_c");
     private static final TableColumn BIG_DECIMAL_COLUMN = TABLE.get("big_decimal_c");
     private static final TableColumn STRING_COLUMN = TABLE.get("string_c");
+
+    private static final TableColumn FLOAT_INFINITY_COLUMN = TABLE.get("float_infinity_c");
+    private static final TableColumn FLOAT_MINUS_INFINITY_COLUMN = TABLE.get("float_minus_infinity_c");
+    private static final TableColumn FLOAT_NAN_COLUMN = TABLE.get("float_nan_c");
+
+    private static final TableColumn DOUBLE_INFINITY_COLUMN = TABLE.get("double_infinity_c");
+    private static final TableColumn DOUBLE_MINUS_INFINITY_COLUMN = TABLE.get("double_minus_infinity_c");
+    private static final TableColumn DOUBLE_NAN_COLUMN = TABLE.get("double_nan_c");
 
     private static final TableColumn TIMESTAMP_COLUMN = TABLE.get("timestamp_c");
     private static final TableColumn TIME_COLUMN = TABLE.get("time_c");
@@ -232,6 +239,98 @@ public class ParameterTest {
                         assertEquals(null, JdbcUtils.readDoubleNull(rs, doubleResult.getIndex()));
                         assertEquals(null, JdbcUtils.readBigDecimal(rs, bigDecimalResult.getIndex()));
                         assertEquals(null, JdbcUtils.readString(rs, stringResult.getIndex()));
+                        assertEquals(false, rs.next());
+                    } finally {
+                        rs.close();
+                    }
+                } finally {
+                    statement.close();
+                }
+                return null;
+            }
+        }, false);
+    }
+
+    @Test
+    public void testRealNotNullByDefinition() throws SQLException {
+        withRealTable(new TestUtils.Mapper<Void>() {
+            @Override
+            public Void apply(Connection connection) throws SQLException {
+                InsertQuery insert = new InsertQuery(TABLE);
+                insert.addValue(FLOAT_INFINITY_COLUMN, Parameter.of(Float.POSITIVE_INFINITY));
+                insert.addValue(FLOAT_MINUS_INFINITY_COLUMN, Parameter.of(Float.NEGATIVE_INFINITY));
+                insert.addValue(FLOAT_NAN_COLUMN, Parameter.of(Float.NaN));
+                insert.addValue(DOUBLE_INFINITY_COLUMN, Parameter.of(Double.POSITIVE_INFINITY));
+                insert.addValue(DOUBLE_MINUS_INFINITY_COLUMN, Parameter.of(Double.NEGATIVE_INFINITY));
+                insert.addValue(DOUBLE_NAN_COLUMN, Parameter.of(Double.NaN));
+                insert.toStatement(new JdbcStatementCompiler(connection)).executeUpdate();
+
+                TableReference e = TABLE.refer();
+                SelectQuery select = new SelectQuery();
+                ResultColumn floatInfinityResult = select.addToSelection(e.get(FLOAT_INFINITY_COLUMN));
+                ResultColumn floatMinusInfinityResult = select.addToSelection(e.get(FLOAT_MINUS_INFINITY_COLUMN));
+                ResultColumn floatNanResult = select.addToSelection(e.get(FLOAT_NAN_COLUMN));
+                ResultColumn doubleInfinityResult = select.addToSelection(e.get(DOUBLE_INFINITY_COLUMN));
+                ResultColumn doubleMinusInfinityResult = select.addToSelection(e.get(DOUBLE_MINUS_INFINITY_COLUMN));
+                ResultColumn doubleNanResult = select.addToSelection(e.get(DOUBLE_NAN_COLUMN));
+
+                PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection));
+                try {
+                    ResultSet rs = statement.executeQuery();
+                    try {
+                        assertEquals(true, rs.next());
+                        assertTrue(isPositiveInfinity(JdbcUtils.readFloatNotNull(rs, floatInfinityResult.getIndex())));
+                        assertTrue(isNegativeInfinity(JdbcUtils.readFloatNotNull(rs, floatMinusInfinityResult.getIndex())));
+                        assertTrue(Float.isNaN(JdbcUtils.readFloatNotNull(rs, floatNanResult.getIndex())));
+                        assertTrue(isPositiveInfinity(JdbcUtils.readDoubleNotNull(rs, doubleInfinityResult.getIndex())));
+                        assertTrue(isNegativeInfinity(JdbcUtils.readDoubleNotNull(rs, doubleMinusInfinityResult.getIndex())));
+                        assertTrue(Double.isNaN(JdbcUtils.readDoubleNotNull(rs, doubleNanResult.getIndex())));
+                        assertEquals(false, rs.next());
+                    } finally {
+                        rs.close();
+                    }
+                } finally {
+                    statement.close();
+                }
+                return null;
+            }
+        }, true);
+    }
+
+    @Test
+    public void testRealNotNullByValue() throws SQLException {
+        withRealTable(new TestUtils.Mapper<Void>() {
+            @Override
+            public Void apply(Connection connection) throws SQLException {
+                InsertQuery insert = new InsertQuery(TABLE);
+                insert.addValue(FLOAT_INFINITY_COLUMN, Parameter.of(Float.POSITIVE_INFINITY));
+                insert.addValue(FLOAT_MINUS_INFINITY_COLUMN, Parameter.of(Float.NEGATIVE_INFINITY));
+                insert.addValue(FLOAT_NAN_COLUMN, Parameter.of(Float.NaN));
+                insert.addValue(DOUBLE_INFINITY_COLUMN, Parameter.of(Double.POSITIVE_INFINITY));
+                insert.addValue(DOUBLE_MINUS_INFINITY_COLUMN, Parameter.of(Double.NEGATIVE_INFINITY));
+                insert.addValue(DOUBLE_NAN_COLUMN, Parameter.of(Double.NaN));
+                insert.toStatement(new JdbcStatementCompiler(connection)).executeUpdate();
+
+                TableReference e = TABLE.refer();
+                SelectQuery select = new SelectQuery();
+                ResultColumn floatInfinityResult = select.addToSelection(e.get(FLOAT_INFINITY_COLUMN));
+                ResultColumn floatMinusInfinityResult = select.addToSelection(e.get(FLOAT_MINUS_INFINITY_COLUMN));
+                ResultColumn floatNanResult = select.addToSelection(e.get(FLOAT_NAN_COLUMN));
+                ResultColumn doubleInfinityResult = select.addToSelection(e.get(DOUBLE_INFINITY_COLUMN));
+                ResultColumn doubleMinusInfinityResult = select.addToSelection(e.get(DOUBLE_MINUS_INFINITY_COLUMN));
+                ResultColumn doubleNanResult = select.addToSelection(e.get(DOUBLE_NAN_COLUMN));
+
+                PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection));
+                try {
+                    ResultSet rs = statement.executeQuery();
+                    try {
+                        assertEquals(true, rs.next());
+                        assertTrue(isPositiveInfinity(JdbcUtils.readFloatNull(rs, floatInfinityResult.getIndex())));
+                        assertTrue(isNegativeInfinity(JdbcUtils.readFloatNull(rs, floatMinusInfinityResult.getIndex())));
+                        assertTrue(Float.isNaN(JdbcUtils.readFloatNull(rs, floatNanResult.getIndex())));
+                        assertTrue(isPositiveInfinity(JdbcUtils.readDoubleNull(rs, doubleInfinityResult.getIndex())));
+                        assertTrue(isNegativeInfinity(JdbcUtils.readDoubleNull(rs, doubleMinusInfinityResult.getIndex())));
+                        assertTrue(Double.isNaN(JdbcUtils.readDoubleNull(rs, doubleNanResult.getIndex())));
                         assertEquals(false, rs.next());
                     } finally {
                         rs.close();
@@ -420,6 +519,28 @@ public class ParameterTest {
         ));
     }
 
+    private static <T> T withRealTable(final TestUtils.Mapper<T> mapper, final boolean notNull) throws SQLException {
+        return withTable(mapper, defineTable(
+                new TableColumn[]{
+                        FLOAT_INFINITY_COLUMN,
+                        FLOAT_MINUS_INFINITY_COLUMN,
+                        FLOAT_NAN_COLUMN,
+                        DOUBLE_INFINITY_COLUMN,
+                        DOUBLE_MINUS_INFINITY_COLUMN,
+                        DOUBLE_NAN_COLUMN
+                },
+                new String[]{
+                        "REAL",
+                        "REAL",
+                        "REAL",
+                        "DOUBLE PRECISION", // No DOUBLE in PostgreSQL
+                        "DOUBLE PRECISION",
+                        "DOUBLE PRECISION"
+                },
+                notNull
+        ));
+    }
+
     private static <T> T withTimestampTable(final TestUtils.Mapper<T> mapper, final boolean notNull) throws SQLException {
         return withTable(mapper, defineTable(
                 new TableColumn[]{
@@ -486,5 +607,21 @@ public class ParameterTest {
         }
         builder.append(')');
         return builder.toString();
+    }
+
+    private static boolean isPositiveInfinity(float value) {
+        return Float.isInfinite(value) && value > 0;
+    }
+
+    private static boolean isPositiveInfinity(double value) {
+        return Double.isInfinite(value) && value > 0;
+    }
+
+    private static boolean isNegativeInfinity(float value) {
+        return Float.isInfinite(value) && value < 0;
+    }
+
+    private static boolean isNegativeInfinity(double value) {
+        return Double.isInfinite(value) && value < 0;
     }
 }
