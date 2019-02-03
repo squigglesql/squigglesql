@@ -13,7 +13,7 @@ services:
   - postgresql
 
 before_script:
-  - psql -c "create user squiggletest with password '1'; create database squiggletest with owner squiggletest;" -U postgres
-
-after_script:
-  - psql -c "drop database squiggletest; drop user squiggletest;" -U postgres
+  - psql -c "DROP DATABASE IF EXISTS squiggletest;" -U postgres
+  - psql -c "DROP ROLE IF EXISTS squiggletest;" -U postgres
+  - psql -c "CREATE USER squiggletest WITH PASSWORD '1';" -U postgres
+  - psql -c "CREATE DATABASE squiggletest WITH OWNER squiggletest;" -U postgres
