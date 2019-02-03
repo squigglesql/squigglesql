@@ -51,6 +51,9 @@ public class SelectTest {
                 + "ORDER BY\n"
                 + "    a DESC,\n"
                 + "    concat(e.first_name, e.last_name)", select.toString());
+
+        // Dummy line for coverage
+        new Order();
     }
 
     @Test

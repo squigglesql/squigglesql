@@ -40,21 +40,4 @@ public class TableColumn implements Compilable {
     public void compile(QueryCompiler compiler) {
         compiler.write(name);
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        TableColumn that = (TableColumn) o;
-
-        return table.equals(that.table) && name.equals(that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = table.hashCode();
-        result = 31 * result + name.hashCode();
-        return result;
-    }
 }

@@ -15,13 +15,18 @@
  */
 package io.zatarox.squiggle;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Table {
 
     private final String name;
 
+    private final Map<String, TableColumn> columnCache = new HashMap<String, TableColumn>();
+
     public Table(String name) {
         if (name == null || name.equals("")) {
-            throw new RuntimeException("Table name can not be empty.");
+            throw new IllegalArgumentException("Table name can not be empty.");
         }
         this.name = name;
     }
@@ -32,27 +37,17 @@ public class Table {
 
     public TableColumn get(String columnName) {
         if (columnName == null || columnName.equals("")) {
-            throw new RuntimeException("Table column name can not be empty.");
+            throw new IllegalArgumentException("Table column name can not be empty.");
         }
-        return new TableColumn(this, columnName);
+        TableColumn column = columnCache.get(columnName);
+        if (column == null) {
+            column = new TableColumn(this, columnName);
+            columnCache.put(columnName, column);
+        }
+        return column;
     }
 
     public TableReference refer() {
         return new TableReference(this);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Table table = (Table) o;
-
-        return name.equals(table.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return name.hashCode();
     }
 }

@@ -15,8 +15,10 @@
  */
 package io.zatarox.squiggle;
 
-public abstract class Order {
+public final class Order {
 
     public static final boolean ASCENDING = true;
     public static final boolean DESCENDING = false;
+
+    Order() {}
 }

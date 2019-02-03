@@ -30,7 +30,7 @@ public class NotCriteria implements Criteria {
 
     @Override
     public void compile(QueryCompiler compiler) {
-        compiler.write("NOT ").write(criteria);
+        compiler.write("NOT (").write(criteria).write(')');
     }
 
     @Override

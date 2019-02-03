@@ -80,7 +80,7 @@ public class CriteriaTest {
     }
 
     @Test
-    public void testBetweenCriteriaWithColumns() {
+    public void testNotAndBetweenCriteriaWithColumns() {
         Table river = new Table("river");
         TableColumn riverName = river.get("name");
         TableColumn riverLevel = river.get("level");
@@ -94,7 +94,8 @@ public class CriteriaTest {
         select.addToSelection(r.get(riverName));
         select.addToSelection(r.get(riverLevel));
 
-        select.addCriteria(new BetweenCriteria(r.get(riverLevel), r.get(riverLowerLimit), r.get(riverUpperLimit)));
+        select.addCriteria(new NotCriteria(
+                new BetweenCriteria(r.get(riverLevel), r.get(riverLowerLimit), r.get(riverUpperLimit))));
 
         assertEquals("SELECT\n"
                 + "    r.name,\n"
@@ -102,6 +103,6 @@ public class CriteriaTest {
                 + "FROM\n"
                 + "    river r\n"
                 + "WHERE\n"
-                + "    r.level BETWEEN r.lower_limit AND r.upper_limit", select.toString());
+                + "    NOT (r.level BETWEEN r.lower_limit AND r.upper_limit)", select.toString());
     }
 }
