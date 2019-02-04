@@ -103,7 +103,7 @@ public abstract class Literal implements Selectable {
         return value == null ? RawLiteral.NULL : new RawLiteral(value);
     }
 
-    public static Literal of(String value) {
+    public static Literal of(Object value) {
         return value == null ? RawLiteral.NULL : new StringLiteral(value);
     }
 
@@ -139,5 +139,5 @@ public abstract class Literal implements Selectable {
         return sql == null ? RawLiteral.NULL : new RawLiteral(sql);
     }
 
-    // TODO: byte[], Date/Time (with or without timezone)
+    // TODO: array, byte[], Date/Time (with or without timezone)
 }

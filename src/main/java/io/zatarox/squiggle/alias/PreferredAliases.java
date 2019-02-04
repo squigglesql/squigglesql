@@ -48,10 +48,5 @@ public class PreferredAliases implements Iterable<String> {
         public String next() {
             return base.substring(0, ++nextSymbol);
         }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
     }
 }

@@ -51,7 +51,7 @@ public class SelectQuery extends Query implements Matchable {
 
     public ResultColumn addToSelection(Selectable selectable) {
         if (selectable == null) {
-            throw new NullPointerException("Selection can not be null.");
+            throw new IllegalArgumentException("Selection can not be null.");
         }
         ResultColumn resultColumn = new ResultColumn(selectable, selection.size() + 1);
         selection.add(resultColumn);
@@ -60,21 +60,21 @@ public class SelectQuery extends Query implements Matchable {
 
     public void addCriteria(Criteria criteria) {
         if (criteria == null) {
-            throw new NullPointerException("Criteria can not be null.");
+            throw new IllegalArgumentException("Criteria can not be null.");
         }
         this.criterias.add(criteria);
     }
 
     public void addOrder(ResultColumn resultColumn, boolean ascending) {
         if (resultColumn == null) {
-            throw new NullPointerException("Ordering column can not be null.");
+            throw new IllegalArgumentException("Ordering column can not be null.");
         }
         this.orders.add(new OrderByResult(resultColumn, ascending));
     }
 
     public void addOrder(Selectable selectable, boolean ascending) {
         if (selectable == null) {
-            throw new NullPointerException("Ordering criteria can not be null.");
+            throw new IllegalArgumentException("Ordering criteria can not be null.");
         }
         this.orders.add(new OrderBySelectable(selectable, ascending));
     }

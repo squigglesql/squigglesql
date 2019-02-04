@@ -49,4 +49,23 @@ public class InsertQueryTest {
         assertEquals("John", statement.getParameters().get(0));
         assertEquals(30, statement.getParameters().get(1));
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullTableException() {
+        new InsertQuery(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullColumnException() {
+        Table employee = new Table("employee");
+        Table department = new Table("department");
+        TableColumn employeeName = employee.get("name");
+        new InsertQuery(department).addValue(employeeName, Literal.of("Name"));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testEmptyValuesException() {
+        Table employee = new Table("employee");
+        new InsertQuery(employee).toString();
+    }
 }

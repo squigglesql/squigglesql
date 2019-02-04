@@ -44,21 +44,4 @@ public class TableColumnReference implements Selectable {
     public void collectTableReferences(Set<TableReference> tableReferences) {
         tableReferences.add(tableReference);
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        TableColumnReference that = (TableColumnReference) o;
-
-        return column.equals(that.column) && tableReference.equals(that.tableReference);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = column.hashCode();
-        result = 31 * result + tableReference.hashCode();
-        return result;
-    }
 }

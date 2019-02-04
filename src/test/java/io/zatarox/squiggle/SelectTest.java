@@ -41,6 +41,7 @@ public class SelectTest {
         select.addOrder(ageResult, Order.DESCENDING);
         select.addOrder(new FunctionCall("concat",
                 p.get(employeeFirstName), p.get(employeeLastName)), Order.ASCENDING);
+        select.addOrder(p.get(employeeFirstName), Order.DESCENDING);
 
         assertEquals("SELECT\n"
                 + "    e.first_name,\n"
@@ -50,7 +51,11 @@ public class SelectTest {
                 + "    employee e\n"
                 + "ORDER BY\n"
                 + "    a DESC,\n"
-                + "    concat(e.first_name, e.last_name)", select.toString());
+                + "    concat(e.first_name, e.last_name),\n"
+                + "    e.first_name DESC", select.toString());
+
+        // Dummy line for coverage
+        new Order();
     }
 
     @Test
@@ -71,5 +76,25 @@ public class SelectTest {
                 + "    e.last_name\n"
                 + "FROM\n"
                 + "    employee e", select.toString());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullSelection() {
+        new SelectQuery().addToSelection(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullCriteria() {
+        new SelectQuery().addCriteria(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullOrderByResult() {
+        new SelectQuery().addOrder((ResultColumn) null, Order.ASCENDING);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullOrderBySelectable() {
+        new SelectQuery().addOrder((Selectable) null, Order.ASCENDING);
     }
 }

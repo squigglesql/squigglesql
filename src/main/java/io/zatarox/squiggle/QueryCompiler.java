@@ -87,10 +87,6 @@ public class QueryCompiler {
         return this;
     }
 
-    public QueryCompiler writeln(Compilable c) {
-        return write(c).writeln();
-    }
-
     public QueryCompiler indent() {
         output.indent();
         return this;

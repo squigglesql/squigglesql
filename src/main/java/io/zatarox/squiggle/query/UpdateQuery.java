@@ -37,29 +37,33 @@ public class UpdateQuery extends Query {
 
     public UpdateQuery(TableReference tableReference) {
         if (tableReference == null) {
-            throw new NullPointerException("Table reference can not be empty.");
+            throw new IllegalArgumentException("Table reference can not be empty.");
         }
         this.tableReference = tableReference;
     }
 
     public void addValue(TableColumn column, Matchable value) {
         if (!column.getTable().equals(tableReference.getTable())) {
-            throw new NullPointerException("Can not insert a value to a different database table.");
+            throw new IllegalArgumentException("Can not insert a value to a different database table.");
         }
         assignments.add(new Assignment(column, value));
     }
 
     public void addCriteria(Criteria criteria) {
         if (criteria == null) {
-            throw new NullPointerException("Criteria can not be null.");
+            throw new IllegalArgumentException("Criteria can not be null.");
         }
         this.criterias.add(criteria);
     }
 
+    public boolean isEmpty() {
+        return assignments.isEmpty();
+    }
+
     @Override
     protected void compile(Output output) {
-        if (assignments.isEmpty()) {
-            throw new RuntimeException("No values specified for updating.");
+        if (isEmpty()) {
+            throw new IllegalStateException("No values specified for updating.");
         }
 
         Set<TableReference> tableReferences = findTableReferences();

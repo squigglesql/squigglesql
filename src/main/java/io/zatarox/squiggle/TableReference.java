@@ -37,12 +37,12 @@ public class TableReference implements Aliasable, Compilable {
 
     public TableColumnReference get(TableColumn column) {
         if (column == null) {
-            throw new NullPointerException("Can not create a reference to a null column.");
+            throw new IllegalArgumentException("Can not create a reference to a null column.");
         }
         TableColumnReference reference = columnReferenceCache.get(column);
         if (reference == null) {
             if (!column.getTable().equals(table)) {
-                throw new RuntimeException(
+                throw new IllegalArgumentException(
                         "Can not create a reference to a column defined in a different database table.");
             }
             reference = new TableColumnReference(column, this);

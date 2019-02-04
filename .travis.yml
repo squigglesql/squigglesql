@@ -8,3 +8,12 @@ script:
   
 after_success:
   - mvn clean test jacoco:report coveralls:report
+
+services:
+  - postgresql
+
+before_script:
+  - psql -c "DROP DATABASE IF EXISTS squiggletest;" -U postgres
+  - psql -c "DROP ROLE IF EXISTS squiggletest;" -U postgres
+  - psql -c "CREATE USER squiggletest WITH PASSWORD '1';" -U postgres
+  - psql -c "CREATE DATABASE squiggletest WITH OWNER squiggletest;" -U postgres

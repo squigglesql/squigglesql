@@ -80,7 +80,7 @@ public class CriteriaTest {
     }
 
     @Test
-    public void testBetweenCriteriaWithColumns() {
+    public void testNotAndBetweenCriteriaWithColumns() {
         Table river = new Table("river");
         TableColumn riverName = river.get("name");
         TableColumn riverLevel = river.get("level");
@@ -94,7 +94,8 @@ public class CriteriaTest {
         select.addToSelection(r.get(riverName));
         select.addToSelection(r.get(riverLevel));
 
-        select.addCriteria(new BetweenCriteria(r.get(riverLevel), r.get(riverLowerLimit), r.get(riverUpperLimit)));
+        select.addCriteria(new NotCriteria(
+                new BetweenCriteria(r.get(riverLevel), r.get(riverLowerLimit), r.get(riverUpperLimit))));
 
         assertEquals("SELECT\n"
                 + "    r.name,\n"
@@ -102,6 +103,28 @@ public class CriteriaTest {
                 + "FROM\n"
                 + "    river r\n"
                 + "WHERE\n"
-                + "    r.level BETWEEN r.lower_limit AND r.upper_limit", select.toString());
+                + "    NOT (r.level BETWEEN r.lower_limit AND r.upper_limit)", select.toString());
+    }
+
+    @Test
+    public void testInEmpty() {
+        Table user = new Table("user");
+        TableColumn userId = user.get("id");
+        TableColumn userRole = user.get("role");
+
+        TableReference u = user.refer();
+
+        SelectQuery select = new SelectQuery();
+
+        select.addToSelection(u.get(userId));
+
+        select.addCriteria(new InCriteria(u.get(userRole)));
+
+        assertEquals("SELECT\n"
+                + "    u.id\n"
+                + "FROM\n"
+                + "    user u\n"
+                + "WHERE\n"
+                + "    1 = 1", select.toString());
     }
 }
