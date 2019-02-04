@@ -5,6 +5,15 @@ import io.zatarox.squiggle.query.SelectQuery;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,6 +28,15 @@ public class LiteralTest {
     private static final double DOUBLE = 20.5d;
     private static final BigDecimal BIG_DECIMAL = new BigDecimal(LONG).pow(4);
     private static final String STRING = "Hello";
+
+    private static final Instant INSTANT = Instant.parse("2018-01-02T03:04:05.006Z");
+    private static final LocalDate LOCAL_DATE = LocalDate.of(2018, 1, 2);
+    private static final LocalTime LOCAL_TIME = LocalTime.of(3, 4, 5, 6000000);
+    private static final LocalDateTime LOCAL_DATE_TIME =
+            LocalDateTime.of(2018, 1, 2, 3, 4, 5, 6000000);
+    private static final ZonedDateTime ZONED_DATE_TIME = ZonedDateTime.of(LOCAL_DATE_TIME, ZoneId.of("America/Vancouver"));
+    private static final OffsetDateTime OFFSET_DATE_TIME = OffsetDateTime.of(LOCAL_DATE_TIME, ZoneOffset.ofHours(-8));
+    private static final OffsetTime OFFSET_TIME = OffsetTime.of(LOCAL_TIME, ZoneOffset.ofHours(-8));
 
     @Test
     public void testLiteral() {
@@ -56,6 +74,20 @@ public class LiteralTest {
         select.addToSelection(Literal.of((BigDecimal) null));
         select.addToSelection(Literal.of(STRING));
         select.addToSelection(Literal.of((String) null));
+        select.addToSelection(Literal.of(INSTANT));
+        select.addToSelection(Literal.of((Instant) null));
+        select.addToSelection(Literal.of(LOCAL_DATE));
+        select.addToSelection(Literal.of((LocalDate) null));
+        select.addToSelection(Literal.of(LOCAL_TIME));
+        select.addToSelection(Literal.of((LocalTime) null));
+        select.addToSelection(Literal.of(LOCAL_DATE_TIME));
+        select.addToSelection(Literal.of((LocalDateTime) null));
+        select.addToSelection(Literal.of(ZONED_DATE_TIME));
+        select.addToSelection(Literal.of((ZonedDateTime) null));
+        select.addToSelection(Literal.of(OFFSET_DATE_TIME));
+        select.addToSelection(Literal.of((OffsetDateTime) null));
+        select.addToSelection(Literal.of(OFFSET_TIME));
+        select.addToSelection(Literal.of((OffsetTime) null));
         select.addToSelection(Literal.unsafe("true"));
         select.addToSelection(Literal.unsafe(null));
 
@@ -91,6 +123,20 @@ public class LiteralTest {
                 + "    1000000000000000000000000000000000000000000000000,\n"
                 + "    null,\n"
                 + "    'Hello',\n"
+                + "    null,\n"
+                + "    '2018-01-02 03:04:05.006+00',\n"
+                + "    null,\n"
+                + "    '2018-01-02',\n"
+                + "    null,\n"
+                + "    '03:04:05.006',\n"
+                + "    null,\n"
+                + "    '2018-01-02 03:04:05.006',\n"
+                + "    null,\n"
+                + "    '2018-01-02 03:04:05.006-08',\n"
+                + "    null,\n"
+                + "    '2018-01-02 03:04:05.006-08',\n"
+                + "    null,\n"
+                + "    '03:04:05.006-08',\n"
                 + "    null,\n"
                 + "    true,\n"
                 + "    null", select.toString());

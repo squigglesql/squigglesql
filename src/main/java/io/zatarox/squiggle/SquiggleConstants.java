@@ -13,5 +13,7 @@ public abstract class SquiggleConstants {
     public static final DateTimeFormatter TIMESTAMP_FORMATTER =
             DateTimeFormatter.ofPattern(DATE_PATTERN + " " + TIME_PATTERN);
     public static final DateTimeFormatter TIMESTAMP_WITH_TIME_ZONE_FORMATTER =
-            DateTimeFormatter.ofPattern(DATE_PATTERN + " " + TIME_PATTERN + " " + ZONE_PATTERN);
+            DateTimeFormatter.ofPattern(DATE_PATTERN + " " + TIME_PATTERN + ZONE_PATTERN);
+    public static final DateTimeFormatter TIME_WITH_TIME_ZONE_FORMATTER =
+            DateTimeFormatter.ofPattern(TIME_PATTERN + ZONE_PATTERN);
 }

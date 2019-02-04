@@ -18,6 +18,7 @@ package io.zatarox.squiggle.literal;
 import io.zatarox.squiggle.Selectable;
 import io.zatarox.squiggle.TableReference;
 import io.zatarox.squiggle.literal.time.DateLiteral;
+import io.zatarox.squiggle.literal.time.InstantInterval;
 import io.zatarox.squiggle.literal.time.TimeLiteral;
 import io.zatarox.squiggle.literal.time.TimeWithTimeZoneLiteral;
 import io.zatarox.squiggle.literal.time.TimestampLiteral;
@@ -108,7 +109,7 @@ public abstract class Literal implements Selectable {
     }
 
     public static Literal of(Instant value) {
-        return value == null ? RawLiteral.NULL : new TimestampWithTimeZoneLiteral(value);
+        return value == null ? RawLiteral.NULL : new InstantInterval(value);
     }
 
     public static Literal of(LocalDate value) {

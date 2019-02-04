@@ -28,6 +28,6 @@ public class TimeWithTimeZoneLiteral extends AbstractTimeLiteral {
 
     @Override
     protected DateTimeFormatter getFormatter() {
-        return SquiggleConstants.TIME_FORMATTER;
+        return SquiggleConstants.TIME_WITH_TIME_ZONE_FORMATTER;
     }
 }

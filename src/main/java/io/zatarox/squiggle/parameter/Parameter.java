@@ -173,7 +173,7 @@ public abstract class Parameter implements Matchable {
     }
 
     public static Parameter of(LocalTime value) {
-        return value != null ? of(SquiggleUtils.serialize(value)) : NullParameter.TIME;
+        return of(SquiggleUtils.serialize(value));
     }
 
     public static Parameter of(LocalDateTime value) {

@@ -16,7 +16,6 @@ class NullParameter extends Parameter {
     static final Parameter DOUBLE = new NullParameter(Types.DOUBLE);
     static final Parameter TIMESTAMP = new NullParameter(Types.TIMESTAMP);
     static final Parameter TIMESTAMP_WITH_TIMEZONE = new NullParameter(Types.TIMESTAMP_WITH_TIMEZONE);
-    static final Parameter TIME = new NullParameter(Types.TIME);
     static final Parameter DATE = new NullParameter(Types.DATE);
 
     private final int sqlType;
