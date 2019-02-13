@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.zatarox</groupId>
+    <groupId>network.tide</groupId>
     <artifactId>squiggle</artifactId>
     <version>4.0.0</version>
-    <url>https://github.com/gchauvet/squiggle-sql</url>
+    <url>https://github.com/enepomnyaschih/squiggle-sql</url>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -13,17 +13,15 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git://github.com:gchauvet/squiggle-sql.git</connection>
-        <developerConnection>scm:git:git@github.com:gchauvet/squiggle-sql.git</developerConnection>
-        <url>https://github.com/gchauvet/squiggle-sql</url>
+        <connection>scm:git:git://github.com:enepomnyaschih/squiggle-sql.git</connection>
+        <developerConnection>scm:git:git@github.com:enepomnyaschih/squiggle-sql.git</developerConnection>
+        <url>https://github.com/enepomnyaschih/squiggle-sql</url>
     </scm>
     <developers>
         <developer>
-            <id>gchauvet</id>
-            <name>Guillaume Chauvet</name>
-            <email>gchauvet@zatarox.com</email>
-            <url>http://github.com/gchauvet</url>
-            <organization>Zatarox</organization>
+            <id>enepomnyaschih</id>
+            <name>Egor Nepomnyaschih</name>
+            <url>http://github.com/enepomnyaschih</url>
         </developer>
     </developers>
     <build>
@@ -88,7 +86,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.0.0</version>
+                        <version>3.0.1</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -153,6 +151,12 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.2.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.3</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
