@@ -14,7 +14,7 @@ import network.tide.squiggle.util.JdbcUtils;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class ProductDao {
+public abstract class ProductDao {
 
     private static final Table TABLE = new Table("product");
     private static final TableColumn ID = TABLE.get("id");

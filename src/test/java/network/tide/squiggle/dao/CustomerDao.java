@@ -14,9 +14,8 @@ import network.tide.squiggle.util.JdbcUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
-public class CustomerDao {
+public abstract class CustomerDao {
 
     private static final Table TABLE = new Table("customer");
     private static final TableColumn ID = TABLE.get("id");
@@ -25,7 +24,7 @@ public class CustomerDao {
 
     public interface Joiner {
 
-        void accept(Selectable idRef, Selectable cityRef);
+        void accept(Selectable idRef);
     }
 
     public static ResultMapper<Customer> addToQuery(SelectQuery query, Joiner joiner) {
@@ -35,7 +34,7 @@ public class CustomerDao {
         ResultColumn name = query.addToSelection(ref.get(NAME));
         ResultColumn city = query.addToSelection(ref.get(CITY));
 
-        joiner.accept(ref.get(ID), ref.get(CITY));
+        joiner.accept(ref.get(ID));
 
         return rs -> new Customer(
                 JdbcUtils.readIntegerNotNull(rs, id.getIndex()),
@@ -53,18 +52,9 @@ public class CustomerDao {
 
     public static Customer select(Connection connection, int id) throws SQLException {
         SelectQuery query = new SelectQuery();
-        ResultMapper<Customer> mapper = addToQuery(query, (idRef, cityRef) -> {
+        ResultMapper<Customer> mapper = addToQuery(query, idRef -> {
             query.addCriteria(new MatchCriteria(idRef, MatchCriteria.EQUALS, Parameter.of(id)));
         });
         return JdbcUtils.selectOne(query, connection, mapper);
-    }
-
-    public static List<Customer> selectByCity(Connection connection, String city) throws SQLException {
-        SelectQuery query = new SelectQuery();
-        ResultMapper<Customer> mapper = addToQuery(query, (idRef, cityRef) -> {
-            query.addCriteria(new MatchCriteria(cityRef, MatchCriteria.EQUALS, Parameter.of(city)));
-            query.addOrder(idRef, true);
-        });
-        return JdbcUtils.selectAll(query, connection, mapper);
     }
 }

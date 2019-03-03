@@ -15,11 +15,10 @@ import network.tide.squiggle.util.JdbcUtils;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.List;
 
 import static network.tide.squiggle.criteria.MatchCriteria.EQUALS;
 
-public class OrderDao {
+public abstract class OrderDao {
 
     private static final Table TABLE = new Table("order");
     private static final TableColumn ID = TABLE.get("id");
@@ -28,7 +27,7 @@ public class OrderDao {
 
     public interface Joiner {
 
-        void accept(Selectable idRef, Selectable cityRef);
+        void accept(Selectable idRef);
     }
 
     public static ResultMapper<Order> addToQuery(SelectQuery query, Joiner joiner) {
@@ -37,10 +36,11 @@ public class OrderDao {
         ResultColumn id = query.addToSelection(ref.get(ID));
         ResultColumn issuedAt = query.addToSelection(ref.get(ISSUED_AT));
 
-        ResultMapper<Customer> customer = CustomerDao.addToQuery(query, (idRef, cityRef) -> {
+        ResultMapper<Customer> customer = CustomerDao.addToQuery(query, idRef -> {
             query.addCriteria(new MatchCriteria(idRef, EQUALS, ref.get(CUSTOMER_ID)));
-            joiner.accept(ref.get(ID), cityRef);
         });
+
+        joiner.accept(ref.get(ID));
 
         return rs -> new Order(
                 JdbcUtils.readIntegerNotNull(rs, id.getIndex()),
@@ -58,17 +58,9 @@ public class OrderDao {
 
     public static Order select(Connection connection, int id) throws SQLException {
         SelectQuery query = new SelectQuery();
-        ResultMapper<Order> mapper = addToQuery(query, (idRef, cityRef) -> {
+        ResultMapper<Order> mapper = addToQuery(query, idRef -> {
             query.addCriteria(new MatchCriteria(idRef, MatchCriteria.EQUALS, Parameter.of(id)));
         });
         return JdbcUtils.selectOne(query, connection, mapper);
-    }
-
-    public static List<Order> selectByCity(Connection connection, String city) throws SQLException {
-        SelectQuery query = new SelectQuery();
-        ResultMapper<Order> mapper = addToQuery(query, (idRef, cityRef) -> {
-            query.addCriteria(new MatchCriteria(cityRef, MatchCriteria.EQUALS, Parameter.of(city)));
-        });
-        return JdbcUtils.selectAll(query, connection, mapper);
     }
 }

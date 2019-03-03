@@ -204,7 +204,7 @@ try (PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(
 }
 ```
 
-# Good practices
+# Best practices
 
 ## Intro
 
@@ -218,6 +218,8 @@ Assuming that you have the following tables:
 * *order* (id, issued_at, *customer_id*)
 * *product* (id, name, price)
 * *order_item* (id, *order_id*, *product_id*, quantity)
+
+You should start with the following.
 
 ## Model classes
 
@@ -264,21 +266,26 @@ The next step is to define DAO (Database Access Object) classes with the databas
 methods as follows:
 
 ```java
-public class CustomerDao {
+public abstract class CustomerDao {
 
     private static final Table TABLE = new Table("customer");
     private static final TableColumn ID = TABLE.get("id");
     private static final TableColumn NAME = TABLE.get("name");
     private static final TableColumn CITY = TABLE.get("city");
 
-    public static ResultMapper<Customer> addToQuery(SelectQuery query, BiConsumer<TableReference, Matchable> joiner) {
+    public interface Joiner {
+
+        void accept(Selectable idRef);
+    }
+
+    public static ResultMapper<Customer> addToQuery(SelectQuery query, Joiner joiner) {
         TableReference ref = TABLE.refer();
 
         ResultColumn id = query.addToSelection(ref.get(ID));
         ResultColumn name = query.addToSelection(ref.get(NAME));
         ResultColumn city = query.addToSelection(ref.get(CITY));
 
-        joiner.accept(ref, ref.get(ID));
+        joiner.accept(ref.get(ID));
 
         return rs -> new Customer(
                 JdbcUtils.readIntegerNotNull(rs, id.getIndex()),
@@ -289,59 +296,55 @@ public class CustomerDao {
 ```
 
 Private static constants define the table and its columns. The method adds the table columns to a SelectQuery, adds
-custom criterias determined by *joiner* function and returns a ResultMapper instance allowing you to map raw result
+custom criterias determined by `joiner` function and returns a ResultMapper instance allowing you to map raw result
 records to new model instances. This method provides a generalized way to obtain Customer instances from database
-in the majority of use cases. The simplest use case is Customer retrieving by certain criterias. Let's add a couple of
-such methods for example:
+by their primary key, regardless of the other tables involved in the query. The simplest use case is a Customer
+retrieving directly by its primary key:
 
 ```java
     public static Customer select(Connection connection, int id) throws SQLException {
         SelectQuery query = new SelectQuery();
-        ResultMapper<Customer> mapper = addToQuery(query, (ref, key) -> {
-            query.addCriteria(new MatchCriteria(key, MatchCriteria.EQUALS, Parameter.of(id)));
+        ResultMapper<Customer> mapper = addToQuery(query, idRef -> {
+            query.addCriteria(new MatchCriteria(idRef, MatchCriteria.EQUALS, Parameter.of(id)));
         });
         return JdbcUtils.selectOne(query, connection, mapper);
     }
-
-    public static List<Customer> selectByCity(Connection connection, String city) throws SQLException {
-        SelectQuery query = new SelectQuery();
-        ResultMapper<Customer> mapper = addToQuery(query, (ref, key) -> {
-            query.addCriteria(new MatchCriteria(ref.get(CITY), MatchCriteria.EQUALS, Parameter.of(city)));
-            query.addOrder(ref.get(ID), true);
-        });
-        return JdbcUtils.selectAll(query, connection, mapper);
-    }
 ```
 
-Notice how short these functions are. The beauty of this approach is that all low-level record mapping code is hidden
-in addToQuery method, so these high-level select* functions do exactly as much as their names state - make a select
-query with certain criterias based on the method arguments. You don't need to copy and paste big portions of the SQL
-code query over and over again just to customize selection criterias, and this is just another Squiggle SQL advantage.
+Notice that all low-level record mapping code is hidden in `addToQuery` method, so this high-level `select` function
+does exactly as much as its names states - makes a select query to this table with a certain criteria. You don't need
+to copy and paste big portions of the SQL code query over and over again just to customize selection criterias or join
+this table with the other tables, and we'll demonstrate it soon.
 
 ## Multi-table DAO
 
 You can use the same approach to define DAO classes for database tables containing references to the other tables. Just
-call addToQuery methods in referred tables to transparently add them to a query:
+call `addToQuery` methods of referred tables to transparently add them to a query:
 
 ```java
-public class OrderDao {
+public abstract class OrderDao {
 
     private static final Table TABLE = new Table("order");
     private static final TableColumn ID = TABLE.get("id");
     private static final TableColumn ISSUED_AT = TABLE.get("issued_at");
     private static final TableColumn CUSTOMER_ID = TABLE.get("customer_id");
 
-    public static ResultMapper<Order> addToQuery(SelectQuery query, BiConsumer<TableReference, Matchable> joiner) {
+    public interface Joiner {
+
+        void accept(Selectable idRef);
+    }
+
+    public static ResultMapper<Order> addToQuery(SelectQuery query, Joiner joiner) {
         TableReference ref = TABLE.refer();
 
         ResultColumn id = query.addToSelection(ref.get(ID));
         ResultColumn issuedAt = query.addToSelection(ref.get(ISSUED_AT));
 
-        ResultMapper<Customer> customer = CustomerDao.addToQuery(query, (customerRef, key) -> {
-            query.addCriteria(new MatchCriteria(key, EQUALS, ref.get(CUSTOMER_ID)));
+        ResultMapper<Customer> customer = CustomerDao.addToQuery(query, idRef -> {
+            query.addCriteria(new MatchCriteria(idRef, EQUALS, ref.get(CUSTOMER_ID)));
         });
 
-        joiner.accept(ref, ref.get(ID));
+        joiner.accept(ref.get(ID));
 
         return rs -> new Order(
                 JdbcUtils.readIntegerNotNull(rs, id.getIndex()),
@@ -351,7 +354,7 @@ public class OrderDao {
 }
 ```
 
-Notice has we use CustomerDao.addToQuery call to join orders with customers in a single query. Then you just need to
+Notice haw we use `CustomerDao.addToQuery` call to join orders with customers in a single query. Then you just need to
 call `customer.apply(rs)` function to read a proper Customer instance referred by the Order.
 
 Now you can easily select full Order instances in the same way as above:
@@ -359,8 +362,8 @@ Now you can easily select full Order instances in the same way as above:
 ```java
     public static Order select(Connection connection, int id) throws SQLException {
         SelectQuery query = new SelectQuery();
-        ResultMapper<Order> mapper = addToQuery(query, (ref, key) -> {
-            query.addCriteria(new MatchCriteria(key, MatchCriteria.EQUALS, Parameter.of(id)));
+        ResultMapper<Order> mapper = addToQuery(query, idRef -> {
+            query.addCriteria(new MatchCriteria(idRef, MatchCriteria.EQUALS, Parameter.of(id)));
         });
         return JdbcUtils.selectOne(query, connection, mapper);
     }
@@ -370,21 +373,26 @@ Let's define the remaining tables to demonstrate the consistency of this approac
 involved, as OrderItem selection involves all 4 tables into the query:
 
 ```java
-public class ProductDao {
+public abstract class ProductDao {
 
     private static final Table TABLE = new Table("product");
     private static final TableColumn ID = TABLE.get("id");
     private static final TableColumn NAME = TABLE.get("name");
     private static final TableColumn PRICE = TABLE.get("price");
 
-    public static ResultMapper<Product> addToQuery(SelectQuery query, BiConsumer<TableReference, Matchable> joiner) {
+    public interface Joiner {
+
+        void accept(Selectable idRef);
+    }
+
+    public static ResultMapper<Product> addToQuery(SelectQuery query, Joiner joiner) {
         TableReference ref = TABLE.refer();
 
         ResultColumn id = query.addToSelection(ref.get(ID));
         ResultColumn name = query.addToSelection(ref.get(NAME));
         ResultColumn price = query.addToSelection(ref.get(PRICE));
 
-        joiner.accept(ref, ref.get(ID));
+        joiner.accept(ref.get(ID));
 
         return rs -> new Product(
                 JdbcUtils.readIntegerNotNull(rs, id.getIndex()),
@@ -393,7 +401,7 @@ public class ProductDao {
     }
 }
 
-public class OrderItemDao {
+public abstract class OrderItemDao {
 
     private static final Table TABLE = new Table("order_item");
     private static final TableColumn ID = TABLE.get("id");
@@ -401,21 +409,26 @@ public class OrderItemDao {
     private static final TableColumn PRODUCT_ID = TABLE.get("product_id");
     private static final TableColumn QUANTITY = TABLE.get("quantity");
 
-    public static ResultMapper<OrderItem> addToQuery(SelectQuery query, BiConsumer<TableReference, Matchable> joiner) {
+    public interface Joiner {
+
+        void accept(Selectable idRef);
+    }
+
+    public static ResultMapper<OrderItem> addToQuery(SelectQuery query, Joiner joiner) {
         TableReference ref = TABLE.refer();
 
         ResultColumn id = query.addToSelection(ref.get(ID));
         ResultColumn quantity = query.addToSelection(ref.get(QUANTITY));
 
-        ResultMapper<Order> order = OrderDao.addToQuery(query, (orderRef, key) -> {
-            query.addCriteria(new MatchCriteria(key, EQUALS, ref.get(ORDER_ID)));
+        ResultMapper<Order> order = OrderDao.addToQuery(query, idRef -> {
+            query.addCriteria(new MatchCriteria(idRef, EQUALS, ref.get(ORDER_ID)));
         });
 
-        ResultMapper<Product> product = ProductDao.addToQuery(query, (productRef, key) -> {
-            query.addCriteria(new MatchCriteria(key, EQUALS, ref.get(PRODUCT_ID)));
+        ResultMapper<Product> product = ProductDao.addToQuery(query, idRef -> {
+            query.addCriteria(new MatchCriteria(idRef, EQUALS, ref.get(PRODUCT_ID)));
         });
 
-        joiner.accept(ref, ref.get(ID));
+        joiner.accept(ref.get(ID));
 
         return rs -> new OrderItem(
                 JdbcUtils.readIntegerNotNull(rs, id.getIndex()),
@@ -423,16 +436,23 @@ public class OrderItemDao {
                 product.apply(rs),
                 JdbcUtils.readIntegerNotNull(rs, quantity.getIndex()));
     }
+}
+```
 
+Selection query of complex OrderItem instance is still consistently easy:
+
+```java
     public static OrderItem select(Connection connection, int id) throws SQLException {
         SelectQuery query = new SelectQuery();
-        ResultMapper<OrderItem> mapper = addToQuery(query, (ref, key) -> {
-            query.addCriteria(new MatchCriteria(key, EQUALS, Parameter.of(id)));
+        ResultMapper<OrderItem> mapper = addToQuery(query, idRef -> {
+            query.addCriteria(new MatchCriteria(idRef, EQUALS, Parameter.of(id)));
         });
         return JdbcUtils.selectOne(query, connection, mapper);
     }
-}
 ```
+
+Notice that all work above is made mostly with static functions with short lists of arguments. It means that the API is
+granular, easy to use and to cover with tests.
 
 Notice that you don't really need to worry about the text of the SQL query behind all this Java code. With just a bunch
 of simple and clear Java classes we've managed to transform Squiggle SQL query builder to a fully-capable database

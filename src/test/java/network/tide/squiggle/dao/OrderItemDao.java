@@ -17,7 +17,7 @@ import java.sql.SQLException;
 
 import static network.tide.squiggle.criteria.MatchCriteria.EQUALS;
 
-public class OrderItemDao {
+public abstract class OrderItemDao {
 
     private static final Table TABLE = new Table("order_item");
     private static final TableColumn ID = TABLE.get("id");
@@ -36,14 +36,15 @@ public class OrderItemDao {
         ResultColumn id = query.addToSelection(ref.get(ID));
         ResultColumn quantity = query.addToSelection(ref.get(QUANTITY));
 
-        ResultMapper<Order> order = OrderDao.addToQuery(query, (idRef, cityRef) -> {
+        ResultMapper<Order> order = OrderDao.addToQuery(query, idRef -> {
             query.addCriteria(new MatchCriteria(idRef, EQUALS, ref.get(ORDER_ID)));
-            joiner.accept(ref.get(ID));
         });
 
         ResultMapper<Product> product = ProductDao.addToQuery(query, idRef -> {
             query.addCriteria(new MatchCriteria(idRef, EQUALS, ref.get(PRODUCT_ID)));
         });
+
+        joiner.accept(ref.get(ID));
 
         return rs -> new OrderItem(
                 JdbcUtils.readIntegerNotNull(rs, id.getIndex()),
