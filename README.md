@@ -41,7 +41,7 @@ select.toString();
 Which produces:
 
 ```SQL
-SELECT\n"
+SELECT
     e.firstname,
     e.lastname
 FROM
