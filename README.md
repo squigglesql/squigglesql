@@ -13,8 +13,12 @@ figure out how to build this string. Squiggle takes much of this pain away.
 * Small, lightweight, fast.
 * Generates clean SQL designed that is very human readable.
 * Supports all basic SQL features.
+* Supports JDBC PreparedStatement compilation.
+* Provides matching sets of raw literals, SQL parameters and result set readers.
 
-# Example
+# Examples
+
+## Basic example
 
 ```java
 // define table
@@ -52,7 +56,7 @@ ORDER BY
     e.age DESC
 ```
 
-# More query features
+## More query features
 
 ```java
 // define tables
@@ -141,7 +145,7 @@ WHERE
     ))
 ```
 
-# JDBC prepared statements
+## JDBC prepared statements
 
 ```java
 // define table
@@ -175,3 +179,27 @@ WHERE
 ```
 
 and integer value of 30 as a parameter.
+
+## Result set readers
+
+```java
+// define table
+Table employee = new Table("employee");
+TableColumn employeeName = employee.get("name");
+TableColumn employeeAge = employee.get("age");
+
+// build query
+TableReference e = employee.refer();
+
+SelectQuery select = new SelectQuery();
+
+ResultColumn employeeNameResult = select.addToSelection(e.get(employeeName));
+ResultColumn employeeAgeResult = select.addToSelection(e.get(employeeAge));
+
+try (PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection))) {
+    try (ResultSet rs = statement.executeQuery()) {
+        String name = JdbcUtils.readString(rs, employeeNameResult.getIndex()));
+        int age = JdbcUtils.readIntegerNotNull(rs, employeeAgeResult.getIndex());
+    }
+}
+```
