@@ -30,10 +30,12 @@ public class StatementTest {
 
     @Test
     public void testStatement() throws SQLException {
+        // define table
         Table employee = new Table("employee");
         TableColumn employeeName = employee.get("name");
         TableColumn employeeAge = employee.get("age");
 
+        // build query
         TableReference e = employee.refer();
 
         SelectQuery select = new SelectQuery();

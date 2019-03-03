@@ -2,43 +2,176 @@
 [![Coverage Status](https://coveralls.io/repos/github/enepomnyaschih/squiggle-sql/badge.svg?branch=master)](https://coveralls.io/github/enepomnyaschih/squiggle-sql?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.zatarox/squiggle/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.zatarox/squiggle)
 
-Squiggle is a little Java library for dynamically generating SQL SELECT statements. It's sweet spot is for applications that need to build up complicated queries with criteria that changes at runtime. Ordinarily it can be quite painful to figure out how to build this string. Squiggle takes much of this pain away.
+Squiggle is a little Java library for dynamically generating SQL SELECT statements. It's sweet spot is for applications
+that need to build up complicated queries with criteria that changes at runtime. Ordinarily it can be quite painful to
+figure out how to build this string. Squiggle takes much of this pain away.
 
-The code for Squiggle is intentionally clean and simple. Rather than provide support for every thing you could ever do with SQL, it provides support for the most common situations and allows you to easily modify the source to suit your needs.
+# Features
 
-#Features
-Concise and intuitive API.
-Simple code, so easy to customize.
-No dependencies on classes outside of JDK 1.5
-Small, lightweight, fast.
-Generates clean SQL designed that is very human readable.
-Supports joins and sub-selects.
-Combine criteria with AND, OR and NOT operators.
-Supports functions in selects and WHERE criteria
+* Concise and intuitive API.
+* No dependencies on classes outside of JDK 1.8.
+* Small, lightweight, fast.
+* Generates clean SQL designed that is very human readable.
+* Supports all basic SQL features.
 
-Example
-Here's a very simple example:
+# Example
 
 ```java
+// define table
+Table employee = new Table("employee");
+TableColumn employeeFirstName = employee.get("firstname");
+TableColumn employeeLastName = employee.get("lastname");
+TableColumn employeeAge = employee.get("age");
+
+// build query
+TableReference e = employee.refer();
+
 SelectQuery select = new SelectQuery();
 
-Table people = new Table("people");
+select.addToSelection(e.get(employeeFirstName));
+select.addToSelection(e.get(employeeLastName));
 
-select.addColumn(people, "firstname");
-select.addColumn(people, "lastname");
+select.addCriteria(new MatchCriteria(e.get(employeeAge), MatchCriteria.GREATEREQUAL, Literal.of(18)));
 
-select.addOrder(people, "age", Order.DESCENDING);
+select.addOrder(e.get(employeeAge), Order.DESCENDING);
 
-System.out.println(select);
-````
+select.toString();
+```
 
 Which produces:
+
+```SQL
+SELECT\n"
+    e.firstname,
+    e.lastname
+FROM
+    employee e
+WHERE
+    e.age >= 18
+ORDER BY
+    e.age DESC
+```
+
+# More query features
+
+```java
+// define tables
+Table order = new Table("order");
+TableColumn orderId = order.get("id");
+TableColumn orderTotalPrice = order.get("total_price");
+TableColumn orderStatus = order.get("status");
+TableColumn orderItems = order.get("items");
+TableColumn orderDelivery = order.get("delivery");
+TableColumn orderWarehouseId = order.get("warehouse_id");
+
+Table warehouse = new Table("warehouse");
+TableColumn warehouseId = warehouse.get("id");
+TableColumn warehouseSize = warehouse.get("size");
+TableColumn warehouseLocation = warehouse.get("location");
+
+Table offer = new Table("offer");
+TableColumn offerLocation = offer.get("location");
+TableColumn offerValid = offer.get("valid");
+
+// basic query
+TableReference o = order.refer();
+
+SelectQuery select = new SelectQuery();
+
+select.addToSelection(o.get(orderId));
+select.addToSelection(o.get(orderTotalPrice));
+
+// matches
+select.addCriteria(new MatchCriteria(
+        o.get(orderStatus), MatchCriteria.EQUALS, new TypeCast(Literal.of("processed"), "status")));
+select.addCriteria(new MatchCriteria(
+        o.get(orderItems), MatchCriteria.LESS, Literal.of(5)));
+select.addCriteria(new InCriteria(o.get(orderDelivery),
+        Literal.of("post"), Literal.of("fedex"), Literal.of("goat")));
+
+// join
+TableReference w = warehouse.refer();
+
+select.addCriteria(new MatchCriteria(
+        o.get(orderWarehouseId), MatchCriteria.EQUALS, w.get(warehouseId)));
+
+// use joined table
+select.addToSelection(w.get(warehouseLocation));
+select.addCriteria(new MatchCriteria(
+        w.get(warehouseSize), MatchCriteria.EQUALS, Literal.of("big")));
+
+// build subselect query
+TableReference f = offer.refer();
+
+SelectQuery subSelect = new SelectQuery();
+
+subSelect.addToSelection(f.get(offerLocation));
+subSelect.addCriteria(new MatchCriteria(
+        f.get(offerValid), MatchCriteria.EQUALS, Literal.of(true)));
+
+// add subselect to original query
+select.addCriteria(new InCriteria(w.get(warehouseLocation), subSelect));
+
+select.toString();
+```
+
+Which produces:
+
 ```SQL
 SELECT
-   people.firstname ,
-   people.lastname
+    o.id,
+    o.total_price,
+    w.location
 FROM
-    people
-ORDER BY
-    people.age DESC
+    order o,
+    warehouse w
+WHERE
+    o.status = 'processed'::status AND
+    o.items < 5 AND
+    o.delivery IN ('post', 'fedex', 'goat') AND
+    o.warehouse_id = w.id AND
+    w.size = 'big' AND
+    w.location IN ((
+        SELECT
+            o.location
+        FROM
+            offer o
+        WHERE
+            o.valid = true
+    ))
 ```
+
+# JDBC prepared statements
+
+```java
+// define table
+Table employee = new Table("employee");
+TableColumn employeeName = employee.get("name");
+TableColumn employeeAge = employee.get("age");
+
+// build query
+TableReference e = employee.refer();
+
+SelectQuery select = new SelectQuery();
+
+select.addToSelection(e.get(employeeName));
+
+select.addCriteria(new MatchCriteria(
+        e.get(employeeAge), MatchCriteria.LESS, Parameter.of(30)));
+
+// with java.sql.Connection connection...
+PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection));
+```
+
+Which produces a statement with a query:
+
+```SQL
+SELECT
+    e.name
+FROM
+    employee e
+WHERE
+    e.age < ?
+```
+
+and integer value of 30 as a parameter.

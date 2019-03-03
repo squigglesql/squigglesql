@@ -106,4 +106,35 @@ public class TutorialTest {
                 + "            o.valid = true\n"
                 + "    ))", select.toString());
     }
+
+    @Test
+    public void testDemo() {
+        // define table
+        Table employee = new Table("employee");
+        TableColumn employeeFirstName = employee.get("firstname");
+        TableColumn employeeLastName = employee.get("lastname");
+        TableColumn employeeAge = employee.get("age");
+
+        // build query
+        TableReference e = employee.refer();
+
+        SelectQuery select = new SelectQuery();
+
+        select.addToSelection(e.get(employeeFirstName));
+        select.addToSelection(e.get(employeeLastName));
+
+        select.addCriteria(new MatchCriteria(e.get(employeeAge), MatchCriteria.GREATEREQUAL, Literal.of(18)));
+
+        select.addOrder(e.get(employeeAge), Order.DESCENDING);
+
+        assertEquals("SELECT\n"
+                + "    e.firstname,\n"
+                + "    e.lastname\n"
+                + "FROM\n"
+                + "    employee e\n"
+                + "WHERE\n"
+                + "    e.age >= 18\n"
+                + "ORDER BY\n"
+                + "    e.age DESC", select.toString());
+    }
 }
