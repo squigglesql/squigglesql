@@ -62,7 +62,7 @@ public abstract class TestUtils {
 
     public static <T> T withTable(Connection connection, String name, String createQuery,
                                   Supplier<T> supplier) throws SQLException {
-        String dropQuery = "DROP TABLE IF EXISTS " + name + " CASCADE";
+        String dropQuery = "DROP TABLE IF EXISTS \"" + name + "\" CASCADE";
         return with(connection, createQuery, dropQuery, supplier);
     }
 

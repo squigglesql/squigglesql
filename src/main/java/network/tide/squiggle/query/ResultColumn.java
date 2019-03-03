@@ -44,7 +44,7 @@ public class ResultColumn implements Aliasable, Compilable, TableReferred {
         compiler.write(selectable);
         String alias = compiler.getAlias(this);
         if (alias != null) {
-            compiler.write(" as ").write(alias);
+            compiler.write(" as ").quote(alias);
         }
     }
 

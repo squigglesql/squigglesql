@@ -87,6 +87,10 @@ public class QueryCompiler {
         return this;
     }
 
+    public QueryCompiler quote(String s) {
+        return write('"').write(s).write('"');
+    }
+
     public QueryCompiler indent() {
         output.indent();
         return this;

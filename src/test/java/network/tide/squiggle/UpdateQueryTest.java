@@ -55,14 +55,14 @@ public class UpdateQueryTest {
 
         MockStatement statement = query.toStatement(new MockStatementCompiler());
 
-        assertEquals("UPDATE employee e SET\n"
-                + "    status = ?,\n"
-                + "    status_changed_at = now()\n"
+        assertEquals("UPDATE \"employee\" \"e\" SET\n"
+                + "    \"status\" = ?,\n"
+                + "    \"status_changed_at\" = \"now\"()\n"
                 + "FROM\n"
-                + "    session s\n"
+                + "    \"session\" \"s\"\n"
                 + "WHERE\n"
-                + "    e.id = s.employee_id AND\n"
-                + "    s.id = ?", statement.getQuery());
+                + "    \"e\".\"id\" = \"s\".\"employee_id\" AND\n"
+                + "    \"s\".\"id\" = ?", statement.getQuery());
         assertEquals(2, statement.getParameters().size());
         assertEquals("BLOCKED", statement.getParameters().get(0));
         assertEquals("<session_id_value>", statement.getParameters().get(1));

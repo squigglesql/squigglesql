@@ -29,7 +29,7 @@ public class TypeCast implements Selectable {
 
     @Override
     public void compile(QueryCompiler compiler) {
-        compiler.write(value).write("::").write(type);
+        compiler.write(value).write("::").write(type); // quote call doesn't work for built-in types
     }
 
     @Override

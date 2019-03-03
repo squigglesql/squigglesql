@@ -38,6 +38,6 @@ public class TableColumn implements Compilable {
 
     @Override
     public void compile(QueryCompiler compiler) {
-        compiler.write(name);
+        compiler.quote(name);
     }
 }

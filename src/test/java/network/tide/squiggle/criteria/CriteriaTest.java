@@ -47,14 +47,14 @@ public class CriteriaTest {
         select.addCriteria(new BetweenCriteria(e.get(employeeAge), Literal.of(18), Literal.of(30)));
 
         assertEquals("SELECT\n"
-                + "    e.first_name,\n"
-                + "    e.last_name\n"
+                + "    \"e\".\"first_name\",\n"
+                + "    \"e\".\"last_name\"\n"
                 + "FROM\n"
-                + "    employee e\n"
+                + "    \"employee\" \"e\"\n"
                 + "WHERE\n"
-                + "    e.height > 1.8 AND\n"
-                + "    e.department IN ('I.T.', 'Cooking') AND\n"
-                + "    e.age BETWEEN 18 AND 30", select.toString());
+                + "    \"e\".\"height\" > 1.8 AND\n"
+                + "    \"e\".\"department\" IN ('I.T.', 'Cooking') AND\n"
+                + "    \"e\".\"age\" BETWEEN 18 AND 30", select.toString());
 
     }
 
@@ -73,10 +73,10 @@ public class CriteriaTest {
 
         assertEquals("SELECT 1\n"
                 + "FROM\n"
-                + "    employee e\n"
+                + "    \"employee\" \"e\"\n"
                 + "WHERE\n"
-                + "    e.name IS NULL AND\n"
-                + "    e.age IS NOT NULL", select.toString());
+                + "    \"e\".\"name\" IS NULL AND\n"
+                + "    \"e\".\"age\" IS NOT NULL", select.toString());
     }
 
     @Test
@@ -98,12 +98,12 @@ public class CriteriaTest {
                 new BetweenCriteria(r.get(riverLevel), r.get(riverLowerLimit), r.get(riverUpperLimit))));
 
         assertEquals("SELECT\n"
-                + "    r.name,\n"
-                + "    r.level\n"
+                + "    \"r\".\"name\",\n"
+                + "    \"r\".\"level\"\n"
                 + "FROM\n"
-                + "    river r\n"
+                + "    \"river\" \"r\"\n"
                 + "WHERE\n"
-                + "    NOT (r.level BETWEEN r.lower_limit AND r.upper_limit)", select.toString());
+                + "    NOT (\"r\".\"level\" BETWEEN \"r\".\"lower_limit\" AND \"r\".\"upper_limit\")", select.toString());
     }
 
     @Test
@@ -121,9 +121,9 @@ public class CriteriaTest {
         select.addCriteria(new InCriteria(u.get(userRole)));
 
         assertEquals("SELECT\n"
-                + "    u.id\n"
+                + "    \"u\".\"id\"\n"
                 + "FROM\n"
-                + "    user u\n"
+                + "    \"user\" \"u\"\n"
                 + "WHERE\n"
                 + "    1 = 1", select.toString());
     }

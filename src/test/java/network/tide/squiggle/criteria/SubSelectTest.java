@@ -50,17 +50,17 @@ public class SubSelectTest {
         select.addCriteria(new MatchCriteria(e.get(employeeTaxCode), MatchCriteria.EQUALS, subSelect));
 
         assertEquals("SELECT\n"
-                + "    e.name\n"
+                + "    \"e\".\"name\"\n"
                 + "FROM\n"
-                + "    employee e\n"
+                + "    \"employee\" \"e\"\n"
                 + "WHERE\n"
-                + "    e.tax_code = (\n"
+                + "    \"e\".\"tax_code\" = (\n"
                 + "        SELECT\n"
-                + "            t.id\n"
+                + "            \"t\".\"id\"\n"
                 + "        FROM\n"
-                + "            tax_code t\n"
+                + "            \"tax_code\" \"t\"\n"
                 + "        WHERE\n"
-                + "            t.valid = true\n"
+                + "            \"t\".\"valid\" = true\n"
                 + "    )", select.toString());
     }
 }

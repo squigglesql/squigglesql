@@ -37,7 +37,7 @@ public class FunctionCall implements Selectable {
 
     @Override
     public void compile(QueryCompiler compiler) {
-        compiler.write(function);
+        compiler.quote(function);
         if (arguments.isEmpty()) {
             compiler.write("()");
             return;

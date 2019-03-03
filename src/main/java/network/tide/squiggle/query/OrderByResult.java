@@ -32,7 +32,7 @@ public class OrderByResult implements BaseOrder {
 
     @Override
     public void compile(QueryCompiler compiler) {
-        compiler.write(compiler.getAlias(column));
+        compiler.quote(compiler.getAlias(column));
         if (!ascending) {
             compiler.write(" DESC");
         }
