@@ -1,8 +1,14 @@
 package network.tide.squiggle.util;
 
+import network.tide.squiggle.ResultMapper;
+import network.tide.squiggle.query.Query;
+import network.tide.squiggle.statement.JdbcStatementCompiler;
+
 import java.math.BigDecimal;
 import java.sql.Array;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
@@ -11,6 +17,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class JdbcUtils {
 
@@ -119,5 +127,42 @@ public abstract class JdbcUtils {
     public static LocalDateTime readLocalDateTime(ResultSet rs, int index) throws SQLException {
         Timestamp timestamp = readTimestamp(rs, index);
         return timestamp != null ? timestamp.toLocalDateTime() : null;
+    }
+
+    public static <T> T selectOne(Query query, Connection connection, ResultMapper<T> mapper) throws SQLException {
+        try (PreparedStatement statement = query.toStatement(new JdbcStatementCompiler(connection))) {
+            try (ResultSet rs = statement.executeQuery()) {
+                if (!rs.next()) {
+                    return null;
+                }
+                T result = mapper.apply(rs);
+                if (rs.next()) {
+                    throw new TooManyRecordsException();
+                }
+                return result;
+            }
+        }
+    }
+
+    public static <T> List<T> selectAll(Query query, Connection connection, ResultMapper<T> mapper) throws SQLException {
+        try (PreparedStatement statement = query.toStatement(new JdbcStatementCompiler(connection))) {
+            try (ResultSet rs = statement.executeQuery()) {
+                List<T> result = new ArrayList<>();
+                while (rs.next()) {
+                    result.add(mapper.apply(rs));
+                }
+                return result;
+            }
+        }
+    }
+
+    public static int insert(Query query, Connection connection) throws SQLException {
+        try (PreparedStatement statement = query.toStatement(new JdbcStatementCompiler(connection))) {
+            return statement.executeUpdate();
+        }
+    }
+
+    public static void update(Query query, Connection connection) throws SQLException {
+        insert(query, connection);
     }
 }

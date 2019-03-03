@@ -30,7 +30,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -43,6 +42,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
+import static network.tide.squiggle.TestUtils.*;
 import static org.junit.Assert.*;
 
 public class ParameterTest {
@@ -112,7 +112,7 @@ public class ParameterTest {
 
     @Test
     public void testRegularNotNullByDefinition() throws SQLException {
-        withRegularTable(new TestUtils.Mapper<Void>() {
+        withRegularTable(new Mapper<Void>() {
             @Override
             public Void apply(Connection connection) throws SQLException {
                 InsertQuery insert = new InsertQuery(TABLE);
@@ -167,7 +167,7 @@ public class ParameterTest {
 
     @Test
     public void testRegularNotNullByValue() throws SQLException {
-        withRegularTable(new TestUtils.Mapper<Void>() {
+        withRegularTable(new Mapper<Void>() {
             @Override
             public Void apply(Connection connection) throws SQLException {
                 InsertQuery insert = new InsertQuery(TABLE);
@@ -222,7 +222,7 @@ public class ParameterTest {
 
     @Test
     public void testRegularNull() throws SQLException {
-        withRegularTable(new TestUtils.Mapper<Void>() {
+        withRegularTable(new Mapper<Void>() {
             @Override
             public Void apply(Connection connection) throws SQLException {
                 InsertQuery insert = new InsertQuery(TABLE);
@@ -277,7 +277,7 @@ public class ParameterTest {
 
     @Test
     public void testRegularNullRaw() throws SQLException {
-        withRegularTable(new TestUtils.Mapper<Void>() {
+        withRegularTable(new Mapper<Void>() {
             @Override
             public Void apply(Connection connection) throws SQLException {
                 InsertQuery insert = new InsertQuery(TABLE);
@@ -332,7 +332,7 @@ public class ParameterTest {
 
     @Test
     public void testRealNotNullByDefinition() throws SQLException {
-        withRealTable(new TestUtils.Mapper<Void>() {
+        withRealTable(new Mapper<Void>() {
             @Override
             public Void apply(Connection connection) throws SQLException {
                 InsertQuery insert = new InsertQuery(TABLE);
@@ -378,7 +378,7 @@ public class ParameterTest {
 
     @Test
     public void testRealNotNullByValue() throws SQLException {
-        withRealTable(new TestUtils.Mapper<Void>() {
+        withRealTable(new Mapper<Void>() {
             @Override
             public Void apply(Connection connection) throws SQLException {
                 InsertQuery insert = new InsertQuery(TABLE);
@@ -424,7 +424,7 @@ public class ParameterTest {
 
     @Test
     public void testTimestampNotNull() throws SQLException {
-        withTimestampTable(new TestUtils.Mapper<Void>() {
+        withTimestampTable(new Mapper<Void>() {
             @Override
             public Void apply(Connection connection) throws SQLException {
                 InsertQuery insert = new InsertQuery(TABLE);
@@ -461,7 +461,7 @@ public class ParameterTest {
 
     @Test
     public void testTimestampNull() throws SQLException {
-        withTimestampTable(new TestUtils.Mapper<Void>() {
+        withTimestampTable(new Mapper<Void>() {
             @Override
             public Void apply(Connection connection) throws SQLException {
                 InsertQuery insert = new InsertQuery(TABLE);
@@ -498,7 +498,7 @@ public class ParameterTest {
 
     @Test
     public void testComplexNotNull() throws SQLException {
-        withComplexTable(new TestUtils.Mapper<Void>() {
+        withComplexTable(new Mapper<Void>() {
             @Override
             public Void apply(Connection connection) throws SQLException {
                 InsertQuery insert = new InsertQuery(TABLE);
@@ -535,7 +535,7 @@ public class ParameterTest {
 
     @Test
     public void testComplexNull() throws SQLException {
-        withComplexTable(new TestUtils.Mapper<Void>() {
+        withComplexTable(new Mapper<Void>() {
             @Override
             public Void apply(Connection connection) throws SQLException {
                 InsertQuery insert = new InsertQuery(TABLE);
@@ -644,8 +644,8 @@ public class ParameterTest {
         });
     }
 
-    private static <T> T withRegularTable(final TestUtils.Mapper<T> mapper, final boolean notNull) throws SQLException {
-        return withTable(mapper, defineTable(
+    private static <T> T withRegularTable(Mapper<T> mapper, boolean notNull) throws SQLException {
+        return withDatabase(connection -> withTable(connection, TABLE.getName(), defineTable(
                 new TableColumn[]{
                         BOOLEAN_COLUMN,
                         BYTE_COLUMN,
@@ -669,11 +669,11 @@ public class ParameterTest {
                         "TEXT"
                 },
                 notNull
-        ));
+        ), () -> mapper.apply(connection)));
     }
 
-    private static <T> T withRealTable(final TestUtils.Mapper<T> mapper, final boolean notNull) throws SQLException {
-        return withTable(mapper, defineTable(
+    private static <T> T withRealTable(Mapper<T> mapper, boolean notNull) throws SQLException {
+        return withDatabase(connection -> withTable(connection, TABLE.getName(), defineTable(
                 new TableColumn[]{
                         FLOAT_INFINITY_COLUMN,
                         FLOAT_MINUS_INFINITY_COLUMN,
@@ -691,11 +691,11 @@ public class ParameterTest {
                         "DOUBLE PRECISION"
                 },
                 notNull
-        ));
+        ), () -> mapper.apply(connection)));
     }
 
-    private static <T> T withTimestampTable(final TestUtils.Mapper<T> mapper, final boolean notNull) throws SQLException {
-        return withTable(mapper, defineTable(
+    private static <T> T withTimestampTable(Mapper<T> mapper, boolean notNull) throws SQLException {
+        return withDatabase(connection -> withTable(connection, TABLE.getName(), defineTable(
                 new TableColumn[]{
                         TIMESTAMP_COLUMN,
                         TIME_COLUMN,
@@ -707,11 +707,11 @@ public class ParameterTest {
                         "DATE"
                 },
                 notNull
-        ));
+        ), () -> mapper.apply(connection)));
     }
 
-    private static <T> T withComplexTable(final TestUtils.Mapper<T> mapper, final boolean notNull) throws SQLException {
-        return withTable(mapper, defineTable(
+    private static <T> T withComplexTable(Mapper<T> mapper, boolean notNull) throws SQLException {
+        return withDatabase(connection -> withTable(connection, TABLE.getName(), defineTable(
                 new TableColumn[]{
                         INT_ARRAY_COLUMN,
                         STRING_ARRAY_COLUMN,
@@ -723,11 +723,11 @@ public class ParameterTest {
                         "BYTEA"
                 },
                 notNull
-        ));
+        ), () -> mapper.apply(connection)));
     }
 
-    private static <T> T withJava8TimeTable(final TestUtils.Mapper<T> mapper) throws SQLException {
-        return withTable(mapper, defineTable(
+    private static <T> T withJava8TimeTable(Mapper<T> mapper) throws SQLException {
+        return withDatabase(connection -> withTable(connection, TABLE.getName(), defineTable(
                 new TableColumn[]{
                         INSTANT_COLUMN,
                         LOCAL_DATE_COLUMN,
@@ -745,31 +745,7 @@ public class ParameterTest {
                         "TIMESTAMP WITH TIME ZONE"
                 },
                 false
-        ));
-    }
-
-    private static <T> T withTable(final TestUtils.Mapper<T> mapper, final String createQuery) throws SQLException {
-        return TestUtils.withDatabase(new TestUtils.Mapper<T>() {
-            @Override
-            public T apply(Connection connection) throws SQLException {
-                Statement dropStatement = connection.createStatement();
-                dropStatement.execute("DROP TABLE IF EXISTS " + TABLE.getName());
-
-                Statement createStatement = connection.createStatement();
-                createStatement.execute(createQuery);
-
-                T result = mapper.apply(connection);
-
-                // We drop the table only if the test succeeds. Otherwise we preserve it for debugging purposes.
-                try {
-                    Statement statement = connection.createStatement();
-                    statement.execute("DROP TABLE IF EXISTS " + TABLE.getName());
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-                return result;
-            }
-        });
+        ), () -> mapper.apply(connection)));
     }
 
     private static String defineTable(TableColumn[] columns, String[] types, boolean notNull) {
