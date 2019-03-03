@@ -1,7 +1,7 @@
 package network.tide.squiggle.dao;
 
-import network.tide.squiggle.Matchable;
 import network.tide.squiggle.ResultMapper;
+import network.tide.squiggle.Selectable;
 import network.tide.squiggle.Table;
 import network.tide.squiggle.TableColumn;
 import network.tide.squiggle.TableReference;
@@ -15,7 +15,7 @@ import network.tide.squiggle.util.JdbcUtils;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.function.BiConsumer;
+import java.util.List;
 
 import static network.tide.squiggle.criteria.MatchCriteria.EQUALS;
 
@@ -26,17 +26,21 @@ public class OrderDao {
     private static final TableColumn ISSUED_AT = TABLE.get("issued_at");
     private static final TableColumn CUSTOMER_ID = TABLE.get("customer_id");
 
-    public static ResultMapper<Order> addToQuery(SelectQuery query, BiConsumer<TableReference, Matchable> joiner) {
+    public interface Joiner {
+
+        void accept(Selectable idRef, Selectable cityRef);
+    }
+
+    public static ResultMapper<Order> addToQuery(SelectQuery query, Joiner joiner) {
         TableReference ref = TABLE.refer();
 
         ResultColumn id = query.addToSelection(ref.get(ID));
         ResultColumn issuedAt = query.addToSelection(ref.get(ISSUED_AT));
 
-        ResultMapper<Customer> customer = CustomerDao.addToQuery(query, (customerRef, key) -> {
-            query.addCriteria(new MatchCriteria(key, EQUALS, ref.get(CUSTOMER_ID)));
+        ResultMapper<Customer> customer = CustomerDao.addToQuery(query, (idRef, cityRef) -> {
+            query.addCriteria(new MatchCriteria(idRef, EQUALS, ref.get(CUSTOMER_ID)));
+            joiner.accept(ref.get(ID), cityRef);
         });
-
-        joiner.accept(ref, ref.get(ID));
 
         return rs -> new Order(
                 JdbcUtils.readIntegerNotNull(rs, id.getIndex()),
@@ -54,9 +58,17 @@ public class OrderDao {
 
     public static Order select(Connection connection, int id) throws SQLException {
         SelectQuery query = new SelectQuery();
-        ResultMapper<Order> mapper = addToQuery(query, (ref, key) -> {
-            query.addCriteria(new MatchCriteria(key, MatchCriteria.EQUALS, Parameter.of(id)));
+        ResultMapper<Order> mapper = addToQuery(query, (idRef, cityRef) -> {
+            query.addCriteria(new MatchCriteria(idRef, MatchCriteria.EQUALS, Parameter.of(id)));
         });
         return JdbcUtils.selectOne(query, connection, mapper);
+    }
+
+    public static List<Order> selectByCity(Connection connection, String city) throws SQLException {
+        SelectQuery query = new SelectQuery();
+        ResultMapper<Order> mapper = addToQuery(query, (idRef, cityRef) -> {
+            query.addCriteria(new MatchCriteria(cityRef, MatchCriteria.EQUALS, Parameter.of(city)));
+        });
+        return JdbcUtils.selectAll(query, connection, mapper);
     }
 }

@@ -1,7 +1,7 @@
 package network.tide.squiggle.dao;
 
-import network.tide.squiggle.Matchable;
 import network.tide.squiggle.ResultMapper;
+import network.tide.squiggle.Selectable;
 import network.tide.squiggle.Table;
 import network.tide.squiggle.TableColumn;
 import network.tide.squiggle.TableReference;
@@ -13,7 +13,6 @@ import network.tide.squiggle.util.JdbcUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.function.BiConsumer;
 
 public class ProductDao {
 
@@ -22,14 +21,19 @@ public class ProductDao {
     private static final TableColumn NAME = TABLE.get("name");
     private static final TableColumn PRICE = TABLE.get("price");
 
-    public static ResultMapper<Product> addToQuery(SelectQuery query, BiConsumer<TableReference, Matchable> joiner) {
+    public interface Joiner {
+
+        void accept(Selectable idRef);
+    }
+
+    public static ResultMapper<Product> addToQuery(SelectQuery query, Joiner joiner) {
         TableReference ref = TABLE.refer();
 
         ResultColumn id = query.addToSelection(ref.get(ID));
         ResultColumn name = query.addToSelection(ref.get(NAME));
         ResultColumn price = query.addToSelection(ref.get(PRICE));
 
-        joiner.accept(ref, ref.get(ID));
+        joiner.accept(ref.get(ID));
 
         return rs -> new Product(
                 JdbcUtils.readIntegerNotNull(rs, id.getIndex()),

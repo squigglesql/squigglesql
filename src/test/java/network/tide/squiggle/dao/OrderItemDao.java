@@ -1,7 +1,7 @@
 package network.tide.squiggle.dao;
 
-import network.tide.squiggle.Matchable;
 import network.tide.squiggle.ResultMapper;
+import network.tide.squiggle.Selectable;
 import network.tide.squiggle.Table;
 import network.tide.squiggle.TableColumn;
 import network.tide.squiggle.TableReference;
@@ -14,7 +14,6 @@ import network.tide.squiggle.util.JdbcUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.function.BiConsumer;
 
 import static network.tide.squiggle.criteria.MatchCriteria.EQUALS;
 
@@ -26,21 +25,25 @@ public class OrderItemDao {
     private static final TableColumn PRODUCT_ID = TABLE.get("product_id");
     private static final TableColumn QUANTITY = TABLE.get("quantity");
 
-    public static ResultMapper<OrderItem> addToQuery(SelectQuery query, BiConsumer<TableReference, Matchable> joiner) {
+    public interface Joiner {
+
+        void accept(Selectable idRef);
+    }
+
+    public static ResultMapper<OrderItem> addToQuery(SelectQuery query, Joiner joiner) {
         TableReference ref = TABLE.refer();
 
         ResultColumn id = query.addToSelection(ref.get(ID));
         ResultColumn quantity = query.addToSelection(ref.get(QUANTITY));
 
-        ResultMapper<Order> order = OrderDao.addToQuery(query, (orderRef, key) -> {
-            query.addCriteria(new MatchCriteria(key, EQUALS, ref.get(ORDER_ID)));
+        ResultMapper<Order> order = OrderDao.addToQuery(query, (idRef, cityRef) -> {
+            query.addCriteria(new MatchCriteria(idRef, EQUALS, ref.get(ORDER_ID)));
+            joiner.accept(ref.get(ID));
         });
 
-        ResultMapper<Product> product = ProductDao.addToQuery(query, (productRef, key) -> {
-            query.addCriteria(new MatchCriteria(key, EQUALS, ref.get(PRODUCT_ID)));
+        ResultMapper<Product> product = ProductDao.addToQuery(query, idRef -> {
+            query.addCriteria(new MatchCriteria(idRef, EQUALS, ref.get(PRODUCT_ID)));
         });
-
-        joiner.accept(ref, ref.get(ID));
 
         return rs -> new OrderItem(
                 JdbcUtils.readIntegerNotNull(rs, id.getIndex()),
@@ -60,8 +63,8 @@ public class OrderItemDao {
 
     public static OrderItem select(Connection connection, int id) throws SQLException {
         SelectQuery query = new SelectQuery();
-        ResultMapper<OrderItem> mapper = addToQuery(query, (ref, key) -> {
-            query.addCriteria(new MatchCriteria(key, EQUALS, Parameter.of(id)));
+        ResultMapper<OrderItem> mapper = addToQuery(query, idRef -> {
+            query.addCriteria(new MatchCriteria(idRef, EQUALS, Parameter.of(id)));
         });
         return JdbcUtils.selectOne(query, connection, mapper);
     }

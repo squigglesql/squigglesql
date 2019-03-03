@@ -43,6 +43,8 @@ public class Tests {
             new Order(5, OffsetDateTime.of(2019, 3, 15, 9, 0, 0, 0, ZoneOffset.UTC).toInstant(), CHRIS),
             new Order(6, OffsetDateTime.of(2019, 4, 1, 10, 0, 0, 0, ZoneOffset.UTC).toInstant(), AARON)
     };
+    private static final Order[] ORDERS_ATLANTA = new Order[]{ORDERS[0], ORDERS[1], ORDERS[3], ORDERS[4], ORDERS[5]};
+    private static final Order[] ORDERS_BERLIN = new Order[]{ORDERS[2]};
 
     private static final OrderItem[] ORDER_ITEMS = new OrderItem[]{
             new OrderItem(1, ORDERS[0], BANANA, 3),
@@ -82,6 +84,15 @@ public class Tests {
                 assertEquals(ORDERS[i], OrderDao.select(connection, i + 1));
             }
             assertNull(CustomerDao.select(connection, ORDERS.length + 1));
+        });
+    }
+
+    @Test
+    public void testOrderSelectByCity() throws SQLException {
+        withContents(connection -> {
+            assertEquals(Arrays.asList(ORDERS_ATLANTA), OrderDao.selectByCity(connection, ATLANTA));
+            assertEquals(Arrays.asList(ORDERS_BERLIN), OrderDao.selectByCity(connection, BERLIN));
+            assertEquals(Collections.emptyList(), OrderDao.selectByCity(connection, CANBERRA));
         });
     }
 
