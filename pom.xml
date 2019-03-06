@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>network.tide</groupId>
-    <artifactId>squiggle</artifactId>
+    <groupId>com.github.squigglesql</groupId>
+    <artifactId>squigglesql</artifactId>
     <version>4.0.0</version>
-    <url>https://github.com/enepomnyaschih/squiggle-sql</url>
+    <url>https://github.com/squigglesql/squigglesql</url>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -13,9 +13,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git://github.com:enepomnyaschih/squiggle-sql.git</connection>
-        <developerConnection>scm:git:git@github.com:enepomnyaschih/squiggle-sql.git</developerConnection>
-        <url>https://github.com/enepomnyaschih/squiggle-sql</url>
+        <connection>scm:git:git://github.com:squigglesql/squigglesql.git</connection>
+        <developerConnection>scm:git:git@github.com:squigglesql/squigglesql.git</developerConnection>
+        <url>https://github.com/squigglesql/squigglesql</url>
     </scm>
     <developers>
         <developer>
