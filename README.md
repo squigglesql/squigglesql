@@ -219,7 +219,7 @@ Assuming that you have the following tables:
 * **product** (id, name, price)
 * **order_item** (id, **order_id**, **product_id**, quantity)
 
-You should start with the following.
+You should start with the following code.
 
 ## DAO classes
 
@@ -267,7 +267,7 @@ public class OrderItemDao {
 
 ## Model classes
 
-Let's define 4 simple immutable Java models. Example for *order_item* table:
+Let's define 4 simple immutable Java models. Example for **order_item** table:
 
 ```java
 public class OrderItem {
@@ -362,8 +362,8 @@ public class CustomerMapper implements ResultMapper<Customer> {
 
 This class provides a generalized way to obtain Customer instances from database, regardless of matching criterias and
 the other tables involved in the query. Notice that all low-level record mapping code is hidden in this class, so
-the high-level `select` function does exactly as much as its names states - makes a select query to this table with
-a certain criteria. You don't need to copy and paste big portions of the SQL code query over and over again just to
+the high-level `select` function does exactly as much as its name states - makes a select query to this table with
+a specific criteria. You don't need to copy and paste big portions of the SQL code query over and over again just to
 customize selection criterias or join this table with the other tables, and we'll demonstrate it soon.
 
 ## Table joins
@@ -426,7 +426,7 @@ import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
     }
 ```
 
-Let's define the remaining ResultMappers and to demonstrate the consistency of this approach regardless of number of
+Let's define the remaining ResultMappers to demonstrate the consistency of this approach regardless of number of
 tables involved, as OrderItem selection involves all 4 tables into the query:
 
 ```java
@@ -503,7 +503,7 @@ public class OrderItemMapper implements ResultMapper<OrderItem> {
 }
 ```
 
-Selection query of complex OrderItem instance in OrderDao is still consistently easy:
+The selection query of a complex OrderItem instance in OrderDao is still consistently easy:
 
 ```java
 import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
@@ -548,7 +548,7 @@ import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
 So, basically, you just need to list all significant selection columns in ResultMapper implementations, and it opens
 a possibility for you to use them in criterias.
 
-We can relay the selection columns down the hierarchy. For example, to select orders by city, you need to define
+You can relay the selection columns down the hierarchy. For example, to select orders by city, you need to define
 getCityRef methods in OrderMapper:
 
 ```java
