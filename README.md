@@ -214,10 +214,10 @@ extensions.
 
 Assuming that you have the following tables:
 
-* *customer* (id, name, city)
-* *order* (id, issued_at, *customer_id*)
-* *product* (id, name, price)
-* *order_item* (id, *order_id*, *product_id*, quantity)
+* **customer** (id, name, city)
+* **order** (id, issued_at, **customer_id**)
+* **product** (id, name, price)
+* **order_item** (id, **order_id**, **product_id**, quantity)
 
 You should start with the following.
 
