@@ -1,46 +1,26 @@
 package network.tide.squiggle.dao;
 
-import network.tide.squiggle.ResultMapper;
-import network.tide.squiggle.Selectable;
 import network.tide.squiggle.Table;
 import network.tide.squiggle.TableColumn;
-import network.tide.squiggle.TableReference;
 import network.tide.squiggle.criteria.MatchCriteria;
 import network.tide.squiggle.parameter.Parameter;
 import network.tide.squiggle.query.InsertQuery;
-import network.tide.squiggle.query.ResultColumn;
 import network.tide.squiggle.query.SelectQuery;
 import network.tide.squiggle.util.JdbcUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
-public abstract class CustomerDao {
+import static network.tide.squiggle.criteria.MatchCriteria.EQUALS;
 
-    private static final Table TABLE = new Table("customer");
-    private static final TableColumn ID = TABLE.get("id");
-    private static final TableColumn NAME = TABLE.get("name");
-    private static final TableColumn CITY = TABLE.get("city");
+public class CustomerDao {
 
-    public interface Joiner {
+    static final Table TABLE = new Table("customer");
 
-        void accept(Selectable idRef);
-    }
-
-    public static ResultMapper<Customer> addToQuery(SelectQuery query, Joiner joiner) {
-        TableReference ref = TABLE.refer();
-
-        ResultColumn id = query.addToSelection(ref.get(ID));
-        ResultColumn name = query.addToSelection(ref.get(NAME));
-        ResultColumn city = query.addToSelection(ref.get(CITY));
-
-        joiner.accept(ref.get(ID));
-
-        return rs -> new Customer(
-                JdbcUtils.readIntegerNotNull(rs, id.getIndex()),
-                JdbcUtils.readString(rs, name.getIndex()),
-                JdbcUtils.readString(rs, city.getIndex()));
-    }
+    static final TableColumn ID = TABLE.get("id");
+    static final TableColumn NAME = TABLE.get("name");
+    static final TableColumn CITY = TABLE.get("city");
 
     public static Customer insert(Connection connection, String name, String city) throws SQLException {
         InsertQuery query = new InsertQuery(TABLE);
@@ -52,9 +32,15 @@ public abstract class CustomerDao {
 
     public static Customer select(Connection connection, int id) throws SQLException {
         SelectQuery query = new SelectQuery();
-        ResultMapper<Customer> mapper = addToQuery(query, idRef -> {
-            query.addCriteria(new MatchCriteria(idRef, MatchCriteria.EQUALS, Parameter.of(id)));
-        });
+        CustomerMapper mapper = new CustomerMapper(query);
+        query.addCriteria(new MatchCriteria(mapper.getIdRef(), EQUALS, Parameter.of(id)));
         return JdbcUtils.selectOne(query, connection, mapper);
+    }
+
+    public static List<Customer> selectByCity(Connection connection, String city) throws SQLException {
+        SelectQuery query = new SelectQuery();
+        CustomerMapper mapper = new CustomerMapper(query);
+        query.addCriteria(new MatchCriteria(mapper.getCityRef(), EQUALS, Parameter.of(city)));
+        return JdbcUtils.selectAll(query, connection, mapper);
     }
 }
