@@ -206,6 +206,9 @@ try (PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(
 
 # Best practices
 
+See full source code of the tutorial here
+https://github.com/squigglesql/squigglesql/tree/master/src/test/java/com/github/squigglesql/squigglesql/dao
+
 ## Intro
 
 This topic describes how to better organize your Java classes to gain a full advantage from dynamic SQL compilation.
@@ -585,3 +588,6 @@ interaction framework. Meanwhile, it is very different from the alternative fram
 object-oriented design.
 * As opposed to ScalikeJDBC, Squiggle SQL doesn't force you to write raw SQL code or respect the original order of
 QueryDSL calls. It means that you don't need to copy & paste big chunks of code anymore.
+
+See full source code of the tutorial here
+https://github.com/squigglesql/squigglesql/tree/master/src/test/java/com/github/squigglesql/squigglesql/dao
