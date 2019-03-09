@@ -18,8 +18,8 @@ package com.github.squigglesql.squigglesql.parameter;
 import com.github.squigglesql.squigglesql.Matchable;
 import com.github.squigglesql.squigglesql.QueryCompiler;
 import com.github.squigglesql.squigglesql.TableReference;
-import com.github.squigglesql.squigglesql.util.SquiggleUtils;
 import com.github.squigglesql.squigglesql.statement.Parametrized;
+import com.github.squigglesql.squigglesql.util.SquiggleUtils;
 
 import java.math.BigDecimal;
 import java.sql.Array;

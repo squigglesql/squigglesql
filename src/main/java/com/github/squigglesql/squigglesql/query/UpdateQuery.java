@@ -20,9 +20,9 @@ import com.github.squigglesql.squigglesql.Output;
 import com.github.squigglesql.squigglesql.QueryCompiler;
 import com.github.squigglesql.squigglesql.TableColumn;
 import com.github.squigglesql.squigglesql.TableReference;
-import com.github.squigglesql.squigglesql.util.CollectionWriter;
 import com.github.squigglesql.squigglesql.alias.AliasGenerator;
 import com.github.squigglesql.squigglesql.criteria.Criteria;
+import com.github.squigglesql.squigglesql.util.CollectionWriter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

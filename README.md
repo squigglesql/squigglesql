@@ -206,6 +206,9 @@ try (PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(
 
 # Best practices
 
+See full source code of the tutorial here
+https://github.com/squigglesql/squigglesql/tree/master/src/test/java/com/github/squigglesql/squigglesql/dao
+
 ## Intro
 
 This topic describes how to better organize your Java classes to gain a full advantage from dynamic SQL compilation.
@@ -214,16 +217,60 @@ extensions.
 
 Assuming that you have the following tables:
 
-* *customer* (id, name, city)
-* *order* (id, issued_at, *customer_id*)
-* *product* (id, name, price)
-* *order_item* (id, *order_id*, *product_id*, quantity)
+* **customer** (id, name, city)
+* **order** (id, issued_at, **customer_id**)
+* **product** (id, name, price)
+* **order_item** (id, **order_id**, **product_id**, quantity)
 
-You should start with the following.
+You should start with the following code.
+
+## DAO classes
+
+The first step is to define DAO (Database Access Object) classes with the database table and column definitions as
+follows:
+
+```java
+public class CustomerDao {
+
+    static final Table TABLE = new Table("customer");
+
+    static final TableColumn ID = TABLE.get("id");
+    static final TableColumn NAME = TABLE.get("name");
+    static final TableColumn CITY = TABLE.get("city");
+}
+
+public class OrderDao {
+
+    static final Table TABLE = new Table("order");
+
+    static final TableColumn ID = TABLE.get("id");
+    static final TableColumn ISSUED_AT = TABLE.get("issued_at");
+    static final TableColumn CUSTOMER_ID = TABLE.get("customer_id");
+}
+
+public class ProductDao {
+
+    static final Table TABLE = new Table("product");
+
+    static final TableColumn ID = TABLE.get("id");
+    static final TableColumn NAME = TABLE.get("name");
+    static final TableColumn PRICE = TABLE.get("price");
+}
+
+public class OrderItemDao {
+
+    static final Table TABLE = new Table("order_item");
+
+    static final TableColumn ID = TABLE.get("id");
+    static final TableColumn ORDER_ID = TABLE.get("order_id");
+    static final TableColumn PRODUCT_ID = TABLE.get("product_id");
+    static final TableColumn QUANTITY = TABLE.get("quantity");
+}
+```
 
 ## Model classes
 
-Let's define 4 simple immutable Java models. Example for *order_item* table:
+Let's define 4 simple immutable Java models. Example for **order_item** table:
 
 ```java
 public class OrderItem {
@@ -260,34 +307,55 @@ public class OrderItem {
 
 Define Customer, Order and Product models in the same way. Use the following data types: int, String, Instant.
 
-## Single-table DAO
+Notice that model classes should not necessarily reflect all table columns. You may use multiple model classes for a
+single database table containing data from different sets of columns.
 
-The next step is to define DAO (Database Access Object) classes with the database tables and the model selection
-methods as follows:
+## Model selection
+
+Let's define `select` static method in CustomerDao to select a Customer by its identifier.
 
 ```java
-public abstract class CustomerDao {
+import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
 
-    private static final Table TABLE = new Table("customer");
-    private static final TableColumn ID = TABLE.get("id");
-    private static final TableColumn NAME = TABLE.get("name");
-    private static final TableColumn CITY = TABLE.get("city");
+...
 
-    public interface Joiner {
+    public static Customer select(Connection connection, int id) throws SQLException {
+        SelectQuery query = new SelectQuery();
+        CustomerMapper mapper = new CustomerMapper(query);
+        query.addCriteria(new MatchCriteria(mapper.getIdRef(), EQUALS, Parameter.of(id)));
+        return JdbcUtils.selectOne(query, connection, mapper);
+    }
+```
 
-        void accept(Selectable idRef);
+CustomerMapper object should add all the necessary columns to the query and provide a way to map the selection rows to
+Customer object instances. Let's implement it as follows:
+
+```java
+import static com.github.squigglesql.squigglesql.dao.CustomerDao.*;
+
+public class CustomerMapper implements ResultMapper<Customer> {
+
+    private final TableReference ref;
+
+    private final ResultColumn id;
+    private final ResultColumn name;
+    private final ResultColumn city;
+
+    public CustomerMapper(SelectQuery query) {
+        ref = TABLE.refer();
+
+        id = query.addToSelection(ref.get(ID));
+        name = query.addToSelection(ref.get(NAME));
+        city = query.addToSelection(ref.get(CITY));
     }
 
-    public static ResultMapper<Customer> addToQuery(SelectQuery query, Joiner joiner) {
-        TableReference ref = TABLE.refer();
+    public Selectable getIdRef() {
+        return ref.get(ID);
+    }
 
-        ResultColumn id = query.addToSelection(ref.get(ID));
-        ResultColumn name = query.addToSelection(ref.get(NAME));
-        ResultColumn city = query.addToSelection(ref.get(CITY));
-
-        joiner.accept(ref.get(ID));
-
-        return rs -> new Customer(
+    @Override
+    public Customer apply(ResultSet rs) throws SQLException {
+        return new Customer(
                 JdbcUtils.readIntegerNotNull(rs, id.getIndex()),
                 JdbcUtils.readString(rs, name.getIndex()),
                 JdbcUtils.readString(rs, city.getIndex()));
@@ -295,58 +363,46 @@ public abstract class CustomerDao {
 }
 ```
 
-Private static constants define the table and its columns. The method adds the table columns to a SelectQuery, adds
-custom criterias determined by `joiner` function and returns a ResultMapper instance allowing you to map raw result
-records to new model instances. This method provides a generalized way to obtain Customer instances from database
-by their primary key, regardless of the other tables involved in the query. The simplest use case is a Customer
-retrieving directly by its primary key:
+This class provides a generalized way to obtain Customer instances from database, regardless of matching criterias and
+the other tables involved in the query. Notice that all low-level record mapping code is hidden in this class, so
+the high-level `select` function does exactly as much as its name states - makes a select query to this table with
+a specific criteria. You don't need to copy and paste big portions of the SQL code query over and over again just to
+customize selection criterias or join this table with the other tables, and we'll demonstrate it soon.
+
+## Table joins
+
+You can use the same approach to define mappers for models distributed across several tables. Just reuse the existing
+ResultMappers in new ones:
 
 ```java
-    public static Customer select(Connection connection, int id) throws SQLException {
-        SelectQuery query = new SelectQuery();
-        ResultMapper<Customer> mapper = addToQuery(query, idRef -> {
-            query.addCriteria(new MatchCriteria(idRef, MatchCriteria.EQUALS, Parameter.of(id)));
-        });
-        return JdbcUtils.selectOne(query, connection, mapper);
-    }
-```
+import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
+import static com.github.squigglesql.squigglesql.dao.OrderDao.*;
 
-Notice that all low-level record mapping code is hidden in `addToQuery` method, so this high-level `select` function
-does exactly as much as its names states - makes a select query to this table with a certain criteria. You don't need
-to copy and paste big portions of the SQL code query over and over again just to customize selection criterias or join
-this table with the other tables, and we'll demonstrate it soon.
+public class OrderMapper implements ResultMapper<Order> {
 
-## Multi-table DAO
+    private final TableReference ref;
 
-You can use the same approach to define DAO classes for database tables containing references to the other tables. Just
-call `addToQuery` methods of referred tables to transparently add them to a query:
+    private final ResultColumn id;
+    private final ResultColumn issuedAt;
+    private final CustomerMapper customer;
 
-```java
-public abstract class OrderDao {
+    public OrderMapper(SelectQuery query) {
+        ref = TABLE.refer();
 
-    private static final Table TABLE = new Table("order");
-    private static final TableColumn ID = TABLE.get("id");
-    private static final TableColumn ISSUED_AT = TABLE.get("issued_at");
-    private static final TableColumn CUSTOMER_ID = TABLE.get("customer_id");
+        id = query.addToSelection(ref.get(ID));
+        issuedAt = query.addToSelection(ref.get(ISSUED_AT));
 
-    public interface Joiner {
-
-        void accept(Selectable idRef);
+        customer = new CustomerMapper(query);
+        query.addCriteria(new MatchCriteria(customer.getIdRef(), EQUALS, ref.get(CUSTOMER_ID)));
     }
 
-    public static ResultMapper<Order> addToQuery(SelectQuery query, Joiner joiner) {
-        TableReference ref = TABLE.refer();
+    public Selectable getIdRef() {
+        return ref.get(ID);
+    }
 
-        ResultColumn id = query.addToSelection(ref.get(ID));
-        ResultColumn issuedAt = query.addToSelection(ref.get(ISSUED_AT));
-
-        ResultMapper<Customer> customer = CustomerDao.addToQuery(query, idRef -> {
-            query.addCriteria(new MatchCriteria(idRef, EQUALS, ref.get(CUSTOMER_ID)));
-        });
-
-        joiner.accept(ref.get(ID));
-
-        return rs -> new Order(
+    @Override
+    public Order apply(ResultSet rs) throws SQLException {
+        return new Order(
                 JdbcUtils.readIntegerNotNull(rs, id.getIndex()),
                 JdbcUtils.readInstant(rs, issuedAt.getIndex()),
                 customer.apply(rs));
@@ -354,83 +410,94 @@ public abstract class OrderDao {
 }
 ```
 
-Notice haw we use `CustomerDao.addToQuery` call to join orders with customers in a single query. Then you just need to
-call `customer.apply(rs)` function to read a proper Customer instance referred by the Order.
+Notice how we instantiate a CustomerMapper object to join orders with customers in a single query. Then we just call
+`customer.apply(rs)` function to read a proper Customer instance referred by the Order.
 
-Now you can easily select full Order instances in the same way as above:
+Now you can easily select full Order instances in the same way as Customer instances. Add the following method to
+OrderDao:
 
 ```java
+import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
+
+...
+
     public static Order select(Connection connection, int id) throws SQLException {
         SelectQuery query = new SelectQuery();
-        ResultMapper<Order> mapper = addToQuery(query, idRef -> {
-            query.addCriteria(new MatchCriteria(idRef, MatchCriteria.EQUALS, Parameter.of(id)));
-        });
+        OrderMapper mapper = new OrderMapper(query);
+        query.addCriteria(new MatchCriteria(mapper.getIdRef(), EQUALS, Parameter.of(id)));
         return JdbcUtils.selectOne(query, connection, mapper);
     }
 ```
 
-Let's define the remaining tables to demonstrate the consistency of this approach regardless of number of tables
-involved, as OrderItem selection involves all 4 tables into the query:
+Let's define the remaining ResultMappers to demonstrate the consistency of this approach regardless of number of
+tables involved, as OrderItem selection involves all 4 tables into the query:
 
 ```java
-public abstract class ProductDao {
+import static com.github.squigglesql.squigglesql.dao.ProductDao.*;
 
-    private static final Table TABLE = new Table("product");
-    private static final TableColumn ID = TABLE.get("id");
-    private static final TableColumn NAME = TABLE.get("name");
-    private static final TableColumn PRICE = TABLE.get("price");
+public class ProductMapper implements ResultMapper<Product> {
 
-    public interface Joiner {
+    private final TableReference ref;
 
-        void accept(Selectable idRef);
+    private final ResultColumn id;
+    private final ResultColumn name;
+    private final ResultColumn price;
+
+    public ProductMapper(SelectQuery query) {
+        ref = TABLE.refer();
+
+        id = query.addToSelection(ref.get(ID));
+        name = query.addToSelection(ref.get(NAME));
+        price = query.addToSelection(ref.get(PRICE));
     }
 
-    public static ResultMapper<Product> addToQuery(SelectQuery query, Joiner joiner) {
-        TableReference ref = TABLE.refer();
+    public Selectable getIdRef() {
+        return ref.get(ID);
+    }
 
-        ResultColumn id = query.addToSelection(ref.get(ID));
-        ResultColumn name = query.addToSelection(ref.get(NAME));
-        ResultColumn price = query.addToSelection(ref.get(PRICE));
-
-        joiner.accept(ref.get(ID));
-
-        return rs -> new Product(
+    @Override
+    public Product apply(ResultSet rs) throws SQLException {
+        return new Product(
                 JdbcUtils.readIntegerNotNull(rs, id.getIndex()),
                 JdbcUtils.readString(rs, name.getIndex()),
                 JdbcUtils.readIntegerNotNull(rs, price.getIndex()));
     }
 }
+```
 
-public abstract class OrderItemDao {
+```java
+import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
+import static com.github.squigglesql.squigglesql.dao.OrderItemDao.*;
 
-    private static final Table TABLE = new Table("order_item");
-    private static final TableColumn ID = TABLE.get("id");
-    private static final TableColumn ORDER_ID = TABLE.get("order_id");
-    private static final TableColumn PRODUCT_ID = TABLE.get("product_id");
-    private static final TableColumn QUANTITY = TABLE.get("quantity");
+public class OrderItemMapper implements ResultMapper<OrderItem> {
 
-    public interface Joiner {
+    private final TableReference ref;
 
-        void accept(Selectable idRef);
+    private final ResultColumn id;
+    private final OrderMapper order;
+    private final ProductMapper product;
+    private final ResultColumn quantity;
+
+    public OrderItemMapper(SelectQuery query) {
+        ref = TABLE.refer();
+
+        id = query.addToSelection(ref.get(ID));
+        quantity = query.addToSelection(ref.get(QUANTITY));
+
+        order = new OrderMapper(query);
+        query.addCriteria(new MatchCriteria(order.getIdRef(), EQUALS, ref.get(ORDER_ID)));
+
+        product = new ProductMapper(query);
+        query.addCriteria(new MatchCriteria(product.getIdRef(), EQUALS, ref.get(PRODUCT_ID)));
     }
 
-    public static ResultMapper<OrderItem> addToQuery(SelectQuery query, Joiner joiner) {
-        TableReference ref = TABLE.refer();
+    public Selectable getIdRef() {
+        return ref.get(ID);
+    }
 
-        ResultColumn id = query.addToSelection(ref.get(ID));
-        ResultColumn quantity = query.addToSelection(ref.get(QUANTITY));
-
-        ResultMapper<Order> order = OrderDao.addToQuery(query, idRef -> {
-            query.addCriteria(new MatchCriteria(idRef, EQUALS, ref.get(ORDER_ID)));
-        });
-
-        ResultMapper<Product> product = ProductDao.addToQuery(query, idRef -> {
-            query.addCriteria(new MatchCriteria(idRef, EQUALS, ref.get(PRODUCT_ID)));
-        });
-
-        joiner.accept(ref.get(ID));
-
-        return rs -> new OrderItem(
+    @Override
+    public OrderItem apply(ResultSet rs) throws SQLException {
+        return new OrderItem(
                 JdbcUtils.readIntegerNotNull(rs, id.getIndex()),
                 order.apply(rs),
                 product.apply(rs),
@@ -439,26 +506,88 @@ public abstract class OrderItemDao {
 }
 ```
 
-Selection query of complex OrderItem instance is still consistently easy:
+The selection query of a complex OrderItem instance in OrderDao is still consistently easy:
 
 ```java
+import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
+
+...
+
     public static OrderItem select(Connection connection, int id) throws SQLException {
         SelectQuery query = new SelectQuery();
-        ResultMapper<OrderItem> mapper = addToQuery(query, idRef -> {
-            query.addCriteria(new MatchCriteria(idRef, EQUALS, Parameter.of(id)));
-        });
+        OrderItemMapper mapper = new OrderItemMapper(query);
+        query.addCriteria(new MatchCriteria(mapper.getIdRef(), EQUALS, Parameter.of(id)));
         return JdbcUtils.selectOne(query, connection, mapper);
     }
 ```
 
-Notice that all work above is made mostly with static functions with short lists of arguments. It means that the API is
+## Other selection criterias
+
+What if we want to use a different selection criteria except primary keys? With this architecture, this is still not a
+big challenge. Just expose the necessary table column references in ResultMapper implementations. Let's start with
+selection of customers by a city. Add the following method to CustomerMapper:
+
+```java
+    public Selectable getCityRef() {
+        return ref.get(CITY);
+    }
+```
+
+Now the selection function in CustomerDao can be implemented as simple as this:
+
+```java
+import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
+
+...
+
+    public static List<Customer> selectByCity(Connection connection, String city) throws SQLException {
+        SelectQuery query = new SelectQuery();
+        CustomerMapper mapper = new CustomerMapper(query);
+        query.addCriteria(new MatchCriteria(mapper.getCityRef(), EQUALS, Parameter.of(city)));
+        return JdbcUtils.selectAll(query, connection, mapper);
+    }
+```
+
+So, basically, you just need to list all significant selection columns in ResultMapper implementations, and it opens
+a possibility for you to use them in criterias.
+
+You can relay the selection columns down the hierarchy. For example, to select orders by city, you need to define
+getCityRef methods in OrderMapper:
+
+```java
+    public Selectable getCityRef() {
+        return customer.getCityRef();
+    }
+```
+
+Now the selection method in OrderDao can be easily implemented:
+
+```java
+import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
+
+...
+
+    public static List<Order> selectByCity(Connection connection, String city) throws SQLException {
+        SelectQuery query = new SelectQuery();
+        OrderMapper mapper = new OrderMapper(query);
+        query.addCriteria(new MatchCriteria(mapper.getCityRef(), EQUALS, Parameter.of(city)));
+        return JdbcUtils.selectAll(query, connection, mapper);
+    }
+```
+
+## Conclusion
+
+Notice that Dao classes are built with static functions with short lists of arguments. It means that the API is
 granular, easy to use and to cover with tests.
 
 Notice that you don't really need to worry about the text of the SQL query behind all this Java code. With just a bunch
 of simple and clear Java classes we've managed to transform Squiggle SQL query builder to a fully-capable database
-communication framework. Meanwhile, it is very different from the alternative frameworks:
+interaction framework. Meanwhile, it is very different from the alternative frameworks:
 
 * As opposed to Hibernate, Squiggle SQL doesn't use any reflection. There's no magic behind it, but pure
 object-oriented design.
 * As opposed to ScalikeJDBC, Squiggle SQL doesn't force you to write raw SQL code or respect the original order of
-QueryDSL calls. Say no to copy & paste.
+QueryDSL calls. It means that you don't need to copy & paste big chunks of code anymore.
+
+See full source code of the tutorial here
+https://github.com/squigglesql/squigglesql/tree/master/src/test/java/com/github/squigglesql/squigglesql/dao

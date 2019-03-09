@@ -23,8 +23,8 @@ import com.github.squigglesql.squigglesql.Selectable;
 import com.github.squigglesql.squigglesql.TableReference;
 import com.github.squigglesql.squigglesql.alias.AliasGenerator;
 import com.github.squigglesql.squigglesql.alias.Alphabet;
-import com.github.squigglesql.squigglesql.util.CollectionWriter;
 import com.github.squigglesql.squigglesql.criteria.Criteria;
+import com.github.squigglesql.squigglesql.util.CollectionWriter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

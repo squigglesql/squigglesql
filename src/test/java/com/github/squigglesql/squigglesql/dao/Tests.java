@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static com.github.squigglesql.squigglesql.TestUtils.*;
 import static org.junit.Assert.assertEquals;
@@ -66,14 +68,14 @@ public class Tests {
         });
     }
 
-//    @Test
-//    public void testCustomerSelectByCity() throws SQLException {
-//        withContents(connection -> {
-//            assertEquals(Arrays.asList(CUSTOMERS_ATLANTA), CustomerDao.selectByCity(connection, ATLANTA));
-//            assertEquals(Arrays.asList(CUSTOMERS_BERLIN), CustomerDao.selectByCity(connection, BERLIN));
-//            assertEquals(Collections.emptyList(), CustomerDao.selectByCity(connection, CANBERRA));
-//        });
-//    }
+    @Test
+    public void testCustomerSelectByCity() throws SQLException {
+        withContents(connection -> {
+            assertEquals(Arrays.asList(CUSTOMERS_ATLANTA), CustomerDao.selectByCity(connection, ATLANTA));
+            assertEquals(Arrays.asList(CUSTOMERS_BERLIN), CustomerDao.selectByCity(connection, BERLIN));
+            assertEquals(Collections.emptyList(), CustomerDao.selectByCity(connection, CANBERRA));
+        });
+    }
 
     @Test
     public void testOrderSelect() throws SQLException {
@@ -85,14 +87,14 @@ public class Tests {
         });
     }
 
-//    @Test
-//    public void testOrderSelectByCity() throws SQLException {
-//        withContents(connection -> {
-//            assertEquals(Arrays.asList(ORDERS_ATLANTA), OrderDao.selectByCity(connection, ATLANTA));
-//            assertEquals(Arrays.asList(ORDERS_BERLIN), OrderDao.selectByCity(connection, BERLIN));
-//            assertEquals(Collections.emptyList(), OrderDao.selectByCity(connection, CANBERRA));
-//        });
-//    }
+    @Test
+    public void testOrderSelectByCity() throws SQLException {
+        withContents(connection -> {
+            assertEquals(Arrays.asList(ORDERS_ATLANTA), OrderDao.selectByCity(connection, ATLANTA));
+            assertEquals(Arrays.asList(ORDERS_BERLIN), OrderDao.selectByCity(connection, BERLIN));
+            assertEquals(Collections.emptyList(), OrderDao.selectByCity(connection, CANBERRA));
+        });
+    }
 
     @Test
     public void testOrderItemSelect() throws SQLException {
