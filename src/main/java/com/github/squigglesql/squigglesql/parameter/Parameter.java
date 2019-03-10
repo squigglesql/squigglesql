@@ -122,6 +122,9 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
+     * @param value Parameter value.
+     * @param calendar Calendar to use. See setTimestamp method of JDBC PreparedStatement for details.
+     * @return Parameter to use in a query.
      * @deprecated Some JDBC drivers don't give a shit about calendars, so use this method only if you know what you
      * are doing. The recommended way to proceed is to convert the timestamp to the local time zone manually before
      * sending it to the database, or use Java 8 date/time API Parameter.of methods.
@@ -135,6 +138,9 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
+     * @param value Parameter value.
+     * @param calendar Calendar to use. See setTimestamp method of JDBC PreparedStatement for details.
+     * @return Parameter to use in a query.
      * @deprecated Some JDBC drivers don't give a shit about calendars, so use this method only if you know what you
      * are doing. Also, it is in general not recommended to use TIME WITH TIME ZONE type, because some time zones have
      * a variable offset (e.g. all DST time zones), so the outcome can be unpredictable.
@@ -148,6 +154,9 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
+     * @param value Parameter value.
+     * @param calendar Calendar to use. See setTimestamp method of JDBC PreparedStatement for details.
+     * @return Parameter to use in a query.
      * @deprecated Some JDBC drivers don't give a shit about calendars, so use this method only if you know what you
      * are doing. Also, there is no DATE WITH TIME ZONE type in SQL standard, so, the existence of setDate method with
      * Calendar argument in JDBC PreparedStatement class is misleading.

@@ -1,5 +1,5 @@
-[![Build Status via Travis CI](https://api.travis-ci.org/enepomnyaschih/squiggle-sql.svg?branch=master)](https://travis-ci.org/enepomnyaschih/squiggle-sql)
-[![Coverage Status](https://coveralls.io/repos/github/enepomnyaschih/squiggle-sql/badge.svg?branch=master)](https://coveralls.io/github/enepomnyaschih/squiggle-sql?branch=master)
+[![Build Status via Travis CI](https://api.travis-ci.org/squigglesql/squigglesql.svg?branch=master)](https://travis-ci.org/squigglesql/squigglesql)
+[![Coverage Status](https://coveralls.io/repos/github/squigglesql/squigglesql/badge.svg?branch=master)](https://coveralls.io/github/squigglesql/squigglesql?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.zatarox/squiggle/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.zatarox/squiggle)
 
 Squiggle is a little Java library for dynamically generating SQL SELECT statements. It's sweet spot is for applications
