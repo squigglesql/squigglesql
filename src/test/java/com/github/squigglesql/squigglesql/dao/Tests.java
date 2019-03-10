@@ -1,5 +1,7 @@
 package com.github.squigglesql.squigglesql.dao;
 
+import com.github.squigglesql.squigglesql.databases.TestDatabase;
+import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -14,6 +16,27 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class Tests {
+
+    private static final TestDatabaseColumn[] CUSTOMER_COLUMNS = new TestDatabaseColumn[]{
+            new TestDatabaseColumn(CustomerDao.NAME.getName(), "TEXT", true, null),
+            new TestDatabaseColumn(CustomerDao.CITY.getName(), "TEXT", true, null)
+    };
+
+    private static final TestDatabaseColumn[] ORDER_COLUMNS = new TestDatabaseColumn[]{
+            new TestDatabaseColumn(OrderDao.ISSUED_AT.getName(), "TIMESTAMP WITH TIME ZONE", true, null),
+            new TestDatabaseColumn(OrderDao.CUSTOMER_ID.getName(), "INTEGER", true, CustomerDao.TABLE.getName())
+    };
+
+    private static final TestDatabaseColumn[] PRODUCT_COLUMNS = new TestDatabaseColumn[]{
+            new TestDatabaseColumn(ProductDao.NAME.getName(), "TEXT", true, null),
+            new TestDatabaseColumn(ProductDao.PRICE.getName(), "INTEGER", true, null)
+    };
+
+    private static final TestDatabaseColumn[] ORDER_ITEM_COLUMNS = new TestDatabaseColumn[]{
+            new TestDatabaseColumn(OrderItemDao.ORDER_ID.getName(), "INTEGER", true, OrderDao.TABLE.getName()),
+            new TestDatabaseColumn(OrderItemDao.PRODUCT_ID.getName(), "INTEGER", true, ProductDao.TABLE.getName()),
+            new TestDatabaseColumn(OrderItemDao.QUANTITY.getName(), "INTEGER", true, null)
+    };
 
     private static final String ATLANTA = "Atlanta";
     private static final String BERLIN = "Berlin";
@@ -60,7 +83,7 @@ public class Tests {
 
     @Test
     public void testCustomerSelect() throws SQLException {
-        withContents(connection -> {
+        withContents((connection, database) -> {
             for (int i = 0; i < CUSTOMERS.length; ++i) {
                 assertEquals(CUSTOMERS[i], CustomerDao.select(connection, i + 1));
             }
@@ -70,7 +93,7 @@ public class Tests {
 
     @Test
     public void testCustomerSelectByCity() throws SQLException {
-        withContents(connection -> {
+        withContents((connection, database) -> {
             assertEquals(Arrays.asList(CUSTOMERS_ATLANTA), CustomerDao.selectByCity(connection, ATLANTA));
             assertEquals(Arrays.asList(CUSTOMERS_BERLIN), CustomerDao.selectByCity(connection, BERLIN));
             assertEquals(Collections.emptyList(), CustomerDao.selectByCity(connection, CANBERRA));
@@ -79,7 +102,7 @@ public class Tests {
 
     @Test
     public void testOrderSelect() throws SQLException {
-        withContents(connection -> {
+        withContents((connection, database) -> {
             for (int i = 0; i < ORDERS.length; ++i) {
                 assertEquals(ORDERS[i], OrderDao.select(connection, i + 1));
             }
@@ -89,7 +112,7 @@ public class Tests {
 
     @Test
     public void testOrderSelectByCity() throws SQLException {
-        withContents(connection -> {
+        withContents((connection, database) -> {
             assertEquals(Arrays.asList(ORDERS_ATLANTA), OrderDao.selectByCity(connection, ATLANTA));
             assertEquals(Arrays.asList(ORDERS_BERLIN), OrderDao.selectByCity(connection, BERLIN));
             assertEquals(Collections.emptyList(), OrderDao.selectByCity(connection, CANBERRA));
@@ -98,7 +121,7 @@ public class Tests {
 
     @Test
     public void testOrderItemSelect() throws SQLException {
-        withContents(connection -> {
+        withContents((connection, database) -> {
             for (int i = 0; i < ORDER_ITEMS.length; ++i) {
                 assertEquals(ORDER_ITEMS[i], OrderItemDao.select(connection, i + 1));
             }
@@ -108,47 +131,18 @@ public class Tests {
 
     private static void withContents(Consumer consumer) throws SQLException {
         withDatabase(
-                connection -> withSequences(connection,
-                        () -> withTables(connection,
-                                () -> withRecords(connection, () -> {
-                                    consumer.accept(connection);
-                                    return null;
-                                }))));
+                (connection, database) -> withTables(connection, database,
+                        () -> withRecords(connection, () -> {
+                            consumer.accept(connection, database);
+                            return null;
+                        })));
     }
 
-    private static <T> T withSequences(Connection connection, Supplier<T> supplier) throws SQLException {
-        return withSequence(connection, "customer_id_seq",
-                () -> withSequence(connection, "order_id_seq",
-                        () -> withSequence(connection, "product_id_seq",
-                                () -> withSequence(connection, "order_item_id_seq", supplier))));
-    }
-
-    private static <T> T withTables(Connection connection, Supplier<T> supplier) throws SQLException {
-        String customer = "CREATE TABLE customer (\n" +
-                "id INTEGER DEFAULT nextval('customer_id_seq'::regclass) NOT NULL PRIMARY KEY,\n" +
-                "name TEXT NOT NULL,\n" +
-                "city TEXT NOT NULL\n" +
-                ")";
-        String order = "CREATE TABLE \"order\" (\n" +
-                "id INTEGER DEFAULT nextval('order_id_seq'::regclass) NOT NULL PRIMARY KEY,\n" +
-                "issued_at TIMESTAMP WITH TIME ZONE NOT NULL,\n" +
-                "customer_id INT NOT NULL REFERENCES customer\n" +
-                ")";
-        String product = "CREATE TABLE product (\n" +
-                "id INTEGER DEFAULT nextval('product_id_seq'::regclass) NOT NULL PRIMARY KEY,\n" +
-                "name TEXT NOT NULL,\n" +
-                "price INTEGER NOT NULL\n" +
-                ")";
-        String orderItem = "CREATE TABLE order_item (\n" +
-                "id INTEGER DEFAULT nextval('order_item_id_seq'::regclass) NOT NULL,\n" +
-                "order_id INTEGER NOT NULL REFERENCES \"order\",\n" +
-                "product_id INTEGER NOT NULL REFERENCES product,\n" +
-                "quantity INTEGER NOT NULL\n" +
-                ")";
-        return withTable(connection, "customer", customer,
-                () -> withTable(connection, "order", order,
-                        () -> withTable(connection, "product", product,
-                                () -> withTable(connection, "order_item", orderItem, supplier))));
+    private static <T> T withTables(Connection connection, TestDatabase database, Supplier<T> supplier) throws SQLException {
+        return withTable(connection, database, CustomerDao.TABLE.getName(), CUSTOMER_COLUMNS,
+                () -> withTable(connection, database, OrderDao.TABLE.getName(), ORDER_COLUMNS,
+                        () -> withTable(connection, database, ProductDao.TABLE.getName(), PRODUCT_COLUMNS,
+                                () -> withTable(connection, database, OrderItemDao.TABLE.getName(), ORDER_ITEM_COLUMNS, supplier))));
     }
 
     private static <T> T withRecords(Connection connection, Supplier<T> supplier) throws SQLException {

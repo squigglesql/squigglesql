@@ -15,29 +15,27 @@
  */
 package com.github.squigglesql.squigglesql;
 
+import com.github.squigglesql.squigglesql.databases.PostgreSqlTestDatabase;
+import com.github.squigglesql.squigglesql.databases.TestDatabase;
+import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
 
 /**
  * Any database tests rely on the following configuration:
  * <p>
- * * Install PostgreSQL
- * * Create user "squiggletest" with password "1" and permission to login
- * * Create database "squiggletest" with "squiggletest" owner
+ * * Install PostgreSQL and MySQL
+ * * In both, create database "squiggletest"
+ * * In both, create user "squiggletest" with password "1", permission to login to "squiggletest" database
+ * and full access to it.
  */
 public abstract class TestUtils {
 
     private static final String USER = "squiggletest";
     private static final String PASSWORD = "1";
-    private static final String URL = "jdbc:postgresql://localhost:5432/squiggletest";
-
-    public interface Mapper<T> {
-
-        T apply(Connection connection) throws SQLException;
-    }
 
     public interface Supplier<T> {
 
@@ -46,50 +44,47 @@ public abstract class TestUtils {
 
     public interface Consumer {
 
-        void accept(Connection connection) throws SQLException;
+        void accept(Connection connection, TestDatabase database) throws SQLException;
     }
 
-    public static <T> T withSequence(Connection connection, String name, Supplier<T> supplier) throws SQLException {
-        String createQuery = "CREATE SEQUENCE " + name + "\n" +
-                "START WITH 1\n" +
-                "INCREMENT BY 1\n" +
-                "NO MINVALUE\n" +
-                "NO MAXVALUE\n" +
-                "CACHE 1";
-        String dropQuery = "DROP SEQUENCE IF EXISTS " + name + " CASCADE";
-        return with(connection, createQuery, dropQuery, supplier);
+    public interface Runnable {
+
+        void run() throws SQLException;
     }
 
-    public static <T> T withTable(Connection connection, String name, String createQuery,
-                                  Supplier<T> supplier) throws SQLException {
-        String dropQuery = "DROP TABLE IF EXISTS \"" + name + "\" CASCADE";
-        return with(connection, createQuery, dropQuery, supplier);
+    public static <T> T withTable(Connection connection, TestDatabase database, String name,
+                                  TestDatabaseColumn[] columns, Supplier<T> supplier) throws SQLException {
+        return with(
+                () -> database.createTable(connection, name, columns),
+                () -> database.dropTable(connection, name),
+                supplier);
     }
 
-    public static <T> T with(Connection connection, String createQuery, String dropQuery,
-                             Supplier<T> supplier) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            statement.execute(dropQuery);
+    public static void withDatabase(Consumer consumer) throws SQLException {
+        withPostgreSqlDatabase(consumer);
+    }
+
+    private static void withPostgreSqlDatabase(Consumer consumer) throws SQLException {
+        withDatabase(new PostgreSqlTestDatabase(), consumer);
+    }
+
+    private static void withDatabase(TestDatabase database, Consumer consumer) throws SQLException {
+        Properties props = new Properties();
+        props.setProperty("user", USER);
+        props.setProperty("password", PASSWORD);
+        try (Connection connection = DriverManager.getConnection(database.getUrl(), props)) {
+            consumer.accept(connection, database);
         }
-        try (Statement statement = connection.createStatement()) {
-            statement.execute(createQuery);
-        }
+    }
+
+    private static <T> T with(Runnable creator, Runnable dropper, Supplier<T> supplier) throws SQLException {
+        dropper.run();
+        creator.run();
 
         T result = supplier.get();
 
         // We drop the table only if the test succeeds. Otherwise we preserve it for debugging purposes.
-        try (Statement statement = connection.createStatement()) {
-            statement.execute(dropQuery);
-        }
+        dropper.run();
         return result;
-    }
-
-    public static <T> T withDatabase(Mapper<T> mapper) throws SQLException {
-        Properties props = new Properties();
-        props.setProperty("user", USER);
-        props.setProperty("password", PASSWORD);
-        try (Connection connection = DriverManager.getConnection(URL, props)) {
-            return mapper.apply(connection);
-        }
     }
 }

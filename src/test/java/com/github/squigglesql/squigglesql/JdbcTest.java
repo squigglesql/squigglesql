@@ -1,6 +1,7 @@
 package com.github.squigglesql.squigglesql;
 
 import com.github.squigglesql.squigglesql.criteria.MatchCriteria;
+import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
 import com.github.squigglesql.squigglesql.parameter.Parameter;
 import com.github.squigglesql.squigglesql.query.InsertQuery;
 import com.github.squigglesql.squigglesql.query.ResultColumn;
@@ -37,7 +38,7 @@ public class JdbcTest {
 
     @Test
     public void testSelectOne() throws SQLException {
-        withContents(connection -> {
+        withContents((connection, database) -> {
             SelectQuery query = new SelectQuery();
             ResultMapper<Employee> mapper = addToQuery(query, AARON.getId());
             Employee employee = JdbcUtils.selectOne(query, connection, mapper);
@@ -47,7 +48,7 @@ public class JdbcTest {
 
     @Test
     public void testSelectOneWithEmpty() throws SQLException {
-        withContents(connection -> {
+        withContents((connection, database) -> {
             SelectQuery query = new SelectQuery();
             ResultMapper<Employee> mapper = addToQuery(query, NONE_ID);
             Employee employee = JdbcUtils.selectOne(query, connection, mapper);
@@ -57,7 +58,7 @@ public class JdbcTest {
 
     @Test(expected = TooManyRecordsException.class)
     public void testSelectOneWithMany() throws SQLException {
-        withContents(connection -> {
+        withContents((connection, database) -> {
             SelectQuery query = new SelectQuery();
             ResultMapper<Employee> mapper = addToQuery(query);
             Employee employee = JdbcUtils.selectOne(query, connection, mapper);
@@ -67,7 +68,7 @@ public class JdbcTest {
 
     @Test
     public void testSelectAll() throws SQLException {
-        withContents(connection -> {
+        withContents((connection, database) -> {
             SelectQuery query = new SelectQuery();
             ResultMapper<Employee> mapper = addToQuery(query);
             List<Employee> actual = JdbcUtils.selectAll(query, connection, mapper);
@@ -80,7 +81,7 @@ public class JdbcTest {
 
     @Test
     public void testUpdate() throws SQLException {
-        withContents(connection -> {
+        withContents((connection, database) -> {
             TableReference ref = TABLE.refer();
             UpdateQuery updateQuery = new UpdateQuery(ref);
             updateQuery.addValue(AGE, Parameter.of(BOB_GROWN.getAge()));
@@ -100,15 +101,17 @@ public class JdbcTest {
                 NAME.getName() + " TEXT NOT NULL,\n" +
                 AGE.getName() + " INTEGER NOT NULL\n" +
                 ")";
-        withDatabase(
-                connection -> withSequence(connection, SEQUENCE,
-                        () -> withTable(connection, TABLE.getName(), createQuery,
-                                () -> {
-                                    insert(connection, AARON);
-                                    insert(connection, BOB);
-                                    consumer.accept(connection);
-                                    return null;
-                                })));
+        withDatabase((connection, database) -> withTable(
+                connection, database, TABLE.getName(), new TestDatabaseColumn[]{
+                        new TestDatabaseColumn(NAME.getName(), "TEXT", true, null),
+                        new TestDatabaseColumn(AGE.getName(), "INTEGER", true, null)
+                },
+                () -> {
+                    insert(connection, AARON);
+                    insert(connection, BOB);
+                    consumer.accept(connection, database);
+                    return null;
+                }));
     }
 
     private static void insert(Connection connection, Employee employee) throws SQLException {
