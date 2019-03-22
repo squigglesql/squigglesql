@@ -1,5 +1,8 @@
 package com.github.squigglesql.squigglesql.statement;
 
+import com.github.squigglesql.squigglesql.syntax.AbstractSqlSyntax;
+import com.github.squigglesql.squigglesql.syntax.SqlSyntax;
+
 import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Connection;
@@ -16,6 +19,11 @@ public class JdbcStatementCompiler implements StatementCompiler<PreparedStatemen
 
     public JdbcStatementCompiler(Connection connection) {
         this.connection = connection;
+    }
+
+    @Override
+    public AbstractSqlSyntax detectDefaultSyntax() throws SQLException {
+        return SqlSyntax.from(connection);
     }
 
     @Override

@@ -48,11 +48,11 @@ public class StatementTest {
         MockStatement statement = select.toStatement(new MockStatementCompiler());
 
         assertEquals("SELECT\n"
-                + "    \"e\".\"name\"\n"
+                + "    e.name\n"
                 + "FROM\n"
-                + "    \"employee\" \"e\"\n"
+                + "    employee e\n"
                 + "WHERE\n"
-                + "    \"e\".\"age\" < ?", statement.getQuery());
+                + "    e.age < ?", statement.getQuery());
 
         assertEquals(1, statement.getParameters().size());
         assertEquals(30, statement.getParameters().get(0));

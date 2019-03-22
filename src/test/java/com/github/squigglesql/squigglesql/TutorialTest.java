@@ -28,7 +28,7 @@ public class TutorialTest {
     @Test
     public void testTutorial() {
         // define tables
-        Table order = new Table("order");
+        Table order = new Table("ordr");
         TableColumn orderId = order.get("id");
         TableColumn orderTotalPrice = order.get("total_price");
         TableColumn orderStatus = order.get("status");
@@ -85,25 +85,25 @@ public class TutorialTest {
         select.addCriteria(new InCriteria(w.get(warehouseLocation), subSelect));
 
         assertEquals("SELECT\n"
-                + "    \"o\".\"id\",\n"
-                + "    \"o\".\"total_price\",\n"
-                + "    \"w\".\"location\"\n"
+                + "    o.id,\n"
+                + "    o.total_price,\n"
+                + "    w.location\n"
                 + "FROM\n"
-                + "    \"order\" \"o\",\n"
-                + "    \"warehouse\" \"w\"\n"
+                + "    ordr o,\n"
+                + "    warehouse w\n"
                 + "WHERE\n"
-                + "    \"o\".\"status\" = 'processed'::status AND\n"
-                + "    \"o\".\"items\" < 5 AND\n"
-                + "    \"o\".\"delivery\" IN ('post', 'fedex', 'goat') AND\n"
-                + "    \"o\".\"warehouse_id\" = \"w\".\"id\" AND\n"
-                + "    \"w\".\"size\" = 'big' AND\n"
-                + "    \"w\".\"location\" IN ((\n"
+                + "    o.status = 'processed'::status AND\n"
+                + "    o.items < 5 AND\n"
+                + "    o.delivery IN ('post', 'fedex', 'goat') AND\n"
+                + "    o.warehouse_id = w.id AND\n"
+                + "    w.size = 'big' AND\n"
+                + "    w.location IN ((\n"
                 + "        SELECT\n"
-                + "            \"o\".\"location\"\n"
+                + "            o.location\n"
                 + "        FROM\n"
-                + "            \"offer\" \"o\"\n"
+                + "            offer o\n"
                 + "        WHERE\n"
-                + "            \"o\".\"valid\" = true\n"
+                + "            o.valid = true\n"
                 + "    ))", select.toString());
     }
 
@@ -128,13 +128,13 @@ public class TutorialTest {
         select.addOrder(e.get(employeeAge), Order.DESCENDING);
 
         assertEquals("SELECT\n"
-                + "    \"e\".\"firstname\",\n"
-                + "    \"e\".\"lastname\"\n"
+                + "    e.firstname,\n"
+                + "    e.lastname\n"
                 + "FROM\n"
-                + "    \"employee\" \"e\"\n"
+                + "    employee e\n"
                 + "WHERE\n"
-                + "    \"e\".\"age\" >= 18\n"
+                + "    e.age >= 18\n"
                 + "ORDER BY\n"
-                + "    \"e\".\"age\" DESC", select.toString());
+                + "    e.age DESC", select.toString());
     }
 }

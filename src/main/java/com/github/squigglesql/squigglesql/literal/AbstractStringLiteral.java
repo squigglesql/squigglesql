@@ -21,7 +21,10 @@ public abstract class AbstractStringLiteral extends Literal {
 
     @Override
     public void compile(QueryCompiler compiler) {
-        compiler.write('\'').write(getValue().toString().replace("'", "''")).write('\'');
+        char quote = compiler.getSyntax().getTextQuote();
+        String str = String.valueOf(quote);
+        // Note: we can't use compiler.quote method here as it fails to work with quote symbols in the input.
+        compiler.write(quote).write(getValue().toString().replace(str, str + str)).write(quote);
     }
 
     protected abstract Object getValue();

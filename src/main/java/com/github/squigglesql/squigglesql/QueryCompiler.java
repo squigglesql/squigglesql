@@ -15,8 +15,10 @@
  */
 package com.github.squigglesql.squigglesql;
 
+import com.github.squigglesql.squigglesql.exception.QueryCompilationException;
 import com.github.squigglesql.squigglesql.parameter.Parameter;
 import com.github.squigglesql.squigglesql.query.ResultColumn;
+import com.github.squigglesql.squigglesql.syntax.AbstractSqlSyntax;
 
 import java.util.Collections;
 import java.util.Map;
@@ -47,6 +49,10 @@ public class QueryCompiler {
 
     public Output getOutput() {
         return output;
+    }
+
+    public AbstractSqlSyntax getSyntax() {
+        return output.getSyntax();
     }
 
     public String getAlias(TableReference tableReference) {
@@ -87,8 +93,15 @@ public class QueryCompiler {
         return this;
     }
 
-    public QueryCompiler quote(String s) {
-        return write('"').write(s).write('"');
+    public QueryCompiler quote(String s, char ch) {
+        if (ch == 0) {
+            return write(s);
+        }
+        if (s.indexOf(ch) != -1) {
+            throw new QueryCompilationException("Can't quote a lexem with " + ch + " characters, as it contains these"
+                    + " characters. Lexem: " + s);
+        }
+        return write(ch).write(s).write(ch);
     }
 
     public QueryCompiler indent() {

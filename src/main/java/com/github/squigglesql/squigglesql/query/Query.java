@@ -18,6 +18,8 @@ package com.github.squigglesql.squigglesql.query;
 import com.github.squigglesql.squigglesql.Output;
 import com.github.squigglesql.squigglesql.alias.Alphabet;
 import com.github.squigglesql.squigglesql.statement.StatementCompiler;
+import com.github.squigglesql.squigglesql.syntax.AbstractSqlSyntax;
+import com.github.squigglesql.squigglesql.syntax.SqlSyntax;
 
 import java.sql.SQLException;
 
@@ -29,19 +31,27 @@ public abstract class Query {
 
     @Override
     public String toString() {
-        return toString(Output.DEFAULT_INDENT);
+        return toString(SqlSyntax.DEFAULT_SQL_SYNTAX);
     }
 
-    public String toString(String indent) {
-        return compile(indent).toString();
+    public String toString(AbstractSqlSyntax syntax) {
+        return toString(syntax, Output.DEFAULT_INDENT);
+    }
+
+    public String toString(AbstractSqlSyntax syntax, String indent) {
+        return compile(syntax, indent).toString();
     }
 
     public <S> S toStatement(StatementCompiler<S> compiler) throws SQLException {
-        return compile(Output.DEFAULT_INDENT).toStatement(compiler);
+        return toStatement(compiler.detectDefaultSyntax(), compiler);
     }
 
-    private Output compile(String indent) {
-        Output out = new Output(indent);
+    public <S> S toStatement(AbstractSqlSyntax syntax, StatementCompiler<S> compiler) throws SQLException {
+        return compile(syntax, Output.DEFAULT_INDENT).toStatement(compiler);
+    }
+
+    private Output compile(AbstractSqlSyntax syntax, String indent) {
+        Output out = new Output(syntax, indent);
         compile(out);
         return out;
     }

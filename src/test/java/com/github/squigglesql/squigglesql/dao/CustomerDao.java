@@ -41,6 +41,7 @@ public class CustomerDao {
         SelectQuery query = new SelectQuery();
         CustomerMapper mapper = new CustomerMapper(query);
         query.addCriteria(new MatchCriteria(mapper.getCityRef(), EQUALS, Parameter.of(city)));
+        query.addOrder(mapper.getIdRef(), true);
         return JdbcUtils.selectAll(query, connection, mapper);
     }
 }

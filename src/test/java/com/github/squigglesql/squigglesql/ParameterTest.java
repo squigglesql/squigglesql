@@ -15,6 +15,7 @@
  */
 package com.github.squigglesql.squigglesql;
 
+import com.github.squigglesql.squigglesql.databases.TestDatabase;
 import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
 import com.github.squigglesql.squigglesql.parameter.Parameter;
 import com.github.squigglesql.squigglesql.query.InsertQuery;
@@ -293,6 +294,9 @@ public class ParameterTest {
     @Test
     public void testRealNotNullByDefinition() throws SQLException {
         withRealTable((connection, database) -> {
+            if (!database.supportsInfinity()) {
+                return;
+            }
             InsertQuery insert = new InsertQuery(TABLE);
             insert.addValue(FLOAT_INFINITY_COLUMN, Parameter.of(Float.POSITIVE_INFINITY));
             insert.addValue(FLOAT_MINUS_INFINITY_COLUMN, Parameter.of(Float.NEGATIVE_INFINITY));
@@ -329,6 +333,9 @@ public class ParameterTest {
     @Test
     public void testRealNotNullByValue() throws SQLException {
         withRealTable((connection, database) -> {
+            if (!database.supportsInfinity()) {
+                return;
+            }
             InsertQuery insert = new InsertQuery(TABLE);
             insert.addValue(FLOAT_INFINITY_COLUMN, Parameter.of(Float.POSITIVE_INFINITY));
             insert.addValue(FLOAT_MINUS_INFINITY_COLUMN, Parameter.of(Float.NEGATIVE_INFINITY));
@@ -381,7 +388,11 @@ public class ParameterTest {
                 try (ResultSet rs = statement.executeQuery()) {
                     assertTrue(rs.next());
                     assertEquals(TIMESTAMP, JdbcUtils.readTimestamp(rs, timestampResult.getIndex()));
-                    assertEquals(TIME, JdbcUtils.readTime(rs, timeResult.getIndex()));
+                    Time time = JdbcUtils.readTime(rs, timeResult.getIndex());
+                    if (!database.supportsTimeMs()) {
+                        time.setTime(time.getTime() + 6);
+                    }
+                    assertEquals(TIME, time);
                     assertEquals(DATE, JdbcUtils.readDate(rs, dateResult.getIndex()));
                     assertFalse(rs.next());
                 }
@@ -496,7 +507,11 @@ public class ParameterTest {
                     assertTrue(rs.next());
                     assertEquals(INSTANT, JdbcUtils.readInstant(rs, instantResult.getIndex()));
                     assertEquals(LOCAL_DATE, JdbcUtils.readLocalDate(rs, localDateResult.getIndex()));
-                    assertEquals(LOCAL_TIME, JdbcUtils.readLocalTime(rs, localTimeResult.getIndex()));
+                    LocalTime time = JdbcUtils.readLocalTime(rs, localTimeResult.getIndex());
+                    if (!database.supportsTimeMs()) {
+                        time = time.withNano(6000000);
+                    }
+                    assertEquals(LOCAL_TIME, time);
                     assertEquals(LOCAL_DATE_TIME, JdbcUtils.readLocalDateTime(rs, localDateTimeResult.getIndex()));
                     assertEquals(Instant.from(ZONED_DATE_TIME), JdbcUtils.readInstant(rs, zonedDateTimeResult.getIndex()));
                     assertEquals(Instant.from(OFFSET_DATE_TIME), JdbcUtils.readInstant(rs, offsetDateTimeResult.getIndex()));
@@ -553,7 +568,7 @@ public class ParameterTest {
                         new TestDatabaseColumn(LONG_COLUMN.getName(), "BIGINT", notNull, null),
                         new TestDatabaseColumn(FLOAT_COLUMN.getName(), "REAL", notNull, null),
                         new TestDatabaseColumn(DOUBLE_COLUMN.getName(), "DOUBLE PRECISION", notNull, null), // No DOUBLE in PostgreSQL
-                        new TestDatabaseColumn(BIG_DECIMAL_COLUMN.getName(), "NUMERIC", notNull, null),
+                        new TestDatabaseColumn(BIG_DECIMAL_COLUMN.getName(), "NUMERIC(50, 0)", notNull, null),
                         new TestDatabaseColumn(STRING_COLUMN.getName(), "TEXT", notNull, null)
                 },
                 () -> {
@@ -583,7 +598,7 @@ public class ParameterTest {
         withDatabase((connection, database) -> withTable(
                 connection, database, TABLE.getName(),
                 new TestDatabaseColumn[]{
-                        new TestDatabaseColumn(TIMESTAMP_COLUMN.getName(), "TIMESTAMP", notNull, null),
+                        new TestDatabaseColumn(TIMESTAMP_COLUMN.getName(), "TIMESTAMP(3)", notNull, null),
                         new TestDatabaseColumn(TIME_COLUMN.getName(), "TIME", notNull, null),
                         new TestDatabaseColumn(DATE_COLUMN.getName(), "DATE", notNull, null)
                 },
@@ -594,29 +609,33 @@ public class ParameterTest {
     }
 
     private static void withComplexTable(Consumer consumer, boolean notNull) throws SQLException {
-        withDatabase((connection, database) -> withTable(
-                connection, database, TABLE.getName(),
-                new TestDatabaseColumn[]{
-                        new TestDatabaseColumn(INT_ARRAY_COLUMN.getName(), "INT[]", notNull, null),
-                        new TestDatabaseColumn(STRING_ARRAY_COLUMN.getName(), "TEXT[]", notNull, null),
-                        new TestDatabaseColumn(BINARY_COLUMN.getName(), "BYTEA", notNull, null)
-                },
-                () -> {
-                    consumer.accept(connection, database);
-                    return null;
-                }));
+        withDatabase((connection, database) -> {
+            if (!database.supportsArrays()) {
+                return;
+            }
+            withTable(connection, database, TABLE.getName(),
+                    new TestDatabaseColumn[]{
+                            new TestDatabaseColumn(INT_ARRAY_COLUMN.getName(), "INT[]", notNull, null),
+                            new TestDatabaseColumn(STRING_ARRAY_COLUMN.getName(), "TEXT[]", notNull, null),
+                            new TestDatabaseColumn(BINARY_COLUMN.getName(), "BYTEA", notNull, null)
+                    },
+                    () -> {
+                        consumer.accept(connection, database);
+                        return null;
+                    });
+        });
     }
 
     private static void withJava8TimeTable(Consumer consumer, boolean notNull) throws SQLException {
         withDatabase((connection, database) -> withTable(
                 connection, database, TABLE.getName(),
                 new TestDatabaseColumn[]{
-                        new TestDatabaseColumn(INSTANT_COLUMN.getName(), "TIMESTAMP WITH TIME ZONE", notNull, null),
+                        new TestDatabaseColumn(INSTANT_COLUMN.getName(), TestDatabase::getTimestampWithTimeZoneType, notNull, null),
                         new TestDatabaseColumn(LOCAL_DATE_COLUMN.getName(), "DATE", notNull, null),
-                        new TestDatabaseColumn(LOCAL_TIME_COLUMN.getName(), "TIME(6)", notNull, null),
-                        new TestDatabaseColumn(LOCAL_DATE_TIME_COLUMN.getName(), "TIMESTAMP", notNull, null),
-                        new TestDatabaseColumn(ZONED_DATE_TIME_COLUMN.getName(), "TIMESTAMP WITH TIME ZONE", notNull, null),
-                        new TestDatabaseColumn(OFFSET_DATE_TIME_COLUMN.getName(), "TIMESTAMP WITH TIME ZONE", notNull, null)
+                        new TestDatabaseColumn(LOCAL_TIME_COLUMN.getName(), "TIME", notNull, null),
+                        new TestDatabaseColumn(LOCAL_DATE_TIME_COLUMN.getName(), "TIMESTAMP(3)", notNull, null),
+                        new TestDatabaseColumn(ZONED_DATE_TIME_COLUMN.getName(), TestDatabase::getTimestampWithTimeZoneType, notNull, null),
+                        new TestDatabaseColumn(OFFSET_DATE_TIME_COLUMN.getName(), TestDatabase::getTimestampWithTimeZoneType, notNull, null)
                 },
                 () -> {
                     consumer.accept(connection, database);

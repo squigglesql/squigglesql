@@ -47,13 +47,13 @@ public class JoinTest {
                 e.get(employeeDepartmentId), MatchCriteria.EQUALS, d.get(departmentId)));
 
         assertEquals("SELECT\n"
-                + "    \"e\".\"first_name\",\n"
-                + "    \"d\".\"director\"\n"
+                + "    e.first_name,\n"
+                + "    d.director\n"
                 + "FROM\n"
-                + "    \"employee\" \"e\",\n"
-                + "    \"department\" \"d\"\n"
+                + "    employee e,\n"
+                + "    department d\n"
                 + "WHERE\n"
-                + "    \"e\".\"department_id\" = \"d\".\"id\"", select.toString());
+                + "    e.department_id = d.id", select.toString());
     }
 
     @Test
@@ -76,11 +76,11 @@ public class JoinTest {
                 i.get(invoiceDate), MatchCriteria.GREATER, t.get(taxPaymentDate)));
 
         assertEquals("SELECT\n"
-                + "    \"i\".\"number\"\n"
+                + "    i.number\n"
                 + "FROM\n"
-                + "    \"invoice\" \"i\",\n"
-                + "    \"tax_payment\" \"t\"\n"
+                + "    invoice i,\n"
+                + "    tax_payment t\n"
                 + "WHERE\n"
-                + "    \"i\".\"date\" > \"t\".\"date\"", select.toString());
+                + "    i.date > t.date", select.toString());
     }
 }

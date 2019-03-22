@@ -29,7 +29,6 @@ public class JdbcTest {
     private static final TableColumn ID = TABLE.get("id");
     private static final TableColumn NAME = TABLE.get("name");
     private static final TableColumn AGE = TABLE.get("age");
-    private static final String SEQUENCE = "employee_id_seq";
 
     private static final Employee AARON = new Employee(1, "Aaron", 20);
     private static final Employee BOB = new Employee(2, "Bob", 30);
@@ -96,11 +95,6 @@ public class JdbcTest {
     }
 
     private static void withContents(Consumer consumer) throws SQLException {
-        String createQuery = "CREATE TABLE " + TABLE.getName() + " (\n" +
-                ID.getName() + " INTEGER DEFAULT nextval('" + SEQUENCE + "'::regclass) NOT NULL,\n" +
-                NAME.getName() + " TEXT NOT NULL,\n" +
-                AGE.getName() + " INTEGER NOT NULL\n" +
-                ")";
         withDatabase((connection, database) -> withTable(
                 connection, database, TABLE.getName(), new TestDatabaseColumn[]{
                         new TestDatabaseColumn(NAME.getName(), "TEXT", true, null),

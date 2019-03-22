@@ -51,15 +51,15 @@ public class OrAndTest {
         ));
 
         assertEquals("SELECT\n"
-                + "    \"u\".\"id\"\n"
+                + "    u.id\n"
                 + "FROM\n"
-                + "    \"user\" \"u\"\n"
+                + "    user u\n"
                 + "WHERE\n"
                 + "    (\n"
-                + "        \"u\".\"name\" LIKE 'a%' OR\n"
+                + "        u.name LIKE 'a%' OR\n"
                 + "        (\n"
-                + "            \"u\".\"id\" = 12345 AND\n"
-                + "            \"u\".\"feet\" = 'smelly'\n"
+                + "            u.id = 12345 AND\n"
+                + "            u.feet = 'smelly'\n"
                 + "        )\n"
                 + "    )", select.toString());
     }
@@ -86,14 +86,14 @@ public class OrAndTest {
         select.addCriteria(new AndCriteria(criterias));
 
         assertEquals("SELECT\n"
-                + "    \"u\".\"id\"\n"
+                + "    u.id\n"
                 + "FROM\n"
-                + "    \"user\" \"u\"\n"
+                + "    user u\n"
                 + "WHERE\n"
                 + "    (\n"
-                + "        \"u\".\"role\" = 'ADMIN' AND\n"
-                + "        \"u\".\"superadmin\" = true AND\n"
-                + "        \"u\".\"enabled\" = true\n"
+                + "        u.role = 'ADMIN' AND\n"
+                + "        u.superadmin = true AND\n"
+                + "        u.enabled = true\n"
                 + "    )", select.toString());
     }
 
@@ -111,7 +111,7 @@ public class OrAndTest {
 
         select.addToSelection(u.get(userId));
 
-        List<Criteria> criterias = new ArrayList<Criteria>();
+        List<Criteria> criterias = new ArrayList<>();
         criterias.add(new MatchCriteria(u.get(userRole), MatchCriteria.EQUALS, Literal.of("ADMIN")));
         criterias.add(new MatchCriteria(u.get(userSuperadmin), MatchCriteria.EQUALS, Literal.of(true)));
         criterias.add(new MatchCriteria(u.get(userEnabled), MatchCriteria.EQUALS, Literal.of(true)));
@@ -119,14 +119,14 @@ public class OrAndTest {
         select.addCriteria(new OrCriteria(criterias));
 
         assertEquals("SELECT\n"
-                + "    \"u\".\"id\"\n"
+                + "    u.id\n"
                 + "FROM\n"
-                + "    \"user\" \"u\"\n"
+                + "    user u\n"
                 + "WHERE\n"
                 + "    (\n"
-                + "        \"u\".\"role\" = 'ADMIN' OR\n"
-                + "        \"u\".\"superadmin\" = true OR\n"
-                + "        \"u\".\"enabled\" = true\n"
+                + "        u.role = 'ADMIN' OR\n"
+                + "        u.superadmin = true OR\n"
+                + "        u.enabled = true\n"
                 + "    )", select.toString());
     }
 
@@ -145,9 +145,9 @@ public class OrAndTest {
         select.addCriteria(new AndCriteria());
 
         assertEquals("SELECT\n"
-                + "    \"u\".\"id\"\n"
+                + "    u.id\n"
                 + "FROM\n"
-                + "    \"user\" \"u\"\n"
+                + "    user u\n"
                 + "WHERE\n"
                 + "    1 = 1 AND\n"
                 + "    1 = 1", select.toString());

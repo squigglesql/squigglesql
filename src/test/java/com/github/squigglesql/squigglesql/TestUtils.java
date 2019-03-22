@@ -15,6 +15,7 @@
  */
 package com.github.squigglesql.squigglesql;
 
+import com.github.squigglesql.squigglesql.databases.MySqlTestDatabase;
 import com.github.squigglesql.squigglesql.databases.PostgreSqlTestDatabase;
 import com.github.squigglesql.squigglesql.databases.TestDatabase;
 import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
@@ -62,10 +63,15 @@ public abstract class TestUtils {
 
     public static void withDatabase(Consumer consumer) throws SQLException {
         withPostgreSqlDatabase(consumer);
+        withMySqlDatabase(consumer);
     }
 
     private static void withPostgreSqlDatabase(Consumer consumer) throws SQLException {
         withDatabase(new PostgreSqlTestDatabase(), consumer);
+    }
+
+    private static void withMySqlDatabase(Consumer consumer) throws SQLException {
+        withDatabase(new MySqlTestDatabase(), consumer);
     }
 
     private static void withDatabase(TestDatabase database, Consumer consumer) throws SQLException {

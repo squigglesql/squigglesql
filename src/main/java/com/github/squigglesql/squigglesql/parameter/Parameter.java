@@ -150,7 +150,7 @@ public abstract class Parameter implements Matchable {
     }
 
     public static Parameter of(Date value) {
-        return of(value, null);
+        return of(value, Calendar.getInstance()); // MySQL driver behaves stupidly without calendar here
     }
 
     /**

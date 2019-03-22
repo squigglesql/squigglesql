@@ -55,7 +55,7 @@ public class InsertQuery extends Query {
 
         QueryCompiler compiler = new QueryCompiler(output);
 
-        compiler.write("INSERT INTO ").quote(table.getName());
+        compiler.write("INSERT INTO ").quote(table.getName(), output.getSyntax().getTableQuote());
         CollectionWriter.writeCollection(compiler, columns, ", ", true, false);
 
         compiler.write(" VALUES ");

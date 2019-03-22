@@ -1,5 +1,6 @@
 package com.github.squigglesql.squigglesql;
 
+import com.github.squigglesql.squigglesql.syntax.SqlSyntax;
 import com.github.squigglesql.squigglesql.util.CollectionWriter;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +18,7 @@ public class CollectionWriterTest {
 
     @Before
     public void setUp() {
-        compiler = new QueryCompiler(new Output());
+        compiler = new QueryCompiler(new Output(SqlSyntax.DEFAULT_SQL_SYNTAX, Output.DEFAULT_INDENT));
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -44,15 +44,15 @@ public class SelectTest {
         select.addOrder(p.get(employeeFirstName), Order.DESCENDING);
 
         assertEquals("SELECT\n"
-                + "    \"e\".\"first_name\",\n"
-                + "    \"e\".\"last_name\",\n"
-                + "    \"e\".\"age\" as \"a\"\n"
+                + "    e.first_name,\n"
+                + "    e.last_name,\n"
+                + "    e.age as a\n"
                 + "FROM\n"
-                + "    \"employee\" \"e\"\n"
+                + "    employee e\n"
                 + "ORDER BY\n"
-                + "    \"a\" DESC,\n"
-                + "    \"concat\"(\"e\".\"first_name\", \"e\".\"last_name\"),\n"
-                + "    \"e\".\"first_name\" DESC", select.toString());
+                + "    a DESC,\n"
+                + "    concat(e.first_name, e.last_name),\n"
+                + "    e.first_name DESC", select.toString());
 
         // Dummy line for coverage
         new Order();
@@ -72,10 +72,10 @@ public class SelectTest {
         select.addToSelection(p.get(employeeLastName));
 
         assertEquals("SELECT DISTINCT\n"
-                + "    \"e\".\"first_name\",\n"
-                + "    \"e\".\"last_name\"\n"
+                + "    e.first_name,\n"
+                + "    e.last_name\n"
                 + "FROM\n"
-                + "    \"employee\" \"e\"", select.toString());
+                + "    employee e", select.toString());
     }
 
     @Test(expected = IllegalArgumentException.class)

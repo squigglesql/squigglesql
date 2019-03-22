@@ -41,10 +41,10 @@ public class NastyStringsTest {
         select.addCriteria(new MatchCriteria(e.get(employeeFee), MatchCriteria.GREATER, Literal.of("I've got a quote")));
 
         assertEquals("SELECT\n"
-                + "    \"e\".\"name\"\n"
+                + "    e.name\n"
                 + "FROM\n"
-                + "    \"employee\" \"e\"\n"
+                + "    employee e\n"
                 + "WHERE\n"
-                + "    \"e\".\"foo\" > 'I''ve got a quote'", select.toString());
+                + "    e.foo > 'I''ve got a quote'", select.toString());
     }
 }

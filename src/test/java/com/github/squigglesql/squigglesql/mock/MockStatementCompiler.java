@@ -17,8 +17,15 @@ package com.github.squigglesql.squigglesql.mock;
 
 import com.github.squigglesql.squigglesql.statement.StatementBuilder;
 import com.github.squigglesql.squigglesql.statement.StatementCompiler;
+import com.github.squigglesql.squigglesql.syntax.AbstractSqlSyntax;
+import com.github.squigglesql.squigglesql.syntax.SqlSyntax;
 
 public class MockStatementCompiler implements StatementCompiler<MockStatement> {
+
+    @Override
+    public AbstractSqlSyntax detectDefaultSyntax() {
+        return SqlSyntax.DEFAULT_SQL_SYNTAX;
+    }
 
     @Override
     public StatementBuilder<MockStatement> createStatementBuilder(String query) {

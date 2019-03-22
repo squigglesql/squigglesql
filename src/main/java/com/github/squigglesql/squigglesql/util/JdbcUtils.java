@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public abstract class JdbcUtils {
@@ -35,8 +36,8 @@ public abstract class JdbcUtils {
     }
 
     public static Byte readByteNull(ResultSet rs, int index) throws SQLException {
-        Integer obj = (Integer) rs.getObject(index);
-        return obj != null ? obj.byteValue() : null;
+        Object obj = rs.getObject(index);
+        return (obj == null || obj instanceof Byte) ? (Byte) obj : Byte.valueOf(rs.getByte(index));
     }
 
     public static short readShortNotNull(ResultSet rs, int index) throws SQLException {
@@ -44,8 +45,8 @@ public abstract class JdbcUtils {
     }
 
     public static Short readShortNull(ResultSet rs, int index) throws SQLException {
-        Integer obj = (Integer) rs.getObject(index);
-        return obj != null ? obj.shortValue() : null;
+        Object obj = rs.getObject(index);
+        return (obj == null || obj instanceof Short) ? (Short) obj : Short.valueOf(rs.getShort(index));
     }
 
     public static int readIntegerNotNull(ResultSet rs, int index) throws SQLException {
@@ -53,7 +54,8 @@ public abstract class JdbcUtils {
     }
 
     public static Integer readIntegerNull(ResultSet rs, int index) throws SQLException {
-        return (Integer) rs.getObject(index);
+        Object obj = rs.getObject(index);
+        return (obj == null || obj instanceof Integer) ? (Integer) obj : Integer.valueOf(rs.getInt(index));
     }
 
     public static long readLongNotNull(ResultSet rs, int index) throws SQLException {
@@ -61,7 +63,8 @@ public abstract class JdbcUtils {
     }
 
     public static Long readLongNull(ResultSet rs, int index) throws SQLException {
-        return (Long) rs.getObject(index);
+        Object obj = rs.getObject(index);
+        return (obj == null || obj instanceof Long) ? (Long) obj : Long.valueOf(rs.getLong(index));
     }
 
     public static float readFloatNotNull(ResultSet rs, int index) throws SQLException {
@@ -69,7 +72,8 @@ public abstract class JdbcUtils {
     }
 
     public static Float readFloatNull(ResultSet rs, int index) throws SQLException {
-        return (Float) rs.getObject(index);
+        Object obj = rs.getObject(index);
+        return (obj == null || obj instanceof Float) ? (Float) obj : Float.valueOf(rs.getFloat(index));
     }
 
     public static double readDoubleNotNull(ResultSet rs, int index) throws SQLException {
@@ -77,7 +81,8 @@ public abstract class JdbcUtils {
     }
 
     public static Double readDoubleNull(ResultSet rs, int index) throws SQLException {
-        return (Double) rs.getObject(index);
+        Object obj = rs.getObject(index);
+        return (obj == null || obj instanceof Double) ? (Double) obj : Double.valueOf(rs.getDouble(index));
     }
 
     public static BigDecimal readBigDecimal(ResultSet rs, int index) throws SQLException {
@@ -97,7 +102,7 @@ public abstract class JdbcUtils {
     }
 
     public static Date readDate(ResultSet rs, int index) throws SQLException {
-        return rs.getDate(index);
+        return rs.getDate(index, Calendar.getInstance()); // MySQL driver behaves stupidly without calendar here
     }
 
     public static <T> T[] readArray(ResultSet rs, int index) throws SQLException {

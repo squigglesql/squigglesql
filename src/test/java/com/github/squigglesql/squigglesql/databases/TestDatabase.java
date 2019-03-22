@@ -10,4 +10,12 @@ public interface TestDatabase {
     void createTable(Connection connection, String name, TestDatabaseColumn[] columns) throws SQLException;
 
     void dropTable(Connection connection, String name) throws SQLException;
+
+    boolean supportsInfinity();
+
+    boolean supportsArrays();
+
+    boolean supportsTimeMs();
+
+    String getTimestampWithTimeZoneType();
 }

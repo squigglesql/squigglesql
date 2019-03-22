@@ -23,7 +23,7 @@ public class Tests {
     };
 
     private static final TestDatabaseColumn[] ORDER_COLUMNS = new TestDatabaseColumn[]{
-            new TestDatabaseColumn(OrderDao.ISSUED_AT.getName(), "TIMESTAMP WITH TIME ZONE", true, null),
+            new TestDatabaseColumn(OrderDao.ISSUED_AT.getName(), TestDatabase::getTimestampWithTimeZoneType, true, null),
             new TestDatabaseColumn(OrderDao.CUSTOMER_ID.getName(), "INTEGER", true, CustomerDao.TABLE.getName())
     };
 

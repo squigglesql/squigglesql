@@ -53,7 +53,10 @@ public class TableReference implements Aliasable, Compilable {
 
     @Override
     public void compile(QueryCompiler compiler) {
-        compiler.quote(table.getName()).write(' ').quote(compiler.getAlias(this));
+        compiler
+                .quote(table.getName(), compiler.getSyntax().getTableQuote())
+                .write(' ')
+                .quote(compiler.getAlias(this), compiler.getSyntax().getTableReferenceQuote());
     }
 
     @Override

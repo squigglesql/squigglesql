@@ -14,6 +14,7 @@ figure out how to build this string. Squiggle takes much of this pain away.
 * Generates clean SQL designed that is very human readable.
 * Supports all basic SQL features.
 * Supports JDBC PreparedStatement compilation.
+* Supports MySQL, PostgreSQL and custom SQL syntax.
 * Provides matching sets of raw literals, SQL parameters and result set readers.
 
 # Examples
@@ -60,7 +61,7 @@ ORDER BY
 
 ```java
 // define tables
-Table order = new Table("order");
+Table order = new Table("ordr");
 TableColumn orderId = order.get("id");
 TableColumn orderTotalPrice = order.get("total_price");
 TableColumn orderStatus = order.get("status");
@@ -123,25 +124,25 @@ Which produces:
 
 ```SQL
 SELECT
-    "o"."id",
-    "o"."total_price",
-    "w"."location"
+    o.id,
+    o.total_price,
+    w.location
 FROM
-    "order" "o",
-    "warehouse" "w"
+    ordr o,
+    warehouse w
 WHERE
-    "o"."status" = 'processed'::status AND
-    "o"."items" < 5 AND
-    "o"."delivery" IN ('post', 'fedex', 'goat') AND
-    "o"."warehouse_id" = "w"."id" AND
-    "w"."size" = 'big' AND
-    "w"."location" IN ((
+    o.status = 'processed'::status AND
+    o.items < 5 AND
+    o.delivery IN ('post', 'fedex', 'goat') AND
+    o.warehouse_id = w.id AND
+    w.size = 'big' AND
+    w.location IN ((
         SELECT
-            "o"."location"
+            o.location
         FROM
-            "offer" "o"
+            offer o
         WHERE
-            "o"."valid" = true
+            o.valid = true
     ))
 ```
 
@@ -171,11 +172,11 @@ Which produces a statement with a query:
 
 ```SQL
 SELECT
-    "e"."name"
+    e.name
 FROM
-    "employee" "e"
+    employee e
 WHERE
-    "e"."age" < ?
+    e.age < ?
 ```
 
 and integer value of 30 as a parameter.
@@ -544,6 +545,7 @@ import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
         SelectQuery query = new SelectQuery();
         CustomerMapper mapper = new CustomerMapper(query);
         query.addCriteria(new MatchCriteria(mapper.getCityRef(), EQUALS, Parameter.of(city)));
+        query.addOrder(mapper.getIdRef(), true);
         return JdbcUtils.selectAll(query, connection, mapper);
     }
 ```
@@ -571,6 +573,7 @@ import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
         SelectQuery query = new SelectQuery();
         OrderMapper mapper = new OrderMapper(query);
         query.addCriteria(new MatchCriteria(mapper.getCityRef(), EQUALS, Parameter.of(city)));
+        query.addOrder(mapper.getIdRef(), true);
         return JdbcUtils.selectAll(query, connection, mapper);
     }
 ```

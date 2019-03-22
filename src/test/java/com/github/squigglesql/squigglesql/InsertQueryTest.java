@@ -43,7 +43,7 @@ public class InsertQueryTest {
 
         MockStatement statement = query.toStatement(new MockStatementCompiler());
 
-        assertEquals("INSERT INTO \"employee\"(\"first_name\", \"last_name\", \"age\") "
+        assertEquals("INSERT INTO employee(first_name, last_name, age) "
                 + "VALUES (?, 'Smith', ?)", statement.getQuery());
         assertEquals(2, statement.getParameters().size());
         assertEquals("John", statement.getParameters().get(0));

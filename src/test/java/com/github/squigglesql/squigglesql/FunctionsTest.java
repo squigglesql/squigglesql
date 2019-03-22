@@ -38,11 +38,11 @@ public class FunctionsTest {
         select.addToSelection(new FunctionCall("tomato", Literal.of("red"), t.get(column)));
 
         assertEquals("SELECT\n"
-                + "    \"sheep\"(),\n"
-                + "    \"cheese\"(10),\n"
-                + "    \"tomato\"('red', \"t\".\"column\")\n"
+                + "    sheep(),\n"
+                + "    cheese(10),\n"
+                + "    tomato('red', t.column)\n"
                 + "FROM\n"
-                + "    \"table\" \"t\"", select.toString());
+                + "    table t", select.toString());
     }
 
     @Test
@@ -64,12 +64,12 @@ public class FunctionsTest {
                 new FunctionCall("getDate"), c.get(cardIssueDate), c.get(cardExpiryDate)));
 
         assertEquals("SELECT\n"
-                + "    \"c\".\"number\",\n"
-                + "    \"c\".\"issue\"\n"
+                + "    c.number,\n"
+                + "    c.issue\n"
                 + "FROM\n"
-                + "    \"credit_card\" \"c\"\n"
+                + "    credit_card c\n"
                 + "WHERE\n"
-                + "    \"getDate\"() BETWEEN \"c\".\"issue_date\" AND \"c\".\"expiry_date\"", select.toString());
+                + "    getDate() BETWEEN c.issue_date AND c.expiry_date", select.toString());
     }
 
     @Test
@@ -78,6 +78,6 @@ public class FunctionsTest {
         select.addToSelection(new FunctionCall("getdate"));
 
         assertEquals("SELECT\n"
-                + "    \"getdate\"()", select.toString());
+                + "    getdate()", select.toString());
     }
 }

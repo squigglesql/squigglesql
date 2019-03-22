@@ -18,6 +18,7 @@ package com.github.squigglesql.squigglesql;
 import com.github.squigglesql.squigglesql.parameter.Parameter;
 import com.github.squigglesql.squigglesql.statement.StatementBuilder;
 import com.github.squigglesql.squigglesql.statement.StatementCompiler;
+import com.github.squigglesql.squigglesql.syntax.AbstractSqlSyntax;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class Output {
 
     public static final String DEFAULT_INDENT = "    ";
 
+    private final AbstractSqlSyntax syntax;
     private final String indent;
 
     private final StringBuffer result = new StringBuffer();
@@ -38,12 +40,13 @@ public class Output {
 
     private final List<Parameter> parameters = new ArrayList<>();
 
-    public Output() {
-        this(DEFAULT_INDENT);
+    public Output(AbstractSqlSyntax syntax, String indent) {
+        this.syntax = syntax;
+        this.indent = indent;
     }
 
-    public Output(String indent) {
-        this.indent = indent;
+    public AbstractSqlSyntax getSyntax() {
+        return syntax;
     }
 
     public void write(char c) {
