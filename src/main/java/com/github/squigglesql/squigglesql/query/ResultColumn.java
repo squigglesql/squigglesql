@@ -25,6 +25,10 @@ import com.github.squigglesql.squigglesql.alias.Aliasable;
 import java.util.Collections;
 import java.util.Set;
 
+/**
+ * Result column of an SQL selection query returned by {@link SelectQuery#addToSelection(Selectable)} method. You may
+ * use its {@link ResultColumn#getIndex()} method to obtain the values from a {@link java.sql.ResultSet}.
+ */
 public class ResultColumn implements Aliasable, Compilable, TableReferred {
 
     private final Selectable selectable;
@@ -35,6 +39,9 @@ public class ResultColumn implements Aliasable, Compilable, TableReferred {
         this.index = index;
     }
 
+    /**
+     * @return 1-based index of the result column.
+     */
     public int getIndex() {
         return index;
     }

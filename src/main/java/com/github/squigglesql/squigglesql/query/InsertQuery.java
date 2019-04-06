@@ -25,13 +25,19 @@ import com.github.squigglesql.squigglesql.util.CollectionWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Implement MultiInsertQuery
+/**
+ * SQL single row insertion query.
+ */
 public class InsertQuery extends Query {
 
     private final Table table;
     private final List<TableColumn> columns = new ArrayList<>();
     private final List<Matchable> values = new ArrayList<>();
 
+    /**
+     * Creates an insertion query.
+     * @param table table to insert a row to.
+     */
     public InsertQuery(Table table) {
         if (table == null) {
             throw new IllegalArgumentException("Table can not be empty.");
@@ -39,6 +45,11 @@ public class InsertQuery extends Query {
         this.table = table;
     }
 
+    /**
+     * Adds a column value to the query.
+     * @param column table column.
+     * @param value value to add to the column.
+     */
     public void addValue(TableColumn column, Matchable value) {
         if (!column.getTable().equals(table)) {
             throw new IllegalArgumentException("Can not insert a value to a different database table.");

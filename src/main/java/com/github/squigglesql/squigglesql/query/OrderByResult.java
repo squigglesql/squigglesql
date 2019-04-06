@@ -20,7 +20,7 @@ import com.github.squigglesql.squigglesql.QueryCompiler;
 
 import java.util.Set;
 
-public class OrderByResult implements BaseOrder {
+class OrderByResult implements BaseOrder {
 
     private final ResultColumn column;
     private final boolean ascending;

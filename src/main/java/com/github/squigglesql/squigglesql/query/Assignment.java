@@ -20,7 +20,7 @@ import com.github.squigglesql.squigglesql.Matchable;
 import com.github.squigglesql.squigglesql.QueryCompiler;
 import com.github.squigglesql.squigglesql.TableColumn;
 
-public class Assignment implements Compilable {
+class Assignment implements Compilable {
 
     private final TableColumn column;
     private final Matchable value;

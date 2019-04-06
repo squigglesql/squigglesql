@@ -29,12 +29,19 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * SQL update query.
+ */
 public class UpdateQuery extends Query {
 
     private final TableReference tableReference;
     private final List<Assignment> assignments = new ArrayList<>();
     private final List<Criteria> criterias = new ArrayList<>();
 
+    /**
+     * Creates an update query.
+     * @param tableReference table reference to update rows in.
+     */
     public UpdateQuery(TableReference tableReference) {
         if (tableReference == null) {
             throw new IllegalArgumentException("Table reference can not be empty.");
@@ -42,6 +49,11 @@ public class UpdateQuery extends Query {
         this.tableReference = tableReference;
     }
 
+    /**
+     * Adds a value assignment to the query.
+     * @param column column to assign.
+     * @param value expression to assign the column to.
+     */
     public void addValue(TableColumn column, Matchable value) {
         if (!column.getTable().equals(tableReference.getTable())) {
             throw new IllegalArgumentException("Can not insert a value to a different database table.");
@@ -49,6 +61,10 @@ public class UpdateQuery extends Query {
         assignments.add(new Assignment(column, value));
     }
 
+    /**
+     * Adds a criteria to "WHERE" section of the query. Criterias are joined with "AND" operator.
+     * @param criteria criteria to add.
+     */
     public void addCriteria(Criteria criteria) {
         if (criteria == null) {
             throw new IllegalArgumentException("Criteria can not be null.");
@@ -56,6 +72,9 @@ public class UpdateQuery extends Query {
         this.criterias.add(criteria);
     }
 
+    /**
+     * @return the query contains no assignments. Empty query can not be compiled.
+     */
     public boolean isEmpty() {
         return assignments.isEmpty();
     }

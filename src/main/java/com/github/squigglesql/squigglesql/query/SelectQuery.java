@@ -31,6 +31,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * SQL selection query.
+ */
 public class SelectQuery extends Query implements Matchable {
 
     private static final Alphabet RESULT_COLUMN_ALIAS_ALPHABET = new Alphabet('a', 19);
@@ -41,14 +44,26 @@ public class SelectQuery extends Query implements Matchable {
 
     private final boolean distinct;
 
+    /**
+     * Creates a selection query.
+     */
     public SelectQuery() {
         this(false);
     }
 
+    /**
+     * Creates a selection query.
+     * @param distinct adds "DISTINCT" modifier to the query.
+     */
     public SelectQuery(boolean distinct) {
         this.distinct = distinct;
     }
 
+    /**
+     * Adds a column to the selection.
+     * @param selectable expression to assign as a column value.
+     * @return result column allowing to order the query or read the {@link java.sql.ResultSet}.
+     */
     public ResultColumn addToSelection(Selectable selectable) {
         if (selectable == null) {
             throw new IllegalArgumentException("Selection can not be null.");
@@ -58,6 +73,10 @@ public class SelectQuery extends Query implements Matchable {
         return resultColumn;
     }
 
+    /**
+     * Adds a criteria to "WHERE" section of the query. Criterias are joined with "AND" operator.
+     * @param criteria criteria to add.
+     */
     public void addCriteria(Criteria criteria) {
         if (criteria == null) {
             throw new IllegalArgumentException("Criteria can not be null.");
@@ -65,6 +84,11 @@ public class SelectQuery extends Query implements Matchable {
         this.criterias.add(criteria);
     }
 
+    /**
+     * Adds a result column to "ORDER BY" section of the query.
+     * @param resultColumn result column.
+     * @param ascending true for "ASC" ordering, false for "DESC".
+     */
     public void addOrder(ResultColumn resultColumn, boolean ascending) {
         if (resultColumn == null) {
             throw new IllegalArgumentException("Ordering column can not be null.");
@@ -72,6 +96,11 @@ public class SelectQuery extends Query implements Matchable {
         this.orders.add(new OrderByResult(resultColumn, ascending));
     }
 
+    /**
+     * Adds an expression to "ORDER BY" section of the query.
+     * @param selectable expression.
+     * @param ascending true for "ASC" ordering, false for "DESC".
+     */
     public void addOrder(Selectable selectable, boolean ascending) {
         if (selectable == null) {
             throw new IllegalArgumentException("Ordering criteria can not be null.");

@@ -25,12 +25,12 @@ import java.util.Set;
  * TODO: Find a way to implement deep ordering by ResultColumn, such as:
  * SELECT e.first_name as a, e.last_name as b FROM employee e ORDER BY concat(a, b)
  */
-public class OrderBySelectable implements BaseOrder {
+class OrderBySelectable implements BaseOrder {
 
     private final Selectable selectable;
     private final boolean ascending;
 
-    public OrderBySelectable(Selectable selectable, boolean ascending) {
+    OrderBySelectable(Selectable selectable, boolean ascending) {
         this.selectable = selectable;
         this.ascending = ascending;
     }
