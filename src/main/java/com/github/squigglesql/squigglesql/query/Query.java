@@ -113,7 +113,7 @@ public abstract class Query {
         Output out = new Output(syntax);
         compile(out);
         StatementBuilder<S> builder = createStatementBuilder(compiler, out.toString());
-        out.addParameters(builder);
+        out.dumpParameters(builder);
         return builder.buildStatement();
     }
 }

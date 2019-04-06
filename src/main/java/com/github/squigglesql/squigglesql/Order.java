@@ -15,9 +15,19 @@
  */
 package com.github.squigglesql.squigglesql;
 
+/**
+ * Selection order constants.
+ */
 public final class Order {
 
+    /**
+     * Ascending "ASC" order.
+     */
     public static final boolean ASCENDING = true;
+
+    /**
+     * Descending "DESC" order.
+     */
     public static final boolean DESCENDING = false;
 
     Order() {}

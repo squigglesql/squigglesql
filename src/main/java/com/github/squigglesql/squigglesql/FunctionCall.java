@@ -21,16 +21,31 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
+/**
+ * SQL function call expression.
+ */
 public class FunctionCall implements Selectable {
 
     private final String function;
     private final Collection<Matchable> arguments;
 
+    /**
+     * Creates an expression.
+     *
+     * @param function  SQL function name.
+     * @param arguments arguments of the function.
+     */
     public FunctionCall(String function, Collection<Matchable> arguments) {
         this.function = function;
         this.arguments = arguments;
     }
 
+    /**
+     * Creates an expression.
+     *
+     * @param function  SQL function name.
+     * @param arguments arguments of the function.
+     */
     public FunctionCall(String function, Matchable... arguments) {
         this(function, Arrays.asList(arguments));
     }

@@ -15,5 +15,8 @@
  */
 package com.github.squigglesql.squigglesql;
 
+/**
+ * Base selection order.
+ */
 public interface BaseOrder extends Compilable, ResultReferred {
 }
