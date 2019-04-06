@@ -24,16 +24,30 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
+/**
+ * Criteria representing "value IN (...options)" expression. If the list of options is empty, gets compiled to "0 = 1"
+ * which is constantly false.
+ */
 public class InCriteria implements Criteria {
 
     private final Matchable value;
     private final Collection<Matchable> options;
 
+    /**
+     * Creates a criteria.
+     * @param value Value to match.
+     * @param options Options to match the value against.
+     */
     public InCriteria(Matchable value, Collection<Matchable> options) {
         this.value = value;
         this.options = options;
     }
 
+    /**
+     * Creates a criteria.
+     * @param value Value to match.
+     * @param options Options to match the value against.
+     */
     public InCriteria(Matchable value, Matchable... options) {
         this(value, Arrays.asList(options));
     }
@@ -41,7 +55,7 @@ public class InCriteria implements Criteria {
     @Override
     public void compile(QueryCompiler compiler) {
         if (options.isEmpty()) {
-            compiler.write("1 = 1");
+            compiler.write("0 = 1");
             return;
         }
         compiler.write(value).write(" IN ");

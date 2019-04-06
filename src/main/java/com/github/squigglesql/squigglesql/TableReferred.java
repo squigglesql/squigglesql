@@ -17,7 +17,15 @@ package com.github.squigglesql.squigglesql;
 
 import java.util.Set;
 
+/**
+ * Part of an SQL query that contains a reference to a table. During query compilation, Squiggle collects all table
+ * references and lists them in "FROM" section of the query.
+ */
 public interface TableReferred {
 
+    /**
+     * Extends a set with all necessary table references.
+     * @param tableReferences Set of the references to extend.
+     */
     void collectTableReferences(Set<TableReference> tableReferences);
 }

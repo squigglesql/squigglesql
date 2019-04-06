@@ -125,6 +125,6 @@ public class CriteriaTest {
                 + "FROM\n"
                 + "    user u\n"
                 + "WHERE\n"
-                + "    1 = 1", select.toString());
+                + "    0 = 1", select.toString());
     }
 }

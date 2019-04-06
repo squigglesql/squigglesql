@@ -20,10 +20,17 @@ import com.github.squigglesql.squigglesql.TableReference;
 
 import java.util.Set;
 
+/**
+ * Criteria representing "NOT (criteria)" SQL expression.
+ */
 public class NotCriteria implements Criteria {
 
     private final Criteria criteria;
 
+    /**
+     * Creates a criteria.
+     * @param criteria Criteria to negate.
+     */
     public NotCriteria(Criteria criteria) {
         this.criteria = criteria;
     }

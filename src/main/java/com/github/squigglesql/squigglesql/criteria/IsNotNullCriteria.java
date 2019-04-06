@@ -21,10 +21,17 @@ import com.github.squigglesql.squigglesql.TableReference;
 
 import java.util.Set;
 
+/**
+ * Criteria representing "value IS NOT NULL" SQL expression.
+ */
 public class IsNotNullCriteria implements Criteria {
 
     private final Matchable value;
 
+    /**
+     * Creates a criteria.
+     * @param value Value to match.
+     */
     public IsNotNullCriteria(Matchable value) {
         this.value = value;
     }

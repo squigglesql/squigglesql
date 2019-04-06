@@ -18,5 +18,9 @@ package com.github.squigglesql.squigglesql.criteria;
 import com.github.squigglesql.squigglesql.Compilable;
 import com.github.squigglesql.squigglesql.TableReferred;
 
+/**
+ * Criteria is a part of "WHERE" section of an SQL query. You may add many criterias to the query. They will be joined
+ * with "AND" operator.
+ */
 public interface Criteria extends Compilable, TableReferred {
 }

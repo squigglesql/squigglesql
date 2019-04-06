@@ -17,12 +17,24 @@ package com.github.squigglesql.squigglesql.criteria;
 
 import java.util.Collection;
 
+/**
+ * Conjunction of multiple criterias. The listed criterias will be joined with "AND" operator. If the list is empty,
+ * the criteria gets compiled to "1 = 1" which is constantly true.
+ */
 public class AndCriteria extends CriteriaGroup {
 
+    /**
+     * Creates a conjunction criteria.
+     * @param criterias Criterias to join.
+     */
     public AndCriteria(Collection<Criteria> criterias) {
         super(criterias);
     }
 
+    /**
+     * Creates a conjunction criteria.
+     * @param criterias Criterias to join.
+     */
     public AndCriteria(Criteria... criterias) {
         super(criterias);
     }
@@ -30,5 +42,10 @@ public class AndCriteria extends CriteriaGroup {
     @Override
     protected String getOperator() {
         return " AND";
+    }
+
+    @Override
+    protected boolean isEmptyTrue() {
+        return true;
     }
 }

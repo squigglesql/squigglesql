@@ -17,12 +17,24 @@ package com.github.squigglesql.squigglesql.criteria;
 
 import java.util.Collection;
 
+/**
+ * Disjunction of multiple criterias. The listed criterias will be joined with "OR" operator. If the list is empty,
+ * the criteria gets compiled to "0 = 1" which is constantly false.
+ */
 public class OrCriteria extends CriteriaGroup {
 
+    /**
+     * Creates a disjunction criteria.
+     * @param criterias Criterias to join.
+     */
     public OrCriteria(Collection<Criteria> criterias) {
         super(criterias);
     }
 
+    /**
+     * Creates a disjunction criteria.
+     * @param criterias Criterias to join.
+     */
     public OrCriteria(Criteria... criterias) {
         super(criterias);
     }
@@ -30,5 +42,10 @@ public class OrCriteria extends CriteriaGroup {
     @Override
     protected String getOperator() {
         return " OR";
+    }
+
+    @Override
+    protected boolean isEmptyTrue() {
+        return false;
     }
 }

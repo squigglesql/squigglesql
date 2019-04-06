@@ -149,7 +149,7 @@ public class OrAndTest {
                 + "FROM\n"
                 + "    user u\n"
                 + "WHERE\n"
-                + "    1 = 1 AND\n"
+                + "    0 = 1 AND\n"
                 + "    1 = 1", select.toString());
     }
 }

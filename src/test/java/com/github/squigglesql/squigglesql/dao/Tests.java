@@ -139,6 +139,10 @@ public class Tests {
     }
 
     private static <T> T withTables(Connection connection, TestDatabase database, Supplier<T> supplier) throws SQLException {
+        database.dropTable(connection, OrderItemDao.TABLE.getName());
+        database.dropTable(connection, ProductDao.TABLE.getName());
+        database.dropTable(connection, OrderDao.TABLE.getName());
+        database.dropTable(connection, CustomerDao.TABLE.getName());
         return withTable(connection, database, CustomerDao.TABLE.getName(), CUSTOMER_COLUMNS,
                 () -> withTable(connection, database, OrderDao.TABLE.getName(), ORDER_COLUMNS,
                         () -> withTable(connection, database, ProductDao.TABLE.getName(), PRODUCT_COLUMNS,

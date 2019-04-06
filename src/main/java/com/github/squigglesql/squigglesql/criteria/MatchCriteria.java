@@ -21,20 +21,57 @@ import com.github.squigglesql.squigglesql.TableReference;
 
 import java.util.Set;
 
+/**
+ * Criteria representing a binary SQL operator, e.g. "left = right". The most popular operators are available as static
+ * constants. We recommend you to import a static wildcard of this class to use them.
+ */
 public class MatchCriteria implements Criteria {
 
+    /**
+     * SQL "equals" operator.
+     */
     public static final String EQUALS = "=";
+
+    /**
+     * SQL "greater" operator.
+     */
     public static final String GREATER = ">";
+
+    /**
+     * SQL "greater or equals" operator.
+     */
     public static final String GREATEREQUAL = ">=";
+
+    /**
+     * SQL "less" operator.
+     */
     public static final String LESS = "<";
+
+    /**
+     * SQL "less or equals" operator.
+     */
     public static final String LESSEQUAL = "<=";
+
+    /**
+     * SQL "like" operator.
+     */
     public static final String LIKE = "LIKE";
+
+    /**
+     * SQL "not equal" operator.
+     */
     public static final String NOTEQUAL = "<>";
 
     private final Matchable left;
     private final String operator;
     private final Matchable right;
 
+    /**
+     * Creates a criteria.
+     * @param left Left operand.
+     * @param operator Operator.
+     * @param right Right operand.
+     */
     public MatchCriteria(Matchable left, String operator, Matchable right) {
         this.left = left;
         this.operator = operator;
