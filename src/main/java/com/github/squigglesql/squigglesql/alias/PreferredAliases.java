@@ -15,12 +15,20 @@
  */
 package com.github.squigglesql.squigglesql.alias;
 
+/**
+ * Preferred alias generator. Generates sequences of up to 3 letters the object name starts with. For example, if
+ * object name is "order", it will generate the following aliases: "o", "or" and "ord".
+ */
 public class PreferredAliases implements Iterable<String> {
 
     private static final int LIMIT = 3;
 
     private final String base;
 
+    /**
+     * Creates a preferred alias generator.
+     * @param base Object name.
+     */
     public PreferredAliases(String base) {
         this.base = base.replace("_", "");
     }

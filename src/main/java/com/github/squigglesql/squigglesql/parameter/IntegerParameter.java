@@ -28,7 +28,7 @@ class IntegerParameter extends Parameter {
     }
 
     @Override
-    public void addValue(Parametrized builder) throws SQLException {
-        builder.addInteger(value);
+    public void addValue(Parametrized statement) throws SQLException {
+        statement.addInteger(value);
     }
 }

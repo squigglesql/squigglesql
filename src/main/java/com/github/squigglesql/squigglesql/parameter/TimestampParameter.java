@@ -32,7 +32,7 @@ class TimestampParameter extends Parameter {
     }
 
     @Override
-    public void addValue(Parametrized builder) throws SQLException {
-        builder.addTimestamp(value, calendar);
+    public void addValue(Parametrized statement) throws SQLException {
+        statement.addTimestamp(value, calendar);
     }
 }

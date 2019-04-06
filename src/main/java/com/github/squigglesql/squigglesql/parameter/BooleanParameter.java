@@ -31,7 +31,7 @@ class BooleanParameter extends Parameter {
     }
 
     @Override
-    public void addValue(Parametrized builder) throws SQLException {
-        builder.addBoolean(value);
+    public void addValue(Parametrized statement) throws SQLException {
+        statement.addBoolean(value);
     }
 }

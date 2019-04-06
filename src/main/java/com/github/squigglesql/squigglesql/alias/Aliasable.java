@@ -15,7 +15,15 @@
  */
 package com.github.squigglesql.squigglesql.alias;
 
+/**
+ * Something that may have an alias in an SQL query.
+ */
 public interface Aliasable {
 
+    /**
+     * Returns the preferred aliases allowing to easily recognize the this object. Usually it generates sequences of
+     * letters the object name starts with.
+     * @return A generator of preferred aliases.
+     */
     Iterable<String> getPreferredAliases();
 }

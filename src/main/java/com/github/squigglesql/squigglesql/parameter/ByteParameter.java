@@ -28,7 +28,7 @@ class ByteParameter extends Parameter {
     }
 
     @Override
-    public void addValue(Parametrized builder) throws SQLException {
-        builder.addByte(value);
+    public void addValue(Parametrized statement) throws SQLException {
+        statement.addByte(value);
     }
 }

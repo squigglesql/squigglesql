@@ -15,20 +15,34 @@
  */
 package com.github.squigglesql.squigglesql.alias;
 
+/**
+ * Alphabet - a range of latin letters.
+ */
 public class Alphabet {
 
     private final char firstLetter;
     private final int letterCount;
 
+    /**
+     * Creates an alphabet.
+     * @param firstLetter First letter of the alphabet.
+     * @param letterCount Count of letters in the alphabet.
+     */
     public Alphabet(char firstLetter, int letterCount) {
         this.firstLetter = firstLetter;
         this.letterCount = letterCount;
     }
 
+    /**
+     * @return First letter of the alphabet.
+     */
     public char getFirstLetter() {
         return firstLetter;
     }
 
+    /**
+     * @return Count of letters in the alphabet.
+     */
     public int getLetterCount() {
         return letterCount;
     }

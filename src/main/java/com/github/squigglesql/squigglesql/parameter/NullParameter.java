@@ -25,7 +25,7 @@ class NullParameter extends Parameter {
     }
 
     @Override
-    public void addValue(Parametrized builder) throws SQLException {
-        builder.addNull(sqlType);
+    public void addValue(Parametrized statement) throws SQLException {
+        statement.addNull(sqlType);
     }
 }

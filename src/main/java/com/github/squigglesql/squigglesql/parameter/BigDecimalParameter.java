@@ -29,7 +29,7 @@ class BigDecimalParameter extends Parameter {
     }
 
     @Override
-    public void addValue(Parametrized builder) throws SQLException {
-        builder.addBigDecimal(value);
+    public void addValue(Parametrized statement) throws SQLException {
+        statement.addBigDecimal(value);
     }
 }

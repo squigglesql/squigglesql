@@ -28,7 +28,7 @@ class FloatParameter extends Parameter {
     }
 
     @Override
-    public void addValue(Parametrized builder) throws SQLException {
-        builder.addFloat(value);
+    public void addValue(Parametrized statement) throws SQLException {
+        statement.addFloat(value);
     }
 }

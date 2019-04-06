@@ -28,7 +28,7 @@ class ShortParameter extends Parameter {
     }
 
     @Override
-    public void addValue(Parametrized builder) throws SQLException {
-        builder.addShort(value);
+    public void addValue(Parametrized statement) throws SQLException {
+        statement.addShort(value);
     }
 }

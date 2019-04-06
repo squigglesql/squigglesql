@@ -29,7 +29,7 @@ class ArrayParameter extends Parameter {
     }
 
     @Override
-    public void addValue(Parametrized builder) throws SQLException {
-        builder.addArray(value);
+    public void addValue(Parametrized statement) throws SQLException {
+        statement.addArray(value);
     }
 }

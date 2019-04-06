@@ -28,7 +28,7 @@ class StringParameter extends Parameter {
     }
 
     @Override
-    public void addValue(Parametrized builder) throws SQLException {
-        builder.addString(value == null ? null : value.toString());
+    public void addValue(Parametrized statement) throws SQLException {
+        statement.addString(value == null ? null : value.toString());
     }
 }

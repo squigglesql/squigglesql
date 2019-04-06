@@ -28,7 +28,7 @@ class LongParameter extends Parameter {
     }
 
     @Override
-    public void addValue(Parametrized builder) throws SQLException {
-        builder.addLong(value);
+    public void addValue(Parametrized statement) throws SQLException {
+        statement.addLong(value);
     }
 }

@@ -16,9 +16,13 @@
 package com.github.squigglesql.squigglesql;
 
 /**
- * Any object that can output itself as part of the final query should implement this interface.
+ * Any object that can compile itself as a part of the final query should implement this interface.
  */
 public interface Compilable {
 
+    /**
+     * Compiles this object with the specified compiler.
+     * @param compiler Compiler.
+     */
     void compile(QueryCompiler compiler);
 }
