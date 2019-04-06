@@ -25,6 +25,7 @@ public class Alphabet {
 
     /**
      * Creates an alphabet.
+     *
      * @param firstLetter first letter of the alphabet.
      * @param letterCount count of letters in the alphabet.
      */

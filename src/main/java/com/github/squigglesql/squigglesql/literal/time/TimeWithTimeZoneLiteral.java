@@ -28,6 +28,7 @@ public class TimeWithTimeZoneLiteral extends AbstractTimeLiteral {
 
     /**
      * Creates a literal.
+     *
      * @param value literal value.
      */
     public TimeWithTimeZoneLiteral(TemporalAccessor value) {

@@ -56,6 +56,7 @@ public class SelectQuery extends Query implements Matchable {
 
     /**
      * Creates a selection query.
+     *
      * @param distinct adds "DISTINCT" modifier to the query.
      */
     public SelectQuery(boolean distinct) {
@@ -64,6 +65,7 @@ public class SelectQuery extends Query implements Matchable {
 
     /**
      * Adds a column to the selection.
+     *
      * @param selectable expression to assign as a column value.
      * @return result column allowing to order the query or read the {@link java.sql.ResultSet}.
      */
@@ -78,6 +80,7 @@ public class SelectQuery extends Query implements Matchable {
 
     /**
      * Adds a criteria to "WHERE" section of the query. Criterias are joined with "AND" operator.
+     *
      * @param criteria criteria to add.
      */
     public void addCriteria(Criteria criteria) {
@@ -89,8 +92,9 @@ public class SelectQuery extends Query implements Matchable {
 
     /**
      * Adds a result column to "ORDER BY" section of the query.
+     *
      * @param resultColumn result column.
-     * @param ascending true for "ASC" ordering, false for "DESC".
+     * @param ascending    true for "ASC" ordering, false for "DESC".
      */
     public void addOrder(ResultColumn resultColumn, boolean ascending) {
         if (resultColumn == null) {
@@ -101,8 +105,9 @@ public class SelectQuery extends Query implements Matchable {
 
     /**
      * Adds an expression to "ORDER BY" section of the query.
+     *
      * @param selectable expression.
-     * @param ascending true for "ASC" ordering, false for "DESC".
+     * @param ascending  true for "ASC" ordering, false for "DESC".
      */
     public void addOrder(Selectable selectable, boolean ascending) {
         if (selectable == null) {

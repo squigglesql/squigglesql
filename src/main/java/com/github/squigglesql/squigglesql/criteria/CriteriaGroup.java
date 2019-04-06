@@ -33,6 +33,7 @@ public abstract class CriteriaGroup implements Criteria {
 
     /**
      * Creates a criteria group.
+     *
      * @param criterias criterias to join.
      */
     CriteriaGroup(Collection<Criteria> criterias) {
@@ -41,6 +42,7 @@ public abstract class CriteriaGroup implements Criteria {
 
     /**
      * Creates a criteria group.
+     *
      * @param criterias criterias to join.
      */
     CriteriaGroup(Criteria... criterias) {
@@ -49,12 +51,14 @@ public abstract class CriteriaGroup implements Criteria {
 
     /**
      * SQL operator to join the criterias with. Should start with a space (e.g. " AND").
+     *
      * @return SQL operator.
      */
     protected abstract String getOperator();
 
     /**
      * Value to return by default if the list of criterias is empty.
+     *
      * @return default value.
      */
     protected abstract boolean isEmptyTrue();

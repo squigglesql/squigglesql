@@ -25,6 +25,7 @@ public class AndCriteria extends CriteriaGroup {
 
     /**
      * Creates a conjunction criteria.
+     *
      * @param criterias criterias to join.
      */
     public AndCriteria(Collection<Criteria> criterias) {
@@ -33,6 +34,7 @@ public class AndCriteria extends CriteriaGroup {
 
     /**
      * Creates a conjunction criteria.
+     *
      * @param criterias criterias to join.
      */
     public AndCriteria(Criteria... criterias) {

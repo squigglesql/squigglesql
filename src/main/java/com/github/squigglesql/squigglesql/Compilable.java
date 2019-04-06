@@ -22,6 +22,7 @@ public interface Compilable {
 
     /**
      * Compiles this object with the specified compiler.
+     *
      * @param compiler Compiler.
      */
     void compile(QueryCompiler compiler);

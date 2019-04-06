@@ -30,5 +30,6 @@ public final class Order {
      */
     public static final boolean DESCENDING = false;
 
-    Order() {}
+    Order() {
+    }
 }

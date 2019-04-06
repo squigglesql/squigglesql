@@ -29,6 +29,7 @@ public class NotCriteria implements Criteria {
 
     /**
      * Creates a criteria.
+     *
      * @param criteria criteria to negate.
      */
     public NotCriteria(Criteria criteria) {

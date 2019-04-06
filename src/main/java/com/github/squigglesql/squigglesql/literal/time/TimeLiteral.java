@@ -28,6 +28,7 @@ public class TimeLiteral extends AbstractTimeLiteral {
 
     /**
      * Creates a literal.
+     *
      * @param value literal value.
      */
     public TimeLiteral(LocalTime value) {

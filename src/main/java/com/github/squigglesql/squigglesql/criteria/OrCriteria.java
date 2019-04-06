@@ -25,6 +25,7 @@ public class OrCriteria extends CriteriaGroup {
 
     /**
      * Creates a disjunction criteria.
+     *
      * @param criterias criterias to join.
      */
     public OrCriteria(Collection<Criteria> criterias) {
@@ -33,6 +34,7 @@ public class OrCriteria extends CriteriaGroup {
 
     /**
      * Creates a disjunction criteria.
+     *
      * @param criterias criterias to join.
      */
     public OrCriteria(Criteria... criterias) {

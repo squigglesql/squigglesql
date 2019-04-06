@@ -43,6 +43,7 @@ public class UpdateQuery extends Query {
 
     /**
      * Creates an update query.
+     *
      * @param tableReference table reference to update rows in.
      */
     public UpdateQuery(TableReference tableReference) {
@@ -54,8 +55,9 @@ public class UpdateQuery extends Query {
 
     /**
      * Adds a value assignment to the query.
+     *
      * @param column column to assign.
-     * @param value expression to assign the column to.
+     * @param value  expression to assign the column to.
      */
     public void addValue(TableColumn column, Matchable value) {
         if (!column.getTable().equals(tableReference.getTable())) {
@@ -66,6 +68,7 @@ public class UpdateQuery extends Query {
 
     /**
      * Adds a criteria to "WHERE" section of the query. Criterias are joined with "AND" operator.
+     *
      * @param criteria criteria to add.
      */
     public void addCriteria(Criteria criteria) {

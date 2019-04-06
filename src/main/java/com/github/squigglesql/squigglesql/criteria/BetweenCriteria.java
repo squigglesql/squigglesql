@@ -30,6 +30,7 @@ public class BetweenCriteria implements Criteria {
 
     /**
      * Creates a criteria.
+     *
      * @param value value to match.
      * @param lower lower limit.
      * @param upper upper limit.

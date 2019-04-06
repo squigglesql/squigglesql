@@ -29,6 +29,7 @@ public abstract class AbstractTimeLiteral extends AbstractStringLiteral {
 
     /**
      * Creates a literal.
+     *
      * @param value literal value.
      */
     public AbstractTimeLiteral(TemporalAccessor value) {

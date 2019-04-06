@@ -39,6 +39,7 @@ public class InsertQuery extends Query {
 
     /**
      * Creates an insertion query.
+     *
      * @param table table to insert a row to.
      */
     public InsertQuery(Table table) {
@@ -50,8 +51,9 @@ public class InsertQuery extends Query {
 
     /**
      * Adds a column value to the query.
+     *
      * @param column table column.
-     * @param value value to add to the column.
+     * @param value  value to add to the column.
      */
     public void addValue(TableColumn column, Matchable value) {
         if (!column.getTable().equals(table)) {

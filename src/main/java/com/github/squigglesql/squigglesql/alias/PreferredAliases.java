@@ -27,6 +27,7 @@ public class PreferredAliases implements Iterable<String> {
 
     /**
      * Creates a preferred alias generator.
+     *
      * @param base object name.
      */
     public PreferredAliases(String base) {

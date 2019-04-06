@@ -23,6 +23,7 @@ public interface Aliasable {
     /**
      * Returns the preferred aliases allowing to easily recognize the this object. Usually it generates sequences of
      * letters the object name starts with.
+     *
      * @return generator of preferred aliases.
      */
     Iterable<String> getPreferredAliases();

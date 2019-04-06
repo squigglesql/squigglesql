@@ -30,6 +30,7 @@ public class IsNullCriteria implements Criteria {
 
     /**
      * Creates a criteria.
+     *
      * @param value value to match.
      */
     public IsNullCriteria(Matchable value) {

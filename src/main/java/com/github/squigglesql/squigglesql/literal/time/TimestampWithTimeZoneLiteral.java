@@ -29,6 +29,7 @@ public class TimestampWithTimeZoneLiteral extends AbstractTimeLiteral {
 
     /**
      * Creates a literal.
+     *
      * @param value literal value.
      */
     public TimestampWithTimeZoneLiteral(ZonedDateTime value) {
@@ -37,6 +38,7 @@ public class TimestampWithTimeZoneLiteral extends AbstractTimeLiteral {
 
     /**
      * Creates a literal.
+     *
      * @param value literal value.
      */
     public TimestampWithTimeZoneLiteral(OffsetDateTime value) {

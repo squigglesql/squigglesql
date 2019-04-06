@@ -35,7 +35,8 @@ public class InCriteria implements Criteria {
 
     /**
      * Creates a criteria.
-     * @param value value to match.
+     *
+     * @param value   value to match.
      * @param options options to match the value against.
      */
     public InCriteria(Matchable value, Collection<Matchable> options) {
@@ -45,7 +46,8 @@ public class InCriteria implements Criteria {
 
     /**
      * Creates a criteria.
-     * @param value value to match.
+     *
+     * @param value   value to match.
      * @param options options to match the value against.
      */
     public InCriteria(Matchable value, Matchable... options) {
