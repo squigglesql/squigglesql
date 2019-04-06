@@ -24,7 +24,6 @@ import com.github.squigglesql.squigglesql.util.SquiggleUtils;
 import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Date;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -80,8 +79,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a boolean parameter. The corresponding SQL type is BOOLEAN with NOT NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readBooleanNotNull(ResultSet, int)} method.
+     * Instantiates a boolean parameter. The corresponding SQL type is BOOLEAN with NOT NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readBooleanNotNull} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -90,8 +89,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a boolean parameter. The corresponding SQL type is BOOLEAN with NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readBooleanNull(ResultSet, int)} method.
+     * Instantiates a boolean parameter. The corresponding SQL type is BOOLEAN with NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readBooleanNull} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -100,8 +99,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a byte parameter. The corresponding SQL type is SMALLINT with NOT NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readByteNotNull(ResultSet, int)} method.
+     * Instantiates a byte parameter. The corresponding SQL type is SMALLINT with NOT NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readByteNotNull} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -110,8 +109,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a byte parameter. The corresponding SQL type is SMALLINT with NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readByteNull(ResultSet, int)} method.
+     * Instantiates a byte parameter. The corresponding SQL type is SMALLINT with NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readByteNull} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -120,8 +119,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a short integer parameter. The corresponding SQL type is SMALLINT with NOT NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readShortNotNull(ResultSet, int)} method.
+     * Instantiates a short integer parameter. The corresponding SQL type is SMALLINT with NOT NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readShortNotNull} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -130,8 +129,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a short integer parameter. The corresponding SQL type is SMALLINT with NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readShortNull(ResultSet, int)} method.
+     * Instantiates a short integer parameter. The corresponding SQL type is SMALLINT with NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readShortNull} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -140,8 +139,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates an integer parameter. The corresponding SQL type is INT with NOT NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readIntegerNotNull(ResultSet, int)} method.
+     * Instantiates an integer parameter. The corresponding SQL type is INT with NOT NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readIntegerNotNull} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -150,8 +149,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates an integer parameter. The corresponding SQL type is INT with NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readIntegerNull(ResultSet, int)} method.
+     * Instantiates an integer parameter. The corresponding SQL type is INT with NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readIntegerNull} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -160,8 +159,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a long integer parameter. The corresponding SQL type is BIGINT with NOT NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readLongNotNull(ResultSet, int)} method.
+     * Instantiates a long integer parameter. The corresponding SQL type is BIGINT with NOT NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readLongNotNull} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -170,8 +169,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a long integer parameter. The corresponding SQL type is BIGINT with NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readLongNull(ResultSet, int)} method.
+     * Instantiates a long integer parameter. The corresponding SQL type is BIGINT with NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readLongNull} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -180,8 +179,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a floating point number parameter. The corresponding SQL type is REAL with NOT NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readFloatNotNull(ResultSet, int)} method.
+     * Instantiates a floating point number parameter. The corresponding SQL type is REAL with NOT NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readFloatNotNull} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -190,8 +189,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a floating point number parameter. The corresponding SQL type is REAL with NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readFloatNull(ResultSet, int)} method.
+     * Instantiates a floating point number parameter. The corresponding SQL type is REAL with NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readFloatNull} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -200,8 +199,9 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a double precision floating point number parameter. The corresponding SQL type is DOUBLE PRECISION with NOT NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readDoubleNotNull(ResultSet, int)} method.
+     * Instantiates a double precision floating point number parameter. The corresponding SQL type
+     * is DOUBLE PRECISION with NOT NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readDoubleNotNull} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -210,8 +210,9 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a double precision floating point number parameter. The corresponding SQL type is DOUBLE PRECISION with NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readDoubleNull(ResultSet, int)} method.
+     * Instantiates a double precision floating point number parameter. The corresponding SQL type
+     * is DOUBLE PRECISION with NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readDoubleNull} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -220,8 +221,9 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a big decimal parameter. The corresponding SQL type is NUMERIC with a preferred precision, regardless of NOT NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readBigDecimal(ResultSet, int)} method.
+     * Instantiates a big decimal parameter. The corresponding SQL type is NUMERIC with a preferred precision,
+     * regardless of NOT NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readBigDecimal} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -230,8 +232,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a string parameter. The corresponding SQL type is TEXT, regardless of NOT NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readString(ResultSet, int)} method.
+     * Instantiates a string parameter. The corresponding SQL type is TEXT, regardless of NOT NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readString} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -240,8 +242,9 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a timestamp parameter. The corresponding SQL type is TIMESTAMP with a preferred precision, regardless of NOT NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readTimestamp(ResultSet, int)} method.
+     * Instantiates a timestamp parameter. The corresponding SQL type is TIMESTAMP with a preferred precision,
+     * regardless of NOT NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readTimestamp} method.
      * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      * @param value parameter value.
      * @return parameter to use in a query.
@@ -252,8 +255,9 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a timestamp parameter. The corresponding SQL type is TIMESTAMP with a preferred precision, regardless of NOT NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readTimestamp(ResultSet, int)} method.
+     * Instantiates a timestamp parameter. The corresponding SQL type is TIMESTAMP with a preferred precision,
+     * regardless of NOT NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readTimestamp} method.
      * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      * @param value parameter value.
      * @param calendar calendar to use. See setTimestamp method of JDBC PreparedStatement for details.
@@ -267,8 +271,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a time parameter. The corresponding SQL type is TIME, regardless of NOT NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readTimestamp(ResultSet, int)} method.
+     * Instantiates a time parameter. The corresponding SQL type is TIME, regardless of NOT NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readTimestamp} method.
      * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      * @param value parameter value.
      * @return parameter to use in a query.
@@ -279,8 +283,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a time parameter. The corresponding SQL type is TIME, regardless of NOT NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readTime(ResultSet, int)} method.
+     * Instantiates a time parameter. The corresponding SQL type is TIME, regardless of NOT NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readTime} method.
      * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      * @param value parameter value.
      * @param calendar calendar to use. See setTimestamp method of JDBC PreparedStatement for details.
@@ -294,8 +298,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a date parameter. The corresponding SQL type is DATE, regardless of NOT NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readDate(ResultSet, int)} method.
+     * Instantiates a date parameter. The corresponding SQL type is DATE, regardless of NOT NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readDate} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      * @deprecated Suggest using Java 8 date/time API Parameter.of methods.
@@ -305,8 +309,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a date parameter. The corresponding SQL type is DATE, regardless of NOT NULL modifier. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readDate(ResultSet, int)} method.
+     * Instantiates a date parameter. The corresponding SQL type is DATE, regardless of NOT NULL modifier.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readDate} method.
      * @param value parameter value.
      * @param calendar calendar to use. See setTimestamp method of JDBC PreparedStatement for details.
      * @return parameter to use in a query.
@@ -319,8 +323,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates an array parameter. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readArray(ResultSet, int)} method.
+     * Instantiates an array parameter.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readArray} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -329,8 +333,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a binary data parameter. The corresponding PostgreSQL type is BYTEA. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readBinary(ResultSet, int)} method.
+     * Instantiates a binary data parameter. The corresponding PostgreSQL type is BYTEA.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readBinary} method.
      * <b>Note:</b> MySQL blob support will be added later.
      * @param value parameter value.
      * @return parameter to use in a query.
@@ -341,8 +345,8 @@ public abstract class Parameter implements Matchable {
 
     /**
      * Instantiates Java 8 instant parameter. The corresponding PostgreSQL type is TIMESTAMP WITH TIME ZONE with
-     * preferred precision. The corresponding MySQL type is TIMESTAMP with preferred precision. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readInstant(ResultSet, int)} method.
+     * preferred precision. The corresponding MySQL type is TIMESTAMP with preferred precision.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readInstant} method.
      * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      * @param value parameter value.
      * @return parameter to use in a query.
@@ -352,8 +356,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates Java 8 local date parameter. The corresponding SQL type is DATE. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readLocalDate(ResultSet, int)} method.
+     * Instantiates Java 8 local date parameter. The corresponding SQL type is DATE.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readLocalDate} method.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -362,8 +366,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates Java 8 local time parameter. The corresponding SQL type is TIME. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readLocalTime(ResultSet, int)} method.
+     * Instantiates Java 8 local time parameter. The corresponding SQL type is TIME.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readLocalTime} method.
      * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      * @param value parameter value.
      * @return parameter to use in a query.
@@ -373,8 +377,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates Java 8 local date/time parameter. The corresponding SQL type is TIMESTAMP with preferred precision. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readLocalDateTime(ResultSet, int)} method.
+     * Instantiates Java 8 local date/time parameter. The corresponding SQL type is TIMESTAMP with preferred precision.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readLocalDateTime} method.
      * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      * @param value parameter value.
      * @return parameter to use in a query.
@@ -384,11 +388,12 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates Java 8 zoned date/time parameter. The corresponding PostgreSQL type is TIMESTAMP WITH TIME ZONE with
-     * preferred precision. The corresponding MySQL type is TIMESTAMP with preferred precision. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readInstant(ResultSet, int)} method.
+     * Instantiates Java 8 zoned date/time parameter. The corresponding PostgreSQL type is TIMESTAMP WITH TIME ZONE
+     * with preferred precision. The corresponding MySQL type is TIMESTAMP with preferred precision.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readInstant} method.
      * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
-     * <b>Note:</b> None of the databases stores the exact time zone identifier. That's why all you can get back is an Instant.
+     * <b>Note:</b> None of the databases stores the exact time zone identifier. That's why all you can get back
+     * is an Instant.
      * @param value parameter value.
      * @return parameter to use in a query.
      */
@@ -397,9 +402,9 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates Java 8 offset date/time parameter. The corresponding PostgreSQL type is TIMESTAMP WITH TIME ZONE with
-     * preferred precision. The corresponding MySQL type is TIMESTAMP with preferred precision. To read the
-     * value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readInstant(ResultSet, int)} method.
+     * Instantiates Java 8 offset date/time parameter. The corresponding PostgreSQL type is TIMESTAMP WITH TIME ZONE
+     * with preferred precision. The corresponding MySQL type is TIMESTAMP with preferred precision.
+     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readInstant} method.
      * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      * <b>Note:</b> None of the databases stores the exact time zone identifier. That's why all you can get back is an Instant.
      * @param value parameter value.
