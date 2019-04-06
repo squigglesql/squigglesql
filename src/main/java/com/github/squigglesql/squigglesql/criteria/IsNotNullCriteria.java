@@ -30,7 +30,7 @@ public class IsNotNullCriteria implements Criteria {
 
     /**
      * Creates a criteria.
-     * @param value Value to match.
+     * @param value value to match.
      */
     public IsNotNullCriteria(Matchable value) {
         this.value = value;

@@ -27,7 +27,7 @@ public class PreferredAliases implements Iterable<String> {
 
     /**
      * Creates a preferred alias generator.
-     * @param base Object name.
+     * @param base object name.
      */
     public PreferredAliases(String base) {
         this.base = base.replace("_", "");

@@ -34,7 +34,7 @@ public class AliasGenerator {
 
     /**
      * Creates an alias generator.
-     * @param alphabet Alphabet to stick to.
+     * @param alphabet alphabet to stick to.
      */
     public AliasGenerator(Alphabet alphabet) {
         this.alphabet = alphabet;
@@ -43,8 +43,8 @@ public class AliasGenerator {
     /**
      * Gemerates an unique alias for an object. First tries to apply the preferred aliases. If they are occupied,
      * generates an alias by auto-incrementing.
-     * @param aliasable Object to generate an alias for.
-     * @return New alias for the object.
+     * @param aliasable object to generate an alias for.
+     * @return new alias for the object.
      */
     public String generateAlias(Aliasable aliasable) {
         for (String preferredAlias : aliasable.getPreferredAliases()) {
@@ -64,9 +64,9 @@ public class AliasGenerator {
 
     /**
      * Generates unique aliases for objects. The objects must be viable as keys of a hash map.
-     * @param collection Objects to generate aliases for.
-     * @param <T> Type of an object.
-     * @return Map from an object to its alias.
+     * @param collection objects to generate aliases for.
+     * @param <T> type of an object.
+     * @return map from an object to its alias.
      */
     private <T extends Aliasable> Map<T, String> generateAliases(Collection<? extends T> collection) {
         Map<T, String> aliases = new HashMap<>();
@@ -79,8 +79,8 @@ public class AliasGenerator {
     /**
      * Generates an auto-incremented alias in scope of an alphabet.
      * @param index 0-based index in auto-incremental sequence.
-     * @param alphabet Alphabet to stick to.
-     * @return Alias.
+     * @param alphabet alphabet to stick to.
+     * @return alias.
      */
     public static String generateAlphabetic(int index, Alphabet alphabet) {
         StringBuilder result = new StringBuilder();
@@ -96,10 +96,10 @@ public class AliasGenerator {
      * a history, i.e. it is impossible to generate more unique aliases after its call. If you need a history,
      * construct an {@link AliasGenerator} instance and call its {@link AliasGenerator#generateAliases(Collection)}
      * method.
-     * @param collection Objects to generate aliases for.
-     * @param alphabet Alphabet to stick to.
-     * @param <T> Type of an object.
-     * @return Map from an object to its alias.
+     * @param collection objects to generate aliases for.
+     * @param alphabet alphabet to stick to.
+     * @param <T> type of an object.
+     * @return map from an object to its alias.
      */
     public static <T extends Aliasable> Map<T, String> generateAliases(
             Collection<? extends T> collection, Alphabet alphabet) {

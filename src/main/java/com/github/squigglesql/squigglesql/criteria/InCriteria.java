@@ -35,8 +35,8 @@ public class InCriteria implements Criteria {
 
     /**
      * Creates a criteria.
-     * @param value Value to match.
-     * @param options Options to match the value against.
+     * @param value value to match.
+     * @param options options to match the value against.
      */
     public InCriteria(Matchable value, Collection<Matchable> options) {
         this.value = value;
@@ -45,8 +45,8 @@ public class InCriteria implements Criteria {
 
     /**
      * Creates a criteria.
-     * @param value Value to match.
-     * @param options Options to match the value against.
+     * @param value value to match.
+     * @param options options to match the value against.
      */
     public InCriteria(Matchable value, Matchable... options) {
         this(value, Arrays.asList(options));

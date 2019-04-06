@@ -25,8 +25,8 @@ public class Alphabet {
 
     /**
      * Creates an alphabet.
-     * @param firstLetter First letter of the alphabet.
-     * @param letterCount Count of letters in the alphabet.
+     * @param firstLetter first letter of the alphabet.
+     * @param letterCount count of letters in the alphabet.
      */
     public Alphabet(char firstLetter, int letterCount) {
         this.firstLetter = firstLetter;
@@ -34,14 +34,14 @@ public class Alphabet {
     }
 
     /**
-     * @return First letter of the alphabet.
+     * @return first letter of the alphabet.
      */
     public char getFirstLetter() {
         return firstLetter;
     }
 
     /**
-     * @return Count of letters in the alphabet.
+     * @return count of letters in the alphabet.
      */
     public int getLetterCount() {
         return letterCount;

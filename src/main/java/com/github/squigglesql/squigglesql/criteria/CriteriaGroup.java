@@ -33,7 +33,7 @@ public abstract class CriteriaGroup implements Criteria {
 
     /**
      * Creates a criteria group.
-     * @param criterias Criterias to join.
+     * @param criterias criterias to join.
      */
     CriteriaGroup(Collection<Criteria> criterias) {
         this.criterias = criterias;
@@ -41,7 +41,7 @@ public abstract class CriteriaGroup implements Criteria {
 
     /**
      * Creates a criteria group.
-     * @param criterias Criterias to join.
+     * @param criterias criterias to join.
      */
     CriteriaGroup(Criteria... criterias) {
         this.criterias = Arrays.asList(criterias);
@@ -55,7 +55,7 @@ public abstract class CriteriaGroup implements Criteria {
 
     /**
      * Value to return by default if the list of criterias is empty.
-     * @return Default value.
+     * @return default value.
      */
     protected abstract boolean isEmptyTrue();
 

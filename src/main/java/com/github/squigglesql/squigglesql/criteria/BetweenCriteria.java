@@ -30,9 +30,9 @@ public class BetweenCriteria implements Criteria {
 
     /**
      * Creates a criteria.
-     * @param value Value to match.
-     * @param lower Lower limit.
-     * @param upper Upper limit.
+     * @param value value to match.
+     * @param lower lower limit.
+     * @param upper upper limit.
      */
     public BetweenCriteria(Matchable value, Matchable lower, Matchable upper) {
         this.value = value;

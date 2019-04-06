@@ -68,9 +68,9 @@ public class MatchCriteria implements Criteria {
 
     /**
      * Creates a criteria.
-     * @param left Left operand.
-     * @param operator Operator.
-     * @param right Right operand.
+     * @param left left operand.
+     * @param operator operator.
+     * @param right right operand.
      */
     public MatchCriteria(Matchable left, String operator, Matchable right) {
         this.left = left;
