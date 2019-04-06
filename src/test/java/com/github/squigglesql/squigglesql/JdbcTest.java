@@ -33,6 +33,7 @@ public class JdbcTest {
     private static final Employee AARON = new Employee(1, "Aaron", 20);
     private static final Employee BOB = new Employee(2, "Bob", 30);
     private static final Employee BOB_GROWN = BOB.withAge(31);
+    private static final Employee CHRIS = new Employee(3, "Chris", 22);
     private static final int NONE_ID = 3;
 
     @Test
@@ -85,13 +86,30 @@ public class JdbcTest {
             UpdateQuery updateQuery = new UpdateQuery(ref);
             updateQuery.addValue(AGE, Parameter.of(BOB_GROWN.getAge()));
             updateQuery.addCriteria(new MatchCriteria(ref.get(ID), EQUALS, Parameter.of(BOB.getId())));
-            JdbcUtils.update(updateQuery, connection);
+            assertEquals(1, JdbcUtils.update(updateQuery, connection));
 
             SelectQuery selectQuery = new SelectQuery();
             ResultMapper<Employee> mapper = addToQuery(selectQuery, BOB.getId());
             Employee employee = JdbcUtils.selectOne(selectQuery, connection, mapper);
             assertEquals(BOB_GROWN, employee);
         });
+    }
+
+    @Test
+    public void testMultiUpdate() throws SQLException {
+        withContents((connection, database) -> {
+            TableReference ref = TABLE.refer();
+            UpdateQuery updateQuery = new UpdateQuery(ref);
+            updateQuery.addValue(AGE, Parameter.of(BOB_GROWN.getAge()));
+            assertEquals(2, JdbcUtils.update(updateQuery, connection));
+        });
+    }
+
+    @Test
+    public void testInsert() throws SQLException {
+        withContents(((connection, database) -> {
+            assertEquals(3, insert(connection, CHRIS));
+        }));
     }
 
     private static void withContents(Consumer consumer) throws SQLException {
@@ -108,11 +126,11 @@ public class JdbcTest {
                 }));
     }
 
-    private static void insert(Connection connection, Employee employee) throws SQLException {
+    private static int insert(Connection connection, Employee employee) throws SQLException {
         InsertQuery query = new InsertQuery(TABLE);
         query.addValue(NAME, Parameter.of(employee.getName()));
         query.addValue(AGE, Parameter.of(employee.getAge()));
-        JdbcUtils.insert(query, connection);
+        return JdbcUtils.insert(query, connection);
     }
 
     private static ResultMapper<Employee> addToQuery(SelectQuery query) {

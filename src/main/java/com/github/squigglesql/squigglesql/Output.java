@@ -17,7 +17,6 @@ package com.github.squigglesql.squigglesql;
 
 import com.github.squigglesql.squigglesql.parameter.Parameter;
 import com.github.squigglesql.squigglesql.statement.StatementBuilder;
-import com.github.squigglesql.squigglesql.statement.StatementCompiler;
 import com.github.squigglesql.squigglesql.syntax.AbstractSqlSyntax;
 
 import java.sql.SQLException;
@@ -39,6 +38,10 @@ public class Output {
     private boolean newLineComing;
 
     private final List<Parameter> parameters = new ArrayList<>();
+
+    public Output(AbstractSqlSyntax syntax) {
+        this(syntax, DEFAULT_INDENT);
+    }
 
     public Output(AbstractSqlSyntax syntax, String indent) {
         this.syntax = syntax;
@@ -90,12 +93,10 @@ public class Output {
         return result.toString();
     }
 
-    public <S> S toStatement(StatementCompiler<S> compiler) throws SQLException {
-        StatementBuilder<S> builder = compiler.createStatementBuilder(toString());
+    public void addParameters(StatementBuilder builder) throws SQLException {
         for (Parameter parameter : parameters) {
             parameter.addValue(builder);
         }
-        return builder.buildStatement();
     }
 
     private void writeNewLineIfNeeded() {

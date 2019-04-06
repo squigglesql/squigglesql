@@ -9,14 +9,23 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+/**
+ * Concrete {@link StatementCompiler} implementation for JDBC {@link PreparedStatement}.
+ */
 public class JdbcStatementCompiler implements StatementCompiler<PreparedStatement> {
 
     private final Connection connection;
 
+    /**
+     * Creates a JDBC statement compiler.
+     *
+     * @param connection JDBC connection to create a statement with.
+     */
     public JdbcStatementCompiler(Connection connection) {
         this.connection = connection;
     }
@@ -29,6 +38,11 @@ public class JdbcStatementCompiler implements StatementCompiler<PreparedStatemen
     @Override
     public StatementBuilder<PreparedStatement> createStatementBuilder(String query) throws SQLException {
         return new Builder(connection.prepareStatement(query));
+    }
+
+    @Override
+    public StatementBuilder<PreparedStatement> createInsertStatementBuilder(String query) throws SQLException {
+        return new Builder(connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS));
     }
 
     private static class Builder implements StatementBuilder<PreparedStatement> {

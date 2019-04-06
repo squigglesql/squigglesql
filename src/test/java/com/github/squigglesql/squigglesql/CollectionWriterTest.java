@@ -18,7 +18,7 @@ public class CollectionWriterTest {
 
     @Before
     public void setUp() {
-        compiler = new QueryCompiler(new Output(SqlSyntax.DEFAULT_SQL_SYNTAX, Output.DEFAULT_INDENT));
+        compiler = new QueryCompiler(new Output(SqlSyntax.DEFAULT_SQL_SYNTAX));
     }
 
     @Test(expected = IllegalArgumentException.class)

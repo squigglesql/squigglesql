@@ -31,4 +31,9 @@ public class MockStatementCompiler implements StatementCompiler<MockStatement> {
     public StatementBuilder<MockStatement> createStatementBuilder(String query) {
         return new MockStatement(query);
     }
+
+    @Override
+    public StatementBuilder<MockStatement> createInsertStatementBuilder(String query) {
+        return new MockStatement(query);
+    }
 }

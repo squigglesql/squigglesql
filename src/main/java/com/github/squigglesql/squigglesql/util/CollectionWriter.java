@@ -21,8 +21,22 @@ import com.github.squigglesql.squigglesql.QueryCompiler;
 import java.util.Collection;
 import java.util.Iterator;
 
+/**
+ * Utilities for collection writing to SQL query output.
+ */
 public abstract class CollectionWriter {
 
+    /**
+     * Writes a collection to SQL query output.
+     *
+     * @param compiler   compiler to write the output to.
+     * @param collection collection.
+     * @param separator  separator to use. Note: separator is appended directly after a value - it doesn't add a space
+     *                   between them.
+     * @param brackets   wrap the collection with brackets.
+     * @param multiLine  write every value at a separate line unless the collection contains only one value.
+     * @throws IllegalArgumentException if the collection is empty.
+     */
     public static void writeCollection(QueryCompiler compiler, Collection<? extends Compilable> collection,
                                        String separator, boolean brackets, boolean multiLine) {
         if (collection.isEmpty()) {

@@ -17,6 +17,7 @@ package com.github.squigglesql.squigglesql.query;
 
 import com.github.squigglesql.squigglesql.Output;
 import com.github.squigglesql.squigglesql.alias.Alphabet;
+import com.github.squigglesql.squigglesql.statement.StatementBuilder;
 import com.github.squigglesql.squigglesql.statement.StatementCompiler;
 import com.github.squigglesql.squigglesql.syntax.AbstractSqlSyntax;
 import com.github.squigglesql.squigglesql.syntax.SqlSyntax;
@@ -36,6 +37,16 @@ public abstract class Query {
      * @param output output to compile the query to.
      */
     protected abstract void compile(Output output);
+
+    /**
+     * Creates a statement builder for this query.
+     *
+     * @param compiler compiler to create a statement builder with.
+     * @param <S>      statement class of the compiler.
+     * @return statement builder.
+     */
+    protected abstract <S> StatementBuilder<S> createStatementBuilder(StatementCompiler<S> compiler, String query)
+            throws SQLException;
 
     /**
      * Compiles the query to a string using default SQL syntax. The syntax may not be compatible with your particular
@@ -73,7 +84,9 @@ public abstract class Query {
      * @return SQL code representing the query.
      */
     public String toString(AbstractSqlSyntax syntax, String indent) {
-        return compile(syntax, indent).toString();
+        Output out = new Output(syntax, indent);
+        compile(out);
+        return out.toString();
     }
 
     /**
@@ -93,16 +106,14 @@ public abstract class Query {
      * SQL syntax.
      *
      * @param compiler compiler to use to compile the query.
-     * @param syntax syntax to compile the query with.
+     * @param syntax   syntax to compile the query with.
      * @return statement representing the query.
      */
     public <S> S toStatement(AbstractSqlSyntax syntax, StatementCompiler<S> compiler) throws SQLException {
-        return compile(syntax, Output.DEFAULT_INDENT).toStatement(compiler);
-    }
-
-    private Output compile(AbstractSqlSyntax syntax, String indent) {
-        Output out = new Output(syntax, indent);
+        Output out = new Output(syntax);
         compile(out);
-        return out;
+        StatementBuilder<S> builder = createStatementBuilder(compiler, out.toString());
+        out.addParameters(builder);
+        return builder.buildStatement();
     }
 }

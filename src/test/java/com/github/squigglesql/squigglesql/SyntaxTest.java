@@ -28,6 +28,6 @@ public class SyntaxTest {
 
     @Test(expected = QueryCompilationException.class)
     public void testQuotesInLexem() {
-        new QueryCompiler(new Output(SqlSyntax.DEFAULT_SQL_SYNTAX, Output.DEFAULT_INDENT)).quote("who's bad", '\'');
+        new QueryCompiler(new Output(SqlSyntax.DEFAULT_SQL_SYNTAX)).quote("who's bad", '\'');
     }
 }

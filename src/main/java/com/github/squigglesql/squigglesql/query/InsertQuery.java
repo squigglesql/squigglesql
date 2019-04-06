@@ -20,8 +20,11 @@ import com.github.squigglesql.squigglesql.Output;
 import com.github.squigglesql.squigglesql.QueryCompiler;
 import com.github.squigglesql.squigglesql.Table;
 import com.github.squigglesql.squigglesql.TableColumn;
+import com.github.squigglesql.squigglesql.statement.StatementBuilder;
+import com.github.squigglesql.squigglesql.statement.StatementCompiler;
 import com.github.squigglesql.squigglesql.util.CollectionWriter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,5 +74,11 @@ public class InsertQuery extends Query {
 
         compiler.write(" VALUES ");
         CollectionWriter.writeCollection(compiler, values, ", ", true, false);
+    }
+
+    @Override
+    protected <S> StatementBuilder<S> createStatementBuilder(StatementCompiler<S> compiler, String query)
+            throws SQLException {
+        return compiler.createInsertStatementBuilder(query);
     }
 }

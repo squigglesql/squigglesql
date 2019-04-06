@@ -22,8 +22,11 @@ import com.github.squigglesql.squigglesql.TableColumn;
 import com.github.squigglesql.squigglesql.TableReference;
 import com.github.squigglesql.squigglesql.alias.AliasGenerator;
 import com.github.squigglesql.squigglesql.criteria.Criteria;
+import com.github.squigglesql.squigglesql.statement.StatementBuilder;
+import com.github.squigglesql.squigglesql.statement.StatementCompiler;
 import com.github.squigglesql.squigglesql.util.CollectionWriter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -104,8 +107,15 @@ public class UpdateQuery extends Query {
         }
     }
 
+    @Override
+    protected <S> StatementBuilder<S> createStatementBuilder(StatementCompiler<S> compiler, String query)
+            throws SQLException {
+        return compiler.createStatementBuilder(query);
+    }
+
     private Set<TableReference> findTableReferences() {
         Set<TableReference> tables = new LinkedHashSet<>();
+        tables.add(tableReference);
         for (Criteria criteria : criterias) {
             criteria.collectTableReferences(tables);
         }

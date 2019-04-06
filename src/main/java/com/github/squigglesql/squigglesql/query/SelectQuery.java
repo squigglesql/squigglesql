@@ -24,8 +24,11 @@ import com.github.squigglesql.squigglesql.TableReference;
 import com.github.squigglesql.squigglesql.alias.AliasGenerator;
 import com.github.squigglesql.squigglesql.alias.Alphabet;
 import com.github.squigglesql.squigglesql.criteria.Criteria;
+import com.github.squigglesql.squigglesql.statement.StatementBuilder;
+import com.github.squigglesql.squigglesql.statement.StatementCompiler;
 import com.github.squigglesql.squigglesql.util.CollectionWriter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -152,6 +155,12 @@ public class SelectQuery extends Query implements Matchable {
             compiler.write("ORDER BY");
             CollectionWriter.writeCollection(compiler, orders, ",", false, true);
         }
+    }
+
+    @Override
+    protected <S> StatementBuilder<S> createStatementBuilder(StatementCompiler<S> compiler, String query)
+            throws SQLException {
+        return compiler.createStatementBuilder(query);
     }
 
     private Set<TableReference> findTableReferences() {
