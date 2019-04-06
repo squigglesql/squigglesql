@@ -15,10 +15,19 @@
  */
 package com.github.squigglesql.squigglesql.literal;
 
+/**
+ * String literal. Use {@link com.github.squigglesql.squigglesql.literal.Literal#of(Object)} method to
+ * instantiate it.
+ */
 public class StringLiteral extends AbstractStringLiteral {
 
     private final Object value;
 
+    /**
+     * Creates a literal.
+     *
+     * @param value literal value.
+     */
     StringLiteral(Object value) {
         this.value = value;
     }

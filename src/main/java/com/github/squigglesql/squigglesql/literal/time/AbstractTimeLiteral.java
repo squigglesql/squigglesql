@@ -20,10 +20,17 @@ import com.github.squigglesql.squigglesql.literal.AbstractStringLiteral;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 
+/**
+ * Abstract date/time string literal.
+ */
 public abstract class AbstractTimeLiteral extends AbstractStringLiteral {
 
     private final TemporalAccessor value;
 
+    /**
+     * Creates a literal.
+     * @param value literal value.
+     */
     public AbstractTimeLiteral(TemporalAccessor value) {
         this.value = value;
     }
@@ -33,5 +40,8 @@ public abstract class AbstractTimeLiteral extends AbstractStringLiteral {
         return getFormatter().format(value);
     }
 
+    /**
+     * @return date/time formatter to write the value to the output.
+     */
     protected abstract DateTimeFormatter getFormatter();
 }

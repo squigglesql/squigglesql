@@ -17,6 +17,10 @@ package com.github.squigglesql.squigglesql.literal;
 
 import com.github.squigglesql.squigglesql.QueryCompiler;
 
+/**
+ * Abstract string literal. Surrounds the value with database-specific quotes and escapes the string between them by
+ * replacing each quote character with two consequent quote characters.
+ */
 public abstract class AbstractStringLiteral extends Literal {
 
     @Override
@@ -27,5 +31,8 @@ public abstract class AbstractStringLiteral extends Literal {
         compiler.write(quote).write(getValue().toString().replace(str, str + str)).write(quote);
     }
 
+    /**
+     * @return original literal value.
+     */
     protected abstract Object getValue();
 }

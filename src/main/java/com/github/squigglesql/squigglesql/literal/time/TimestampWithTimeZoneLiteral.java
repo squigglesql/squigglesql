@@ -17,12 +17,29 @@ package com.github.squigglesql.squigglesql.literal.time;
 
 import com.github.squigglesql.squigglesql.SquiggleConstants;
 
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 
+/**
+ * Date/time literal. Use {@link com.github.squigglesql.squigglesql.literal.Literal#of(java.time.ZonedDateTime)} or
+ * {@link com.github.squigglesql.squigglesql.literal.Literal#of(java.time.OffsetDateTime)} method to instantiate it.
+ */
 public class TimestampWithTimeZoneLiteral extends AbstractTimeLiteral {
 
-    public TimestampWithTimeZoneLiteral(TemporalAccessor value) {
+    /**
+     * Creates a literal.
+     * @param value literal value.
+     */
+    public TimestampWithTimeZoneLiteral(ZonedDateTime value) {
+        super(value);
+    }
+
+    /**
+     * Creates a literal.
+     * @param value literal value.
+     */
+    public TimestampWithTimeZoneLiteral(OffsetDateTime value) {
         super(value);
     }
 

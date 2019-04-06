@@ -20,8 +20,16 @@ import com.github.squigglesql.squigglesql.SquiggleConstants;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 
+/**
+ * Time literal. Use {@link com.github.squigglesql.squigglesql.literal.Literal#of(java.time.OffsetTime)} method to
+ * instantiate it.
+ */
 public class TimeWithTimeZoneLiteral extends AbstractTimeLiteral {
 
+    /**
+     * Creates a literal.
+     * @param value literal value.
+     */
     public TimeWithTimeZoneLiteral(TemporalAccessor value) {
         super(value);
     }

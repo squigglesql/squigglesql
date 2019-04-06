@@ -2,13 +2,21 @@ package com.github.squigglesql.squigglesql.literal.time;
 
 import com.github.squigglesql.squigglesql.SquiggleConstants;
 
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 
+/**
+ * Date/time literal. Use {@link com.github.squigglesql.squigglesql.literal.Literal#of(java.time.Instant)} method to
+ * instantiate it.
+ */
 public class InstantInterval extends AbstractTimeLiteral {
 
-    public InstantInterval(TemporalAccessor value) {
+    /**
+     * Creates a literal.
+     * @param value literal value.
+     */
+    public InstantInterval(Instant value) {
         super(value);
     }
 

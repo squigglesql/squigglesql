@@ -17,12 +17,20 @@ package com.github.squigglesql.squigglesql.literal.time;
 
 import com.github.squigglesql.squigglesql.SquiggleConstants;
 
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 
+/**
+ * Time literal. Use {@link com.github.squigglesql.squigglesql.literal.Literal#of(java.time.LocalTime)} method to
+ * instantiate it.
+ */
 public class TimeLiteral extends AbstractTimeLiteral {
 
-    public TimeLiteral(TemporalAccessor value) {
+    /**
+     * Creates a literal.
+     * @param value literal value.
+     */
+    public TimeLiteral(LocalTime value) {
         super(value);
     }
 
