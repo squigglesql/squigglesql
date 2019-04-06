@@ -17,20 +17,37 @@ package com.github.squigglesql.squigglesql;
 
 import java.util.Set;
 
+/**
+ * Table column reference that you may use in a query. You can obtain a new reference by calling
+ * {@link TableReference#get(TableColumn)} method.
+ */
 public class TableColumnReference implements Selectable {
 
     private final TableColumn column;
     private final TableReference tableReference;
 
+    /**
+     * Creates a column reference. Instead of constructing this object directly, you should call
+     * {@link TableReference#get(TableColumn)} method.
+     *
+     * @param column         column to refer.
+     * @param tableReference table reference to use.
+     */
     TableColumnReference(TableColumn column, TableReference tableReference) {
         this.column = column;
         this.tableReference = tableReference;
     }
 
+    /**
+     * @return the referred column.
+     */
     public TableColumn getColumn() {
         return column;
     }
 
+    /**
+     * @return the matching table reference.
+     */
     public TableReference getTableReference() {
         return tableReference;
     }

@@ -19,7 +19,16 @@ import com.github.squigglesql.squigglesql.query.ResultColumn;
 
 import java.util.Set;
 
+/**
+ * Part of an SQL query that contains a reference to a result column. During query compilation, Squiggle collects all
+ * result column references and generates aliases for them.
+ */
 public interface ResultReferred {
 
+    /**
+     * Extends a set with all necessary result column references.
+     *
+     * @param resultReferences Set of the references to extend.
+     */
     void collectResultReferences(Set<ResultColumn> resultReferences);
 }

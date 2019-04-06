@@ -21,20 +21,41 @@ import com.github.squigglesql.squigglesql.alias.PreferredAliases;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Table reference that you may use in a query. You can obtain a new reference by calling {@link Table#refer()} method.
+ * You may create multiple references to a single table to build complex SQL queries, and every reference will obtain
+ * an unique alias.
+ */
 public class TableReference implements Aliasable, Compilable {
 
     private final Table table;
 
     private final Map<TableColumn, TableColumnReference> columnReferenceCache = new HashMap<>();
 
+    /**
+     * Creates a table reference. Instead of constructing this object directly, you should call {@link Table#refer()}
+     * method.
+     *
+     * @param table table to refer.
+     */
     TableReference(Table table) {
         this.table = table;
     }
 
+    /**
+     * @return the referred table.
+     */
     public Table getTable() {
         return table;
     }
 
+    /**
+     * Creates a new column reference that you can further use in an SQL query.
+     *
+     * @param column column to refer.
+     * @return column reference.
+     * @throws IllegalArgumentException if the column is located in a difference database table.
+     */
     public TableColumnReference get(TableColumn column) {
         if (column == null) {
             throw new IllegalArgumentException("Can not create a reference to a null column.");

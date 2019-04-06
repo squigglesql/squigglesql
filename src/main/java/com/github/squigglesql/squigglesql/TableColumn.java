@@ -16,22 +16,37 @@
 package com.github.squigglesql.squigglesql;
 
 /**
- * Column that belongs to a table.
+ * Database table column model. You can obtain this model from a table by calling {@link Table#get(String)} method.
+ * To use this table in particular queries, you might need to create references to it by calling
+ * {@link TableReference#get(TableColumn)} method.
  */
 public class TableColumn implements Compilable {
 
     private final Table table;
     private final String name;
 
+    /**
+     * Creates a table column model. Instead of constructing this object directly, you should call
+     * {@link Table#get(String)} method.
+     *
+     * @param table table to obtain a column from.
+     * @param name  column name.
+     */
     TableColumn(Table table, String name) {
         this.table = table;
         this.name = name;
     }
 
+    /**
+     * @return table this column is defined in.
+     */
     public Table getTable() {
         return table;
     }
 
+    /**
+     * @return column name.
+     */
     public String getName() {
         return name;
     }

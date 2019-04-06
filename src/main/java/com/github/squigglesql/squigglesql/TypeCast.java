@@ -17,11 +17,20 @@ package com.github.squigglesql.squigglesql;
 
 import java.util.Set;
 
+/**
+ * SQL type cast expression.
+ */
 public class TypeCast implements Selectable {
 
     private final Matchable value;
     private final String type;
 
+    /**
+     * Creates an expression.
+     *
+     * @param value value to cast.
+     * @param type  SQL type to cast the value to.
+     */
     public TypeCast(Matchable value, String type) {
         this.value = value;
         this.type = type;

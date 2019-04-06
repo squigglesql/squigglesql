@@ -25,6 +25,7 @@ public interface TableReferred {
 
     /**
      * Extends a set with all necessary table references.
+     *
      * @param tableReferences Set of the references to extend.
      */
     void collectTableReferences(Set<TableReference> tableReferences);

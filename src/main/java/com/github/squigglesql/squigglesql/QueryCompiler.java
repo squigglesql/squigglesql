@@ -170,6 +170,7 @@ public class QueryCompiler {
      * @param s  string to write.
      * @param ch quote character to use. Pass 0 character to just write the string without quotes.
      * @return this compiler for chaining.
+     * @throws QueryCompilationException if the string contains the quote characters.
      */
     public QueryCompiler quote(String s, char ch) {
         if (ch == 0) {
