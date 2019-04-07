@@ -38,7 +38,7 @@ import java.util.Set;
 
 /**
  * Abstract SQL parameter. Parameters are a preferred way to pass variables to an SQL query. As opposed to
- * {@link com.github.squigglesql.squigglesql.literal.Literal}, Parameter gets serialized to a constant <tt>?</tt>
+ * {@link com.github.squigglesql.squigglesql.literal.Literal}, Parameter gets serialized to a constant "?"
  * symbol, and its actual value gets transferred to the database directly via the JDBC driver. This approach is:
  *
  * <ol>
@@ -46,7 +46,7 @@ import java.util.Set;
  * <li>safer, as confidential data doesn't get written into log files;</li>
  * <li>faster, as the database is able to cache the compiled query structure and plan.</li>
  * </ol>
- * Squiggle SQL has a bunch of built-in parameter types instantiated with <tt>of</tt> static methods. You can invent
+ * Squiggle SQL has a bunch of built-in parameter types instantiated with "of" static methods. You can invent
  * custom parameter types by extending Parameter class and implementing {@link Parameter#addValue(Parametrized)} method.
  */
 public abstract class Parameter implements Matchable {
@@ -70,7 +70,7 @@ public abstract class Parameter implements Matchable {
 
     /**
      * Instantiates a parameter with null value. You must specify the JDBC value type explicitly. The preferred way to
-     * add a null value is to call <tt>of</tt> method of a specific type and pass null there.
+     * add a null value is to call "of" method of a specific type and pass null there.
      *
      * @param sqlType the SQL type code defined in <code>java.sql.Types</code>
      * @return parameter to use in a query.

@@ -322,6 +322,7 @@ public abstract class JdbcUtils {
      *
      * @param rs    result set.
      * @param index 1-based column index.
+     * @param <T>   array item class.
      * @return result value.
      * @throws SQLException if JDBC driver throws the exception.
      */

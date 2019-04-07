@@ -37,7 +37,7 @@ import java.util.Set;
 /**
  * Literal is a constant value in an SQL query. Use literals only to specify constant values - for variables, use
  * {@link com.github.squigglesql.squigglesql.parameter.Parameter} (see its documentation for details).
- * Squiggle SQL has a bunch of built-in literal types instantiated with <tt>of</tt> static methods. You can invent
+ * Squiggle SQL has a bunch of built-in literal types instantiated with "of" static methods. You can invent
  * custom literal types by extending {@link AbstractStringLiteral} or using {@link RawLiteral}.
  */
 public abstract class Literal implements Selectable {
@@ -322,7 +322,7 @@ public abstract class Literal implements Selectable {
     }
 
     /**
-     * Returns an unsafe raw literal. If you add it to a query, the compiler will simply dump <tt>sql</tt> parameter
+     * Returns an unsafe raw literal. If you add it to a query, the compiler will simply dump "sql" parameter
      * value as a part of the output. Be careful when you use this kind of literal.
      *
      * @param sql part of SQL query to dump as a literal.

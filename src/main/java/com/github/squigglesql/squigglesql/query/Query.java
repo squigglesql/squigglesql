@@ -42,8 +42,10 @@ public abstract class Query {
      * Creates a statement builder for this query.
      *
      * @param compiler compiler to create a statement builder with.
+     * @param query    pre-computed SQL query code.
      * @param <S>      statement class of the compiler.
      * @return statement builder.
+     * @throws SQLException if JDBC throws the exception.
      */
     protected abstract <S> StatementBuilder<S> createStatementBuilder(StatementCompiler<S> compiler, String query)
             throws SQLException;
@@ -95,7 +97,9 @@ public abstract class Query {
      * {@link Query#toStatement(AbstractSqlSyntax, StatementCompiler)} and specify the syntax explicitly.
      *
      * @param compiler compiler to use to compile the query.
+     * @param <S>      statement class.
      * @return statement representing the query.
+     * @throws SQLException if JDBC throws the exception.
      */
     public <S> S toStatement(StatementCompiler<S> compiler) throws SQLException {
         return toStatement(compiler.detectDefaultSyntax(), compiler);
@@ -107,7 +111,9 @@ public abstract class Query {
      *
      * @param compiler compiler to use to compile the query.
      * @param syntax   syntax to compile the query with.
+     * @param <S>      statement class.
      * @return statement representing the query.
+     * @throws SQLException if JDBC throws the exception.
      */
     public <S> S toStatement(AbstractSqlSyntax syntax, StatementCompiler<S> compiler) throws SQLException {
         Output out = new Output(syntax);

@@ -157,6 +157,7 @@ public class SqlSyntax implements AbstractSqlSyntax {
      *
      * @param connection JDBC connection.
      * @return SQL syntax instance.
+     * @throws SQLException if JDBC throws the exception.
      */
     public static AbstractSqlSyntax from(Connection connection) throws SQLException {
         return fromUrl(connection.getMetaData().getURL());

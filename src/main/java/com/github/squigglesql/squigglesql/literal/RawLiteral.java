@@ -18,25 +18,25 @@ package com.github.squigglesql.squigglesql.literal;
 import com.github.squigglesql.squigglesql.QueryCompiler;
 
 /**
- * Raw (unsafe) SQL literal. If you add it to a query, the compiler will simply dump <tt>sql</tt> parameter
+ * Raw (unsafe) SQL literal. If you add it to a query, the compiler will simply dump "sql" parameter
  * value as a part of the output. Be careful when you use this kind of literal. Use
  * {@link Literal#unsafe(String)} method to instantiate it.
  */
 public class RawLiteral extends Literal {
 
     /**
-     * Null literal. Returned as a result of {@link Literal#ofNull()} method or any <tt>of</tt> method with
-     * <tt>null</tt> in parameter.
+     * Null literal. Returned as a result of {@link Literal#ofNull()} method or any "of" method with
+     * "null" in parameter.
      */
     static final Literal NULL = new RawLiteral(null);
 
     /**
-     * True boolean literal. Returns as a result of {@link Literal#of(boolean)} method with <tt>true</tt> in parameter.
+     * True boolean literal. Returns as a result of {@link Literal#of(boolean)} method with "true" in parameter.
      */
     static final Literal TRUE = new RawLiteral(true);
 
     /**
-     * False boolean literal. Returns as a result of {@link Literal#of(boolean)} method with <tt>false</tt> in parameter.
+     * False boolean literal. Returns as a result of {@link Literal#of(boolean)} method with "false" in parameter.
      */
     static final Literal FALSE = new RawLiteral(false);
 
