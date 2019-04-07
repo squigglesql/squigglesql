@@ -2,9 +2,9 @@
 [![Coverage Status](https://coveralls.io/repos/github/squigglesql/squigglesql/badge.svg?branch=master)](https://coveralls.io/github/squigglesql/squigglesql?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.squigglesql/squigglesql/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.squigglesql/squigglesql)
 
-Squiggle is a little Java library for dynamically generating SQL SELECT statements. It's sweet spot is for applications
+Squiggle SQL is a little Java library for dynamically generating SQL statements. It's sweet spot is for applications
 that need to build up complicated queries with criteria that changes at runtime. Ordinarily it can be quite painful to
-figure out how to build this string. Squiggle takes much of this pain away.
+figure out how to build this string. Squiggle SQL takes much of this pain away.
 
 # Features
 
