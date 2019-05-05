@@ -65,13 +65,13 @@ public class InsertQuery extends Query {
 
     @Override
     protected void compile(Output output) {
-        if (columns.isEmpty()) {
-            throw new IllegalStateException("No values specified for insertion.");
-        }
-
         QueryCompiler compiler = new QueryCompiler(output);
 
         compiler.write("INSERT INTO ").quote(table.getName(), output.getSyntax().getTableQuote());
+        if (columns.isEmpty()) {
+            output.getSyntax().compileEmptyInsert(compiler);
+            return;
+        }
         CollectionWriter.writeCollection(compiler, columns, ", ", true, false);
 
         compiler.write(" VALUES ");

@@ -23,92 +23,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Implementation of {@link AbstractSqlSyntax}.
+ * Library of predefined {@link AbstractSqlSyntax} implementations.
  */
-public class SqlSyntax implements AbstractSqlSyntax {
+public abstract class SqlSyntax {
 
     /**
      * Default SQL syntax. Doesn't quote any identifiers. Uses single quote symbol to quote string literals. Not to be
      * used in production, as it may fail to work if some table/column/function identifier is a reserved word.
      */
-    public static final AbstractSqlSyntax DEFAULT_SQL_SYNTAX = new SqlSyntax((char) 0, '\'');
+    public static final AbstractSqlSyntax DEFAULT_SQL_SYNTAX = new DefaultSqlSyntax();
 
     /**
      * MySQL syntax. Uses backtick to quote identifiers and single quote to quote string literals.
      */
-    public static final AbstractSqlSyntax MY_SQL_SYNTAX = new SqlSyntax('`', '\'');
+    public static final AbstractSqlSyntax MY_SQL_SYNTAX = new MySqlSyntax();
 
     /**
      * PostgreSQL syntax. Uses double quote to quote identifiers and single quote to quote string literals.
      */
-    public static final AbstractSqlSyntax POSTGRE_SQL_SYNTAX = new SqlSyntax('"', '\'');
-
-    private final char tableQuote;
-    private final char tableReferenceQuote;
-    private final char columnQuote;
-    private final char resultColumnQuote;
-    private final char functionQuote;
-    private final char textQuote;
-
-    /**
-     * Creates an SQL syntax.
-     *
-     * @param identifierQuote ASCII character to use to quote identifiers. 0-char if quotation should be skipped.
-     * @param textQuote       ASCII character to use to quote string literals.
-     */
-    public SqlSyntax(char identifierQuote, char textQuote) {
-        this(identifierQuote, identifierQuote, identifierQuote, identifierQuote, identifierQuote, textQuote);
-    }
-
-    /**
-     * Creates an SQL syntax.
-     *
-     * @param tableQuote          ASCII character to use to quote a table name. 0-char if quotation should be skipped.
-     * @param tableReferenceQuote ASCII character to use to quote a table reference name. 0-char if quotation should be skipped.
-     * @param columnQuote         ASCII character to use to quote a table column name. 0-char if quotation should be skipped.
-     * @param resultColumnQuote   ASCII character to use to quote a result column name. 0-char if quotation should be skipped.
-     * @param functionQuote       ASCII character to use to quote an SQL function name. 0-char if quotation should be skipped.
-     * @param textQuote           ASCII symbol use to quote a string literal.
-     */
-    public SqlSyntax(char tableQuote, char tableReferenceQuote, char columnQuote, char resultColumnQuote,
-                     char functionQuote, char textQuote) {
-        this.tableQuote = tableQuote;
-        this.tableReferenceQuote = tableReferenceQuote;
-        this.columnQuote = columnQuote;
-        this.resultColumnQuote = resultColumnQuote;
-        this.functionQuote = functionQuote;
-        this.textQuote = textQuote;
-    }
-
-    @Override
-    public char getTableQuote() {
-        return tableQuote;
-    }
-
-    @Override
-    public char getTableReferenceQuote() {
-        return tableReferenceQuote;
-    }
-
-    @Override
-    public char getColumnQuote() {
-        return columnQuote;
-    }
-
-    @Override
-    public char getResultColumnQuote() {
-        return resultColumnQuote;
-    }
-
-    @Override
-    public char getFunctionQuote() {
-        return functionQuote;
-    }
-
-    @Override
-    public char getTextQuote() {
-        return textQuote;
-    }
+    public static final AbstractSqlSyntax POSTGRE_SQL_SYNTAX = new PostgreSqlSyntax();
 
     /**
      * Detects an SQL syntax by JDBC protocol name.

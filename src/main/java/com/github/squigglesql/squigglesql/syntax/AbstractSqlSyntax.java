@@ -15,6 +15,8 @@
  */
 package com.github.squigglesql.squigglesql.syntax;
 
+import com.github.squigglesql.squigglesql.QueryCompiler;
+
 /**
  * Abstract SQL syntax. Describes database-specific SQL features necessary to compile a query. You may use
  * {@link SqlSyntax} class to instantiate these objects.
@@ -50,4 +52,10 @@ public interface AbstractSqlSyntax {
      * @return ASCII symbol use to quote a string literal.
      */
     char getTextQuote();
+
+    /**
+     * Compiles a part of empty row insertion query after "INSERT INTO `table_name` ".
+     * @param compiler compiler to compile the query with.
+     */
+    void compileEmptyInsert(QueryCompiler compiler);
 }

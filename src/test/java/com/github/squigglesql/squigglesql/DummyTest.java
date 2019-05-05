@@ -15,6 +15,7 @@
  */
 package com.github.squigglesql.squigglesql;
 
+import com.github.squigglesql.squigglesql.syntax.SqlSyntax;
 import com.github.squigglesql.squigglesql.util.CollectionWriter;
 import com.github.squigglesql.squigglesql.util.JdbcUtils;
 import com.github.squigglesql.squigglesql.util.SquiggleUtils;
@@ -25,9 +26,16 @@ public class DummyTest {
 
     @Test
     public void testDummy() {
-        new SquiggleUtils() {};
-        new SquiggleConstants() {};
-        new JdbcUtils() {};
-        new CollectionWriter() {};
+        new SquiggleUtils() {
+        };
+        new SquiggleConstants() {
+        };
+        new JdbcUtils() {
+        };
+        new CollectionWriter() {
+        };
+        new SqlSyntax() {
+        };
+        SqlSyntax.DEFAULT_SQL_SYNTAX.compileEmptyInsert(null);
     }
 }

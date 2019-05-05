@@ -15,11 +15,13 @@
  */
 package com.github.squigglesql.squigglesql;
 
+import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
 import com.github.squigglesql.squigglesql.literal.Literal;
 import com.github.squigglesql.squigglesql.mock.MockStatement;
 import com.github.squigglesql.squigglesql.mock.MockStatementCompiler;
 import com.github.squigglesql.squigglesql.parameter.Parameter;
 import com.github.squigglesql.squigglesql.query.InsertQuery;
+import com.github.squigglesql.squigglesql.util.JdbcUtils;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -63,9 +65,14 @@ public class InsertQueryTest {
         new InsertQuery(department).addValue(employeeName, Literal.of("Name"));
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void testEmptyValuesException() {
-        Table employee = new Table("employee");
-        new InsertQuery(employee).toString();
+    @Test
+    public void testEmptyValuesException() throws Exception {
+        TestUtils.withDatabase((connection, database) -> {
+            TestUtils.withTable(connection, database, "employee", new TestDatabaseColumn[]{}, () -> {
+                Table employee = new Table("employee");
+                assertEquals((Integer) 1, JdbcUtils.insert(new InsertQuery(employee), connection, rs -> rs.getInt(1)));
+                return null;
+            });
+        });
     }
 }
