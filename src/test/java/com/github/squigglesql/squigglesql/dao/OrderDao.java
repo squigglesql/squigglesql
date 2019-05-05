@@ -42,7 +42,7 @@ public class OrderDao {
         InsertQuery query = new InsertQuery(TABLE);
         query.addValue(ISSUED_AT, Parameter.of(issuedAt));
         query.addValue(CUSTOMER_ID, Parameter.of(customer.getId()));
-        int id = JdbcUtils.insert(query, connection);
+        int id = JdbcUtils.insert(query, connection, rs -> rs.getInt(1));
         return new Order(id, issuedAt, customer);
     }
 

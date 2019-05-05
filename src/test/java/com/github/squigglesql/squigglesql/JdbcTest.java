@@ -145,7 +145,7 @@ public class JdbcTest {
         InsertQuery query = new InsertQuery(TABLE);
         query.addValue(NAME, Parameter.of(employee.getName()));
         query.addValue(AGE, Parameter.of(employee.getAge()));
-        return JdbcUtils.insert(query, connection);
+        return JdbcUtils.insert(query, connection, rs -> rs.getInt(1));
     }
 
     private static ResultMapper<Employee> addToQuery(SelectQuery query) {

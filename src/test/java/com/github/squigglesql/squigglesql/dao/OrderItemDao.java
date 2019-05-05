@@ -42,7 +42,7 @@ public class OrderItemDao {
         query.addValue(ORDER_ID, Parameter.of(order.getId()));
         query.addValue(PRODUCT_ID, Parameter.of(product.getId()));
         query.addValue(QUANTITY, Parameter.of(quantity));
-        int id = JdbcUtils.insert(query, connection);
+        int id = JdbcUtils.insert(query, connection, rs -> rs.getInt(1));
         return new OrderItem(id, order, product, quantity);
     }
 

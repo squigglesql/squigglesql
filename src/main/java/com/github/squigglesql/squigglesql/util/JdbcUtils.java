@@ -469,15 +469,16 @@ public abstract class JdbcUtils {
      *
      * @param query      SQL selection query.
      * @param connection JDBC connection.
+     * @param keyMapper  Mapper for generated keys.
      * @return list of Java model instances.
      * @throws SQLException if JDBC driver throws the exception.
      */
-    public static int insert(Query query, Connection connection) throws SQLException {
+    public static <T> T insert(Query query, Connection connection, ResultMapper<T> keyMapper) throws SQLException {
         try (PreparedStatement statement = query.toStatement(new JdbcStatementCompiler(connection))) {
             statement.executeUpdate();
             try (ResultSet rs = statement.getGeneratedKeys()) {
                 rs.next();
-                return rs.getInt(1);
+                return keyMapper.apply(rs);
             }
         }
     }

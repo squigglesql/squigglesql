@@ -41,7 +41,7 @@ public class CustomerDao {
         InsertQuery query = new InsertQuery(TABLE);
         query.addValue(NAME, Parameter.of(name));
         query.addValue(CITY, Parameter.of(city));
-        int id = JdbcUtils.insert(query, connection);
+        int id = JdbcUtils.insert(query, connection, rs -> rs.getInt(1));
         return new Customer(id, name, city);
     }
 

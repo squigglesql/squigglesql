@@ -17,9 +17,18 @@ package com.github.squigglesql.squigglesql;
 
 import com.github.squigglesql.squigglesql.criteria.InCriteria;
 import com.github.squigglesql.squigglesql.criteria.MatchCriteria;
+import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
 import com.github.squigglesql.squigglesql.literal.Literal;
+import com.github.squigglesql.squigglesql.parameter.Parameter;
+import com.github.squigglesql.squigglesql.query.InsertQuery;
+import com.github.squigglesql.squigglesql.query.ResultColumn;
 import com.github.squigglesql.squigglesql.query.SelectQuery;
+import com.github.squigglesql.squigglesql.statement.JdbcStatementCompiler;
+import com.github.squigglesql.squigglesql.util.JdbcUtils;
 import org.junit.Test;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import static org.junit.Assert.assertEquals;
 
@@ -136,5 +145,80 @@ public class TutorialTest {
                 + "    e.age >= 18\n"
                 + "ORDER BY\n"
                 + "    e.age DESC", select.toString());
+    }
+
+    @Test
+    public void testJdbcUtilsTutorial() throws Exception {
+        TestUtils.withDatabase((connection, database) -> {
+            TestUtils.withTable(connection, database, "employee", new TestDatabaseColumn[] {
+                    new TestDatabaseColumn("name", "TEXT", true, null),
+                    new TestDatabaseColumn("age", "INT", true, null)
+            }, () -> {
+                Table employee = new Table("employee");
+                TableColumn employeeId = employee.get("id");
+                TableColumn employeeName = employee.get("name");
+                TableColumn employeeAge = employee.get("age");
+
+                InsertQuery insert = new InsertQuery(employee);
+                insert.addValue(employeeName, Parameter.of("Homer"));
+                insert.addValue(employeeAge, Parameter.of(40));
+                assertEquals((Integer) 1, JdbcUtils.insert(insert, connection, rs -> rs.getInt(1)));
+
+                TableReference e = employee.refer();
+
+                SelectQuery select = new SelectQuery();
+
+                ResultColumn employeeIdResult = select.addToSelection(e.get(employeeId));
+                ResultColumn employeeNameResult = select.addToSelection(e.get(employeeName));
+                ResultColumn employeeAgeResult = select.addToSelection(e.get(employeeAge));
+
+                try (PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection))) {
+                    try (ResultSet rs = statement.executeQuery()) {
+                        rs.next();
+                        int id = JdbcUtils.readIntegerNotNull(rs, employeeIdResult.getIndex());
+                        String name = JdbcUtils.readString(rs, employeeNameResult.getIndex());
+                        int age = JdbcUtils.readIntegerNotNull(rs, employeeAgeResult.getIndex());
+                        assertEquals(1, id);
+                        assertEquals("Homer", name);
+                        assertEquals(40, age);
+                    }
+                }
+
+                Employee result = JdbcUtils.selectOne(select, connection, rs -> new Employee(
+                        JdbcUtils.readIntegerNotNull(rs, employeeIdResult.getIndex()),
+                        JdbcUtils.readString(rs, employeeNameResult.getIndex()),
+                        JdbcUtils.readIntegerNotNull(rs, employeeAgeResult.getIndex())));
+                assertEquals(1, result.getId());
+                assertEquals("Homer", result.getName());
+                assertEquals(40, result.getAge());
+
+                return null;
+            });
+        });
+    }
+
+    private static class Employee {
+
+        private final int id;
+        private final String name;
+        private final int age;
+
+        public Employee(int id, String name, int age) {
+            this.id = id;
+            this.name = name;
+            this.age = age;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getAge() {
+            return age;
+        }
     }
 }

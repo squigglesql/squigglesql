@@ -37,7 +37,7 @@ public interface Parametrized {
     void addNull(int sqlType) throws SQLException;
 
     /**
-     * Delegate of {@link java.sql.PreparedStatement#setNull(int, int)} method.
+     * Delegate of {@link java.sql.PreparedStatement#setBoolean(int, boolean)} method.
      *
      * @param value JDBC statement method argument.
      * @throws SQLException if JDBC throws the exception.
@@ -45,7 +45,7 @@ public interface Parametrized {
     void addBoolean(boolean value) throws SQLException;
 
     /**
-     * Delegate of {@link java.sql.PreparedStatement#setNull(int, int)} method.
+     * Delegate of {@link java.sql.PreparedStatement#setByte(int, byte)} method.
      *
      * @param value JDBC statement method argument.
      * @throws SQLException if JDBC throws the exception.
@@ -53,7 +53,7 @@ public interface Parametrized {
     void addByte(byte value) throws SQLException;
 
     /**
-     * Delegate of {@link java.sql.PreparedStatement#setNull(int, int)} method.
+     * Delegate of {@link java.sql.PreparedStatement#setShort(int, short)} method.
      *
      * @param value JDBC statement method argument.
      * @throws SQLException if JDBC throws the exception.
@@ -61,7 +61,7 @@ public interface Parametrized {
     void addShort(short value) throws SQLException;
 
     /**
-     * Delegate of {@link java.sql.PreparedStatement#setNull(int, int)} method.
+     * Delegate of {@link java.sql.PreparedStatement#setInt(int, int)} method.
      *
      * @param value JDBC statement method argument.
      * @throws SQLException if JDBC throws the exception.
@@ -69,7 +69,7 @@ public interface Parametrized {
     void addInteger(int value) throws SQLException;
 
     /**
-     * Delegate of {@link java.sql.PreparedStatement#setNull(int, int)} method.
+     * Delegate of {@link java.sql.PreparedStatement#setLong(int, long)} method.
      *
      * @param value JDBC statement method argument.
      * @throws SQLException if JDBC throws the exception.
@@ -77,7 +77,7 @@ public interface Parametrized {
     void addLong(long value) throws SQLException;
 
     /**
-     * Delegate of {@link java.sql.PreparedStatement#setNull(int, int)} method.
+     * Delegate of {@link java.sql.PreparedStatement#setFloat(int, float)} method.
      *
      * @param value JDBC statement method argument.
      * @throws SQLException if JDBC throws the exception.
@@ -85,7 +85,7 @@ public interface Parametrized {
     void addFloat(float value) throws SQLException;
 
     /**
-     * Delegate of {@link java.sql.PreparedStatement#setNull(int, int)} method.
+     * Delegate of {@link java.sql.PreparedStatement#setDouble(int, double)} method.
      *
      * @param value JDBC statement method argument.
      * @throws SQLException if JDBC throws the exception.
@@ -93,7 +93,7 @@ public interface Parametrized {
     void addDouble(double value) throws SQLException;
 
     /**
-     * Delegate of {@link java.sql.PreparedStatement#setNull(int, int)} method.
+     * Delegate of {@link java.sql.PreparedStatement#setBigDecimal(int, BigDecimal)} method.
      *
      * @param value JDBC statement method argument.
      * @throws SQLException if JDBC throws the exception.
@@ -101,7 +101,7 @@ public interface Parametrized {
     void addBigDecimal(BigDecimal value) throws SQLException;
 
     /**
-     * Delegate of {@link java.sql.PreparedStatement#setNull(int, int)} method.
+     * Delegate of {@link java.sql.PreparedStatement#setString(int, String)} method.
      *
      * @param value JDBC statement method argument.
      * @throws SQLException if JDBC throws the exception.
@@ -109,7 +109,7 @@ public interface Parametrized {
     void addString(String value) throws SQLException;
 
     /**
-     * Delegate of {@link java.sql.PreparedStatement#setNull(int, int)} method.
+     * Delegate of {@link java.sql.PreparedStatement#setTimestamp(int, Timestamp, Calendar)} method.
      *
      * @param value    JDBC statement method argument.
      * @param calendar JDBC statement method argument.
@@ -118,7 +118,7 @@ public interface Parametrized {
     void addTimestamp(Timestamp value, Calendar calendar) throws SQLException;
 
     /**
-     * Delegate of {@link java.sql.PreparedStatement#setNull(int, int)} method.
+     * Delegate of {@link java.sql.PreparedStatement#setTime(int, Time, Calendar)} method.
      *
      * @param value    JDBC statement method argument.
      * @param calendar JDBC statement method argument.
@@ -127,7 +127,7 @@ public interface Parametrized {
     void addTime(Time value, Calendar calendar) throws SQLException;
 
     /**
-     * Delegate of {@link java.sql.PreparedStatement#setNull(int, int)} method.
+     * Delegate of {@link java.sql.PreparedStatement#setDate(int, Date, Calendar)} method.
      *
      * @param value    JDBC statement method argument.
      * @param calendar JDBC statement method argument.
@@ -136,7 +136,7 @@ public interface Parametrized {
     void addDate(Date value, Calendar calendar) throws SQLException;
 
     /**
-     * Delegate of {@link java.sql.PreparedStatement#setNull(int, int)} method.
+     * Delegate of {@link java.sql.PreparedStatement#setArray(int, Array)} method.
      *
      * @param value JDBC statement method argument.
      * @throws SQLException if JDBC throws the exception.
@@ -144,7 +144,7 @@ public interface Parametrized {
     void addArray(Array value) throws SQLException;
 
     /**
-     * Delegate of {@link java.sql.PreparedStatement#setNull(int, int)} method.
+     * Delegate of {@link java.sql.PreparedStatement#setBytes(int, byte[])} method.
      *
      * @param value JDBC statement method argument.
      * @throws SQLException if JDBC throws the exception.

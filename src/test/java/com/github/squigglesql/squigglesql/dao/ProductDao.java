@@ -36,7 +36,7 @@ public class ProductDao {
         InsertQuery query = new InsertQuery(TABLE);
         query.addValue(NAME, Parameter.of(name));
         query.addValue(PRICE, Parameter.of(price));
-        int id = JdbcUtils.insert(query, connection);
+        int id = JdbcUtils.insert(query, connection, rs -> rs.getInt(1));
         return new Product(id, name, price);
     }
 }

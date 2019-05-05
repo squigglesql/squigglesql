@@ -2,8 +2,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/squigglesql/squigglesql/badge.svg?branch=master)](https://coveralls.io/github/squigglesql/squigglesql?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.squigglesql/squigglesql/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.squigglesql/squigglesql)
 
-Squiggle SQL is a little Java library for dynamically generating SQL statements. It's sweet spot is for applications
-that need to build up complicated queries with criteria that changes at runtime. Ordinarily it can be quite painful to
+Squiggle SQL is a little Java library for dynamic generation of SQL queries. Its sweet spot is applications
+that need to build up complicated queries with criterias that change in runtime. Ordinarily it can be quite painful to
 figure out how to build this string. Squiggle SQL takes much of this pain away.
 
 # Features
@@ -186,6 +186,7 @@ and integer value of 30 as a parameter.
 ```java
 // define table
 Table employee = new Table("employee");
+TableColumn employeeId = employee.get("id");
 TableColumn employeeName = employee.get("name");
 TableColumn employeeAge = employee.get("age");
 
@@ -194,15 +195,47 @@ TableReference e = employee.refer();
 
 SelectQuery select = new SelectQuery();
 
+ResultColumn employeeIdResult = select.addToSelection(e.get(employeeId));
 ResultColumn employeeNameResult = select.addToSelection(e.get(employeeName));
 ResultColumn employeeAgeResult = select.addToSelection(e.get(employeeAge));
 
 try (PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection))) {
     try (ResultSet rs = statement.executeQuery()) {
-        String name = JdbcUtils.readString(rs, employeeNameResult.getIndex()));
+        rs.next();
+        int id = JdbcUtils.readIntegerNotNull(rs, employeeIdResult.getIndex());
+        String name = JdbcUtils.readString(rs, employeeNameResult.getIndex());
         int age = JdbcUtils.readIntegerNotNull(rs, employeeAgeResult.getIndex());
     }
 }
+```
+
+## Query execution helpers
+
+You may use JdbcUtils methods selectOne, selectAll, insert and update to execute the queries. So, in the example above,
+both try/catch blocks can be replaced with a single JdbcUtils.selectOne call.
+
+```java
+JdbcUtils.selectOne(select, connection, rs -> new Employee(
+        JdbcUtils.readIntegerNotNull(rs, employeeIdResult.getIndex()),
+        JdbcUtils.readString(rs, employeeNameResult.getIndex()),
+        JdbcUtils.readIntegerNotNull(rs, employeeAgeResult.getIndex())));
+```
+
+You just need to define Employee model class for this.
+
+## Insertion queries
+
+To obtain a generated key of the insertion query, you must define a mapper.
+
+```java
+Table employee = new Table("employee");
+TableColumn employeeName = employee.get("name");
+TableColumn employeeAge = employee.get("age");
+
+InsertQuery insert = new InsertQuery(employee);
+insert.addValue(employeeName, Parameter.of("Homer"));
+insert.addValue(employeeAge, Parameter.of(40));
+int id = JdbcUtils.insert(insert, connection, rs -> rs.getInt(1));
 ```
 
 # Best practices
