@@ -15,15 +15,23 @@
  */
 package com.github.squigglesql.squigglesql;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.logging.Logger;
+
+import org.junit.AssumptionViolatedException;
+
+import com.github.squigglesql.squigglesql.databases.H2TestDatabase;
 import com.github.squigglesql.squigglesql.databases.MySqlTestDatabase;
 import com.github.squigglesql.squigglesql.databases.PostgreSqlTestDatabase;
 import com.github.squigglesql.squigglesql.databases.TestDatabase;
 import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Properties;
+import static org.junit.Assume.assumeNotNull;
 
 /**
  * Any database tests rely on the following configuration:
@@ -35,23 +43,26 @@ import java.util.Properties;
  */
 public abstract class TestUtils {
 
-    private static final String USER = "squiggletest";
-    private static final String PASSWORD = "1";
+  private static final Logger logger = Logger.getLogger(TestUtils.class.getName());
+  private static final List<String> BLACKLISTET_URLs = new ArrayList<>();
 
-    public interface Supplier<T> {
+  private static final String USER = "squiggletest";
+  private static final String PASSWORD = "1";
 
-        T get() throws SQLException;
-    }
+  public interface Supplier<T> {
 
-    public interface Consumer {
+    T get() throws SQLException;
+  }
 
-        void accept(Connection connection, TestDatabase database) throws SQLException;
-    }
+  public interface Consumer {
 
-    public interface Runnable {
+    void accept(Connection connection, TestDatabase database) throws SQLException;
+  }
 
-        void run() throws SQLException;
-    }
+  public interface Runnable {
+
+    void run() throws SQLException;
+  }
 
     public static <T> T withTable(Connection connection, TestDatabase database, String name,
                                   TestDatabaseColumn[] columns, Supplier<T> supplier) throws SQLException {
@@ -59,38 +70,59 @@ public abstract class TestUtils {
                 () -> database.createTable(connection, name, columns),
                 () -> database.dropTable(connection, name),
                 supplier);
+  }
+
+  public static void withDatabase(Consumer consumer) throws SQLException {
+    withPostgreSqlDatabase(consumer);
+    withMySqlDatabase(consumer);
+    withH2Database(consumer);
+  }
+
+  private static void withPostgreSqlDatabase(Consumer consumer) throws SQLException {
+    withDatabase(new PostgreSqlTestDatabase(), consumer);
+  }
+
+  private static void withMySqlDatabase(Consumer consumer) throws SQLException {
+    withDatabase(new MySqlTestDatabase(), consumer);
+  }
+
+  private static void withH2Database(Consumer consumer) throws SQLException {
+    withDatabase(new H2TestDatabase(), consumer);
+  }
+
+  private static void withDatabase(TestDatabase database, Consumer consumer) throws SQLException {
+    Properties props = new Properties();
+    props.setProperty("user", USER);
+    props.setProperty("password", PASSWORD);
+    try (Connection connection = connect(database, props)) {
+      consumer.accept(connection, database);
+    } catch (AssumptionViolatedException ave) {
+      logger.fine(ave.getMessage());
     }
+  }
 
-    public static void withDatabase(Consumer consumer) throws SQLException {
-        withPostgreSqlDatabase(consumer);
-        withMySqlDatabase(consumer);
+  public static Connection connect(TestDatabase database, Properties props) {
+    Connection connection = null;
+    if (!BLACKLISTET_URLs.contains(database.getUrl())) {
+      try {
+        connection = DriverManager.getConnection(database.getUrl(), props);
+      } catch (SQLException e) {
+        logger.warning("Skip test with database " + database.getUrl() + ", cannot connect: " + e.getMessage());
+        BLACKLISTET_URLs.add(database.getUrl());
+      }
     }
+    assumeNotNull(connection);
+    return connection;
+  }
 
-    private static void withPostgreSqlDatabase(Consumer consumer) throws SQLException {
-        withDatabase(new PostgreSqlTestDatabase(), consumer);
-    }
+  private static <T> T with(Runnable creator, Runnable dropper, Supplier<T> supplier) throws SQLException {
+    dropper.run();
+    creator.run();
 
-    private static void withMySqlDatabase(Consumer consumer) throws SQLException {
-        withDatabase(new MySqlTestDatabase(), consumer);
-    }
+    T result = supplier.get();
 
-    private static void withDatabase(TestDatabase database, Consumer consumer) throws SQLException {
-        Properties props = new Properties();
-        props.setProperty("user", USER);
-        props.setProperty("password", PASSWORD);
-        try (Connection connection = DriverManager.getConnection(database.getUrl(), props)) {
-            consumer.accept(connection, database);
-        }
-    }
-
-    private static <T> T with(Runnable creator, Runnable dropper, Supplier<T> supplier) throws SQLException {
-        dropper.run();
-        creator.run();
-
-        T result = supplier.get();
-
-        // We drop the table only if the test succeeds. Otherwise we preserve it for debugging purposes.
-        dropper.run();
-        return result;
-    }
+    // We drop the table only if the test succeeds. Otherwise we preserve it for debugging purposes.
+    dropper.run();
+    return result;
+  }
 }

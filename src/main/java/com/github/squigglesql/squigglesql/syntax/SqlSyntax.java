@@ -44,6 +44,11 @@ public abstract class SqlSyntax {
     public static final AbstractSqlSyntax POSTGRE_SQL_SYNTAX = new PostgreSqlSyntax();
 
     /**
+     * H2 syntax. Uses double quote to quote identifiers and single quote to quote string literals.
+     */
+    public static final AbstractSqlSyntax H2_SQL_SYNTAX = new H2Syntax();
+
+    /**
      * Detects an SQL syntax by JDBC protocol name.
      *
      * <ul>
@@ -64,6 +69,8 @@ public abstract class SqlSyntax {
                 return MY_SQL_SYNTAX;
             case "postgresql":
                 return POSTGRE_SQL_SYNTAX;
+            case "h2":
+              return H2_SQL_SYNTAX;
             default:
                 throw new UnsupportedDatabaseException(protocol);
         }
