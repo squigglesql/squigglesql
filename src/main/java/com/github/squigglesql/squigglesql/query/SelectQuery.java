@@ -72,10 +72,13 @@ public class SelectQuery extends Query implements Matchable {
     }
 
     /**
-     * Adds an item to "FROM" section of the query. From items are usually represented by {@link TableReference} class
-     * or {@link com.github.squigglesql.squigglesql.join.Join} subclass.
+     * Adds an item to "FROM" section of the query. See {@link FromItem} subclasses for available options.
+     * <p>
+     * You don't have to always add from-items to a query - in the majority of cases, the query can automatically infer
+     * them from its selection columns and criteria.
      *
      * @param fromItem from item to add.
+     * @since 4.1.0
      */
     public void addFrom(FromItem fromItem) {
         if (fromItem == null) {

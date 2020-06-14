@@ -54,7 +54,7 @@ public abstract class Query {
      * Compiles the query to a string using default SQL syntax. The syntax may not be compatible with your particular
      * database, so it is recommended to use this method only for logging, testing, debugging and demonstration
      * purposes. Use {@link Query#toString(AbstractSqlSyntax)} in production.
-     * If you use a parametrized query, suggest using {@link Query#toStatement(StatementCompiler)}
+     * If you use a parametrized query, consider using {@link Query#toStatement(StatementCompiler)}
      * method, or parameter values won't be used.
      *
      * @return SQL code representing the query.
@@ -66,7 +66,7 @@ public abstract class Query {
 
     /**
      * Compiles the query to a string using the specified SQL syntax.
-     * If you use a parametrized query, suggest using {@link Query#toStatement(AbstractSqlSyntax, StatementCompiler)}
+     * If you use a parametrized query, consider using {@link Query#toStatement(AbstractSqlSyntax, StatementCompiler)}
      * method, or parameter values won't be used.
      *
      * @param syntax syntax to compile the query with.
@@ -78,7 +78,7 @@ public abstract class Query {
 
     /**
      * Compiles the query to a string using the specified SQL syntax and indentation.
-     * If you use a parametrized query, suggest using {@link Query#toStatement(AbstractSqlSyntax, StatementCompiler)}
+     * If you use a parametrized query, consider using {@link Query#toStatement(AbstractSqlSyntax, StatementCompiler)}
      * method, or parameter values won't be used.
      *
      * @param syntax syntax to compile the query with.

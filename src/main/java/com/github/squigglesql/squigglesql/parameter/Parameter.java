@@ -266,7 +266,7 @@ public abstract class Parameter implements Matchable {
      *
      * @param value parameter value.
      * @return parameter to use in a query.
-     * @deprecated Suggest using Java 8 date/time API Parameter.of methods.
+     * @deprecated Consider using Java 8 date/time API Parameter.of methods.
      */
     public static Parameter of(Timestamp value) {
         return of(value, null);
@@ -296,7 +296,7 @@ public abstract class Parameter implements Matchable {
      *
      * @param value parameter value.
      * @return parameter to use in a query.
-     * @deprecated Suggest using Java 8 date/time API Parameter.of methods.
+     * @deprecated Consider using Java 8 date/time API Parameter.of methods.
      */
     public static Parameter of(Time value) {
         return of(value, null);
@@ -324,7 +324,7 @@ public abstract class Parameter implements Matchable {
      *
      * @param value parameter value.
      * @return parameter to use in a query.
-     * @deprecated Suggest using Java 8 date/time API Parameter.of methods.
+     * @deprecated Consider using Java 8 date/time API Parameter.of methods.
      */
     public static Parameter of(Date value) {
         return of(value, Calendar.getInstance()); // MySQL driver behaves stupidly without calendar here
