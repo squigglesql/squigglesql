@@ -67,6 +67,6 @@ public class TableReferenceInferringTest {
                 + "    color c\n"
                 + "WHERE\n"
                 + "    v.color_id = c.id AND\n"
-                + "    c.name = 'blue'",select.toString());
+                + "    c.name = 'blue'", select.toString());
     }
 }

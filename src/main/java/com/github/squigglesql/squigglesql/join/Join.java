@@ -15,8 +15,8 @@
  */
 package com.github.squigglesql.squigglesql.join;
 
-import com.github.squigglesql.squigglesql.QueryCompiler;
 import com.github.squigglesql.squigglesql.FromItem;
+import com.github.squigglesql.squigglesql.QueryCompiler;
 import com.github.squigglesql.squigglesql.TableReference;
 
 import java.util.Set;

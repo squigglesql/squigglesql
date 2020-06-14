@@ -151,7 +151,7 @@ public class TutorialTest {
     @Test
     public void testJdbcUtilsTutorial() throws Exception {
         TestUtils.withDatabase((connection, database) -> {
-            TestUtils.withTable(connection, database, "employee", new TestDatabaseColumn[] {
+            TestUtils.withTable(connection, database, "employee", new TestDatabaseColumn[]{
                     new TestDatabaseColumn("name", "TEXT", true, null),
                     new TestDatabaseColumn("age", "INT", true, null)
             }, () -> {
