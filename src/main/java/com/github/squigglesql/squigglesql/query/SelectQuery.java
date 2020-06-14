@@ -15,12 +15,7 @@
  */
 package com.github.squigglesql.squigglesql.query;
 
-import com.github.squigglesql.squigglesql.BaseOrder;
-import com.github.squigglesql.squigglesql.Matchable;
-import com.github.squigglesql.squigglesql.Output;
-import com.github.squigglesql.squigglesql.QueryCompiler;
-import com.github.squigglesql.squigglesql.Selectable;
-import com.github.squigglesql.squigglesql.TableReference;
+import com.github.squigglesql.squigglesql.*;
 import com.github.squigglesql.squigglesql.alias.AliasGenerator;
 import com.github.squigglesql.squigglesql.alias.Alphabet;
 import com.github.squigglesql.squigglesql.criteria.Criteria;
@@ -29,10 +24,7 @@ import com.github.squigglesql.squigglesql.statement.StatementCompiler;
 import com.github.squigglesql.squigglesql.util.CollectionWriter;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * SQL selection query.
@@ -42,6 +34,7 @@ public class SelectQuery extends Query implements Matchable {
     private static final Alphabet RESULT_COLUMN_ALIAS_ALPHABET = new Alphabet('a', 19);
 
     private final List<ResultColumn> selection = new ArrayList<>();
+    private final List<FromItem> fromItems = new ArrayList<>();
     private final List<Criteria> criterias = new ArrayList<>();
     private final List<BaseOrder> orders = new ArrayList<>();
 
@@ -76,6 +69,19 @@ public class SelectQuery extends Query implements Matchable {
         ResultColumn resultColumn = new ResultColumn(selectable, selection.size() + 1);
         selection.add(resultColumn);
         return resultColumn;
+    }
+
+    /**
+     * Adds an item to "FROM" section of the query. From items are usually represented by {@link TableReference} class
+     * or {@link com.github.squigglesql.squigglesql.join.Join} subclass.
+     *
+     * @param fromItem from item to add.
+     */
+    public void addFrom(FromItem fromItem) {
+        if (fromItem == null) {
+            throw new IllegalArgumentException("From item can not be null.");
+        }
+        fromItems.add(fromItem);
     }
 
     /**
@@ -129,10 +135,17 @@ public class SelectQuery extends Query implements Matchable {
 
     @Override
     protected void compile(Output output) {
-        Set<TableReference> tableReferences = findTableReferences();
+        Set<TableReference> mentionedTableReferences = findMentionedTableReferences();
+        Set<TableReference> usedTableReferences = findUsedTableReferences();
+        Set<TableReference> missingTableReferences = new LinkedHashSet<>(usedTableReferences);
+        missingTableReferences.removeAll(mentionedTableReferences);
+
+        Set<FromItem> allFromItems = new LinkedHashSet<>(fromItems);
+        allFromItems.addAll(missingTableReferences);
+
         Set<ResultColumn> resultReferences = findResultReferences();
         QueryCompiler compiler = new QueryCompiler(output,
-                AliasGenerator.generateAliases(tableReferences, TABLE_REFERENCE_ALIAS_ALPHABET),
+                AliasGenerator.generateAliases(usedTableReferences, TABLE_REFERENCE_ALIAS_ALPHABET),
                 AliasGenerator.generateAliases(resultReferences, RESULT_COLUMN_ALIAS_ALPHABET));
 
         compiler.write("SELECT");
@@ -146,9 +159,9 @@ public class SelectQuery extends Query implements Matchable {
             CollectionWriter.writeCollection(compiler, selection, ",", false, true);
         }
 
-        if (!tableReferences.isEmpty()) {
+        if (!allFromItems.isEmpty()) {
             compiler.write("FROM");
-            CollectionWriter.writeCollection(compiler, tableReferences, ",", false, true);
+            CollectionWriter.writeCollection(compiler, allFromItems, ",", false, true);
         }
 
         if (!criterias.isEmpty()) {
@@ -168,7 +181,15 @@ public class SelectQuery extends Query implements Matchable {
         return compiler.createStatementBuilder(query);
     }
 
-    private Set<TableReference> findTableReferences() {
+    private Set<TableReference> findMentionedTableReferences() {
+        Set<TableReference> references = new LinkedHashSet<>();
+        for (FromItem source : fromItems) {
+            source.collectTableReferences(references);
+        }
+        return references;
+    }
+
+    private Set<TableReference> findUsedTableReferences() {
         Set<TableReference> references = new LinkedHashSet<>();
         for (ResultColumn resultColumn : selection) {
             resultColumn.collectTableReferences(references);

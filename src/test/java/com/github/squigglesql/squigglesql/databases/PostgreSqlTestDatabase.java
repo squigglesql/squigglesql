@@ -80,6 +80,11 @@ public class PostgreSqlTestDatabase implements TestDatabase {
     }
 
     @Override
+    public boolean supportsFullJoin() {
+        return true;
+    }
+
+    @Override
     public String getTimestampWithTimeZoneType() {
         return "TIMESTAMP WITH TIME ZONE";
     }

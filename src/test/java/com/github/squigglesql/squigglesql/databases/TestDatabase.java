@@ -32,5 +32,7 @@ public interface TestDatabase {
 
     boolean supportsTimeMs();
 
+    boolean supportsFullJoin();
+
     String getTimestampWithTimeZoneType();
 }

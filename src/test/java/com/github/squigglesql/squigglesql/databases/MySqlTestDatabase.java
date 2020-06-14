@@ -75,6 +75,11 @@ public class MySqlTestDatabase implements TestDatabase {
     }
 
     @Override
+    public boolean supportsFullJoin() {
+        return false;
+    }
+
+    @Override
     public String getTimestampWithTimeZoneType() {
         return "TIMESTAMP(3)";
     }

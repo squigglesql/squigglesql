@@ -20,13 +20,14 @@ import com.github.squigglesql.squigglesql.alias.PreferredAliases;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Table reference that you may use in a query. You can obtain a new reference by calling {@link Table#refer()} method.
  * You may create multiple references to a single table to build complex SQL queries, and every reference will obtain
  * an unique alias.
  */
-public class TableReference implements Aliasable, Compilable {
+public class TableReference implements Aliasable, FromItem {
 
     private final Table table;
 
@@ -83,5 +84,10 @@ public class TableReference implements Aliasable, Compilable {
     @Override
     public Iterable<String> getPreferredAliases() {
         return new PreferredAliases(table.getName());
+    }
+
+    @Override
+    public void collectTableReferences(Set<TableReference> tableReferences) {
+        tableReferences.add(this);
     }
 }
