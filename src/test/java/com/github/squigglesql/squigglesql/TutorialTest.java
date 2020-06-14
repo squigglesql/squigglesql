@@ -18,6 +18,8 @@ package com.github.squigglesql.squigglesql;
 import com.github.squigglesql.squigglesql.criteria.InCriteria;
 import com.github.squigglesql.squigglesql.criteria.MatchCriteria;
 import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
+import com.github.squigglesql.squigglesql.join.QualifiedJoin;
+import com.github.squigglesql.squigglesql.join.QualifiedJoinKind;
 import com.github.squigglesql.squigglesql.literal.Literal;
 import com.github.squigglesql.squigglesql.parameter.Parameter;
 import com.github.squigglesql.squigglesql.query.InsertQuery;
@@ -73,8 +75,8 @@ public class TutorialTest {
         // join
         TableReference w = warehouse.refer();
 
-        select.addCriteria(new MatchCriteria(
-                o.get(orderWarehouseId), MatchCriteria.EQUALS, w.get(warehouseId)));
+        select.addFrom(new QualifiedJoin(o, QualifiedJoinKind.INNER, w,
+                new MatchCriteria(o.get(orderWarehouseId), MatchCriteria.EQUALS, w.get(warehouseId))));
 
         // use joined table
         select.addToSelection(w.get(warehouseLocation));
@@ -98,13 +100,11 @@ public class TutorialTest {
                 + "    o.total_price,\n"
                 + "    w.location\n"
                 + "FROM\n"
-                + "    ordr o,\n"
-                + "    warehouse w\n"
+                + "    ordr o INNER JOIN warehouse w ON o.warehouse_id = w.id\n"
                 + "WHERE\n"
                 + "    o.status = 'processed'::status AND\n"
                 + "    o.items < 5 AND\n"
                 + "    o.delivery IN ('post', 'fedex', 'goat') AND\n"
-                + "    o.warehouse_id = w.id AND\n"
                 + "    w.size = 'big' AND\n"
                 + "    w.location IN ((\n"
                 + "        SELECT\n"

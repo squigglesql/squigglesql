@@ -97,8 +97,8 @@ select.addCriteria(new InCriteria(o.get(orderDelivery),
 // join
 TableReference w = warehouse.refer();
 
-select.addCriteria(new MatchCriteria(
-        o.get(orderWarehouseId), MatchCriteria.EQUALS, w.get(warehouseId)));
+select.addFrom(new QualifiedJoin(o, QualifiedJoinKind.INNER, w,
+        new MatchCriteria(o.get(orderWarehouseId), MatchCriteria.EQUALS, w.get(warehouseId))));
 
 // use joined table
 select.addToSelection(w.get(warehouseLocation));
@@ -128,13 +128,11 @@ SELECT
     o.total_price,
     w.location
 FROM
-    ordr o,
-    warehouse w
+    ordr o INNER JOIN warehouse w ON o.warehouse_id = w.id
 WHERE
     o.status = 'processed'::status AND
     o.items < 5 AND
     o.delivery IN ('post', 'fedex', 'goat') AND
-    o.warehouse_id = w.id AND
     w.size = 'big' AND
     w.location IN ((
         SELECT
