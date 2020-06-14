@@ -8,8 +8,6 @@ import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
 import com.github.squigglesql.squigglesql.join.CrossJoin;
 import com.github.squigglesql.squigglesql.join.QualifiedJoin;
 import com.github.squigglesql.squigglesql.join.QualifiedJoinKind;
-import com.github.squigglesql.squigglesql.parameter.Parameter;
-import com.github.squigglesql.squigglesql.query.InsertQuery;
 import com.github.squigglesql.squigglesql.query.SelectQuery;
 import com.github.squigglesql.squigglesql.util.JdbcUtils;
 import org.junit.Test;
@@ -148,17 +146,10 @@ public class SingleJoinTest {
 
     private static <T> T withRecords(Connection connection, Supplier<T> supplier) throws SQLException {
         for (Color color : COLORS) {
-            InsertQuery query = new InsertQuery(ColorDao.TABLE);
-            query.addValue(ColorDao.ID, Parameter.of(color.getId()));
-            query.addValue(ColorDao.COLOR, Parameter.of(color.getColor()));
-            JdbcUtils.insert(query, connection, rs -> rs.getInt(1));
+            ColorDao.insert(connection, color);
         }
         for (Tshirt tshirt : TSHIRTS) {
-            InsertQuery query = new InsertQuery(TshirtDao.TABLE);
-            query.addValue(TshirtDao.ID, Parameter.of(tshirt.getId()));
-            query.addValue(TshirtDao.SIZE, Parameter.of(tshirt.getSize()));
-            query.addValue(TshirtDao.COLOR_ID, Parameter.of(tshirt.getColorId()));
-            JdbcUtils.insert(query, connection, rs -> rs.getInt(1));
+            TshirtDao.insert(connection, tshirt);
         }
         return supplier.get();
     }

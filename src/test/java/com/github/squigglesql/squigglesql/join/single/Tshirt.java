@@ -4,7 +4,7 @@ class Tshirt {
 
     private final int id;
     private final String size;
-    private final Integer colorId;
+    private final Integer colorId; // not Color here, because some Records contain a color without a tshirt
 
     Tshirt(int id, String size, Integer colorId) {
         this.id = id;

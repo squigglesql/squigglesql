@@ -1,4 +1,4 @@
-package com.github.squigglesql.squigglesql.join.single;
+package com.github.squigglesql.squigglesql.join.multiple;
 
 import com.github.squigglesql.squigglesql.Table;
 import com.github.squigglesql.squigglesql.TableColumn;
@@ -13,12 +13,12 @@ class ColorDao {
 
     static final Table TABLE = new Table("color");
     static final TableColumn ID = TABLE.get("id");
-    static final TableColumn COLOR = TABLE.get("color");
+    static final TableColumn NAME = TABLE.get("name");
 
     static void insert(Connection connection, Color color) throws SQLException {
         InsertQuery query = new InsertQuery(TABLE);
         query.addValue(ID, Parameter.of(color.getId()));
-        query.addValue(COLOR, Parameter.of(color.getColor()));
+        query.addValue(NAME, Parameter.of(color.getName()));
         JdbcUtils.insert(query, connection, rs -> rs.getInt(1));
     }
 }
