@@ -42,7 +42,7 @@ public class AliasGenerator {
     }
 
     /**
-     * Gemerates an unique alias for an object. First tries to apply the preferred aliases. If they are occupied,
+     * Generates a unique alias for an object. First tries to apply the preferred aliases. If they are occupied,
      * generates an alias by auto-incrementing.
      *
      * @param aliasable object to generate an alias for.
