@@ -24,6 +24,6 @@ public class CrossJoin extends Join {
 
     @Override
     public void compile(QueryCompiler compiler) {
-        compiler.write(left).write(" CROSS JOIN ").write(right);
+        compiler.writeln(left).write("CROSS JOIN ").write(right);
     }
 }

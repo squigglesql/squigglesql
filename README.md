@@ -128,7 +128,8 @@ SELECT
     o.total_price,
     w.location
 FROM
-    ordr o INNER JOIN warehouse w ON o.warehouse_id = w.id
+    ordr o
+    INNER JOIN warehouse w ON o.warehouse_id = w.id
 WHERE
     o.status = 'processed'::status AND
     o.items < 5 AND

@@ -74,7 +74,9 @@ public class MultipleJoinTest {
                 + "    c.name,\n"
                 + "    p.last_name\n"
                 + "FROM\n"
-                + "    vehicle v INNER JOIN color c ON v.color_id = c.id INNER JOIN person p ON v.person_id = p.id", select.toString());
+                + "    vehicle v\n"
+                + "    INNER JOIN color c ON v.color_id = c.id\n"
+                + "    INNER JOIN person p ON v.person_id = p.id", select.toString());
 
         Record[] expectedRecords = new Record[]{
                 new Record("car", "green", "Brown"),
@@ -105,7 +107,9 @@ public class MultipleJoinTest {
                 + "    c.name,\n"
                 + "    p.last_name\n"
                 + "FROM\n"
-                + "    person p LEFT JOIN vehicle v ON v.person_id = p.id INNER JOIN color c ON v.color_id = c.id", select.toString());
+                + "    person p\n"
+                + "    LEFT JOIN vehicle v ON v.person_id = p.id\n"
+                + "    INNER JOIN color c ON v.color_id = c.id", select.toString());
 
         Record[] expectedRecords = new Record[]{
                 new Record("car", "green", "Brown"),
@@ -136,7 +140,9 @@ public class MultipleJoinTest {
                 + "    c.name,\n"
                 + "    p.last_name\n"
                 + "FROM\n"
-                + "    vehicle v INNER JOIN color c ON v.color_id = c.id RIGHT JOIN person p ON v.person_id = p.id", select.toString());
+                + "    vehicle v\n"
+                + "    INNER JOIN color c ON v.color_id = c.id\n"
+                + "    RIGHT JOIN person p ON v.person_id = p.id", select.toString());
 
         Record[] expectedRecords = new Record[]{
                 new Record("car", "green", "Brown"),
@@ -169,7 +175,9 @@ public class MultipleJoinTest {
                 + "    c.name,\n"
                 + "    p.last_name\n"
                 + "FROM\n"
-                + "    vehicle v FULL JOIN color c ON v.color_id = c.id FULL JOIN person p ON v.person_id = p.id", select.toString());
+                + "    vehicle v\n"
+                + "    FULL JOIN color c ON v.color_id = c.id\n"
+                + "    FULL JOIN person p ON v.person_id = p.id", select.toString());
 
         Record[] expectedRecords = new Record[]{
                 new Record("car", "green", "Brown"),
@@ -207,7 +215,9 @@ public class MultipleJoinTest {
                 + "    c.name,\n"
                 + "    p.last_name\n"
                 + "FROM\n"
-                + "    vehicle v INNER JOIN color c ON v.color_id = c.id FULL JOIN person p ON v.person_id = p.id", select.toString());
+                + "    vehicle v\n"
+                + "    INNER JOIN color c ON v.color_id = c.id\n"
+                + "    FULL JOIN person p ON v.person_id = p.id", select.toString());
 
         Record[] expectedRecords = new Record[]{
                 new Record("car", "green", "Brown"),

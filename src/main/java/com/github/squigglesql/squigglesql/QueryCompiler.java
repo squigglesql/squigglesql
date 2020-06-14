@@ -164,6 +164,17 @@ public class QueryCompiler {
     }
 
     /**
+     * Writes a compilable object to the output and inserts a line break before the next statement.
+     *
+     * @param c object to write.
+     * @return this compiler for chaining.
+     */
+    public QueryCompiler writeln(Compilable c) {
+        c.compile(this);
+        return this.writeln();
+    }
+
+    /**
      * Writes a string to the output, surrounding it with quotes. The method doesn't escape the output, so it assumes
      * that the string doesn't contain such quote symbols. If it does, it throws {@link QueryCompilationException}.
      *

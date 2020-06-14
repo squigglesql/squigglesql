@@ -35,7 +35,7 @@ public class QualifiedJoin extends Join {
 
     @Override
     public void compile(QueryCompiler compiler) {
-        compiler.write(left).write(' ').write(joinKind.name()).write(" JOIN ").write(right)
+        compiler.writeln(left).write(joinKind.name()).write(" JOIN ").write(right)
                 .write(" ON ").write(criteria);
     }
 }

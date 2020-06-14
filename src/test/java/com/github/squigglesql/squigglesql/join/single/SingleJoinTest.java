@@ -48,7 +48,7 @@ public class SingleJoinTest {
 
     @Test
     public void testCrossJoin() throws SQLException {
-        testFor(CrossJoin::new, "tshirt t CROSS JOIN color c", database -> true, new Record[]{
+        testFor(CrossJoin::new, "tshirt t\n    CROSS JOIN color c", database -> true, new Record[]{
                 new Record(TSHIRT_1, YELLOW),
                 new Record(TSHIRT_2, YELLOW),
                 new Record(TSHIRT_3, YELLOW),
@@ -101,7 +101,7 @@ public class SingleJoinTest {
                          Record[] expectedRecords) throws SQLException {
         testFor((t, c) -> new QualifiedJoin(t, joinKind, c,
                         new MatchCriteria(t.get(TshirtDao.COLOR_ID), MatchCriteria.EQUALS, c.get(ColorDao.ID))),
-                "tshirt t " + joinKind.name() + " JOIN color c ON t.color_id = c.id", supports, expectedRecords);
+                "tshirt t\n    " + joinKind.name() + " JOIN color c ON t.color_id = c.id", supports, expectedRecords);
     }
 
     private void testFor(BiFunction<TableReference, TableReference, FromItem> fromItem, String fromSql,
