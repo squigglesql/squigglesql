@@ -15,6 +15,7 @@
  */
 package com.github.squigglesql.squigglesql.syntax;
 
+import com.github.squigglesql.squigglesql.Matchable;
 import com.github.squigglesql.squigglesql.QueryCompiler;
 
 class MySqlSyntax extends CommonSqlSyntax {
@@ -27,5 +28,15 @@ class MySqlSyntax extends CommonSqlSyntax {
     @Override
     public void compileEmptyInsert(QueryCompiler compiler) {
         compiler.write(" () VALUES ()");
+    }
+
+    @Override
+    public void compileIsDistinctFrom(QueryCompiler compiler, Matchable left, Matchable right) {
+        compiler.write("NOT ").write(left).write(" <=> ").write(right);
+    }
+
+    @Override
+    public void compileIsNotDistinctFrom(QueryCompiler compiler, Matchable left, Matchable right) {
+        compiler.write(left).write(" <=> ").write(right);
     }
 }

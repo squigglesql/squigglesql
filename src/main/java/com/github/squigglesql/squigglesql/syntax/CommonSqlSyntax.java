@@ -15,6 +15,9 @@
  */
 package com.github.squigglesql.squigglesql.syntax;
 
+import com.github.squigglesql.squigglesql.Matchable;
+import com.github.squigglesql.squigglesql.QueryCompiler;
+
 abstract class CommonSqlSyntax implements AbstractSqlSyntax {
 
     abstract char getIdentifierQuote();
@@ -47,5 +50,15 @@ abstract class CommonSqlSyntax implements AbstractSqlSyntax {
     @Override
     public char getTextQuote() {
         return '\'';
+    }
+
+    @Override
+    public void compileIsDistinctFrom(QueryCompiler compiler, Matchable left, Matchable right) {
+        compiler.write(left).write(" IS DISTINCT FROM ").write(right);
+    }
+
+    @Override
+    public void compileIsNotDistinctFrom(QueryCompiler compiler, Matchable left, Matchable right) {
+        compiler.write(left).write(" IS NOT DISTINCT FROM ").write(right);
     }
 }

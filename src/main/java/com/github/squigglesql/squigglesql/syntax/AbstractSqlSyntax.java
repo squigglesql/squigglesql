@@ -15,6 +15,7 @@
  */
 package com.github.squigglesql.squigglesql.syntax;
 
+import com.github.squigglesql.squigglesql.Matchable;
 import com.github.squigglesql.squigglesql.QueryCompiler;
 
 /**
@@ -58,4 +59,8 @@ public interface AbstractSqlSyntax {
      * @param compiler compiler to compile the query with.
      */
     void compileEmptyInsert(QueryCompiler compiler);
+
+    void compileIsDistinctFrom(QueryCompiler compiler, Matchable left, Matchable right);
+
+    void compileIsNotDistinctFrom(QueryCompiler compiler, Matchable left, Matchable right);
 }
