@@ -17,7 +17,6 @@ package com.github.squigglesql.squigglesql.join.single;
 
 import com.github.squigglesql.squigglesql.FromItem;
 import com.github.squigglesql.squigglesql.TableReference;
-import com.github.squigglesql.squigglesql.criteria.MatchCriteria;
 import com.github.squigglesql.squigglesql.databases.TestDatabase;
 import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
 import com.github.squigglesql.squigglesql.join.CrossJoin;
@@ -36,6 +35,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static com.github.squigglesql.squigglesql.TestUtils.*;
+import static com.github.squigglesql.squigglesql.criteria.Criteria.equal;
 import static org.junit.Assert.assertEquals;
 
 // Examples are taken from https://learnsql.com/blog/illustrated-guide-multiple-join/
@@ -115,7 +115,7 @@ public class SingleJoinTest {
     private void testFor(QualifiedJoinKind joinKind, Function<TestDatabase, Boolean> supports,
                          Record[] expectedRecords) throws SQLException {
         testFor((t, c) -> new QualifiedJoin(t, joinKind, c,
-                        new MatchCriteria(t.get(TshirtDao.COLOR_ID), MatchCriteria.EQUALS, c.get(ColorDao.ID))),
+                        equal(t.get(TshirtDao.COLOR_ID), c.get(ColorDao.ID))),
                 "tshirt t\n    " + joinKind.name() + " JOIN color c ON t.color_id = c.id", supports, expectedRecords);
     }
 

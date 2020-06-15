@@ -21,6 +21,7 @@ import com.github.squigglesql.squigglesql.TableReference;
 import com.github.squigglesql.squigglesql.query.SelectQuery;
 import org.junit.Test;
 
+import static com.github.squigglesql.squigglesql.criteria.Criteria.*;
 import static org.junit.Assert.assertEquals;
 
 public class JoinTest {
@@ -43,8 +44,7 @@ public class JoinTest {
         select.addToSelection(e.get(employeeFirstName));
         select.addToSelection(d.get(departmentDirector));
 
-        select.addCriteria(new MatchCriteria(
-                e.get(employeeDepartmentId), MatchCriteria.EQUALS, d.get(departmentId)));
+        select.addCriteria(equal(e.get(employeeDepartmentId), d.get(departmentId)));
 
         assertEquals("SELECT\n"
                 + "    e.first_name,\n"
@@ -71,9 +71,7 @@ public class JoinTest {
         SelectQuery select = new SelectQuery();
 
         select.addToSelection(i.get(invoiceNumber));
-
-        select.addCriteria(new MatchCriteria(
-                i.get(invoiceDate), MatchCriteria.GREATER, t.get(taxPaymentDate)));
+        select.addCriteria(greater(i.get(invoiceDate), t.get(taxPaymentDate)));
 
         assertEquals("SELECT\n"
                 + "    i.number\n"

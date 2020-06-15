@@ -18,7 +18,6 @@ package com.github.squigglesql.squigglesql.join.multiple;
 import com.github.squigglesql.squigglesql.FromItem;
 import com.github.squigglesql.squigglesql.TableReference;
 import com.github.squigglesql.squigglesql.TestUtils;
-import com.github.squigglesql.squigglesql.criteria.MatchCriteria;
 import com.github.squigglesql.squigglesql.databases.TestDatabase;
 import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
 import com.github.squigglesql.squigglesql.join.QualifiedJoin;
@@ -34,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import static com.github.squigglesql.squigglesql.TestUtils.*;
+import static com.github.squigglesql.squigglesql.criteria.Criteria.equal;
 import static org.junit.Assert.assertEquals;
 
 // Examples are taken from https://learnsql.com/blog/illustrated-guide-multiple-join/
@@ -79,9 +79,9 @@ public class MultipleJoinTest {
         TableReference c = mapper.getColorRef();
         TableReference p = mapper.getPersonRef();
         FromItem join1 = new QualifiedJoin(v, QualifiedJoinKind.INNER, c,
-                new MatchCriteria(v.get(VehicleDao.COLOR_ID), MatchCriteria.EQUALS, c.get(ColorDao.ID)));
+                equal(v.get(VehicleDao.COLOR_ID), c.get(ColorDao.ID)));
         FromItem join2 = new QualifiedJoin(join1, QualifiedJoinKind.INNER, p,
-                new MatchCriteria(v.get(VehicleDao.PERSON_ID), MatchCriteria.EQUALS, p.get(PersonDao.ID)));
+                equal(v.get(VehicleDao.PERSON_ID), p.get(PersonDao.ID)));
         select.addFrom(join2);
 
         assertEquals("SELECT\n"
@@ -112,9 +112,9 @@ public class MultipleJoinTest {
         TableReference c = mapper.getColorRef();
         TableReference p = mapper.getPersonRef();
         FromItem join1 = new QualifiedJoin(p, QualifiedJoinKind.LEFT, v,
-                new MatchCriteria(v.get(VehicleDao.PERSON_ID), MatchCriteria.EQUALS, p.get(PersonDao.ID)));
+                equal(v.get(VehicleDao.PERSON_ID), p.get(PersonDao.ID)));
         FromItem join2 = new QualifiedJoin(join1, QualifiedJoinKind.INNER, c,
-                new MatchCriteria(v.get(VehicleDao.COLOR_ID), MatchCriteria.EQUALS, c.get(ColorDao.ID)));
+                equal(v.get(VehicleDao.COLOR_ID), c.get(ColorDao.ID)));
         select.addFrom(join2);
 
         assertEquals("SELECT\n"
@@ -145,9 +145,9 @@ public class MultipleJoinTest {
         TableReference c = mapper.getColorRef();
         TableReference p = mapper.getPersonRef();
         FromItem join1 = new QualifiedJoin(v, QualifiedJoinKind.INNER, c,
-                new MatchCriteria(v.get(VehicleDao.COLOR_ID), MatchCriteria.EQUALS, c.get(ColorDao.ID)));
+                equal(v.get(VehicleDao.COLOR_ID), c.get(ColorDao.ID)));
         FromItem join2 = new QualifiedJoin(join1, QualifiedJoinKind.RIGHT, p,
-                new MatchCriteria(v.get(VehicleDao.PERSON_ID), MatchCriteria.EQUALS, p.get(PersonDao.ID)));
+                equal(v.get(VehicleDao.PERSON_ID), p.get(PersonDao.ID)));
         select.addFrom(join2);
 
         assertEquals("SELECT\n"
@@ -180,9 +180,9 @@ public class MultipleJoinTest {
         TableReference c = mapper.getColorRef();
         TableReference p = mapper.getPersonRef();
         FromItem join1 = new QualifiedJoin(v, QualifiedJoinKind.FULL, c,
-                new MatchCriteria(v.get(VehicleDao.COLOR_ID), MatchCriteria.EQUALS, c.get(ColorDao.ID)));
+                equal(v.get(VehicleDao.COLOR_ID), c.get(ColorDao.ID)));
         FromItem join2 = new QualifiedJoin(join1, QualifiedJoinKind.FULL, p,
-                new MatchCriteria(v.get(VehicleDao.PERSON_ID), MatchCriteria.EQUALS, p.get(PersonDao.ID)));
+                equal(v.get(VehicleDao.PERSON_ID), p.get(PersonDao.ID)));
         select.addFrom(join2);
 
         assertEquals("SELECT\n"
@@ -220,9 +220,9 @@ public class MultipleJoinTest {
         TableReference c = mapper.getColorRef();
         TableReference p = mapper.getPersonRef();
         FromItem join1 = new QualifiedJoin(v, QualifiedJoinKind.INNER, c,
-                new MatchCriteria(v.get(VehicleDao.COLOR_ID), MatchCriteria.EQUALS, c.get(ColorDao.ID)));
+                equal(v.get(VehicleDao.COLOR_ID), c.get(ColorDao.ID)));
         FromItem join2 = new QualifiedJoin(join1, QualifiedJoinKind.FULL, p,
-                new MatchCriteria(v.get(VehicleDao.PERSON_ID), MatchCriteria.EQUALS, p.get(PersonDao.ID)));
+                equal(v.get(VehicleDao.PERSON_ID), p.get(PersonDao.ID)));
         select.addFrom(join2);
 
         assertEquals("SELECT\n"

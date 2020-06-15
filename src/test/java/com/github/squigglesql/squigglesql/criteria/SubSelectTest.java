@@ -22,6 +22,7 @@ import com.github.squigglesql.squigglesql.literal.Literal;
 import com.github.squigglesql.squigglesql.query.SelectQuery;
 import org.junit.Test;
 
+import static com.github.squigglesql.squigglesql.criteria.Criteria.equal;
 import static org.junit.Assert.assertEquals;
 
 public class SubSelectTest {
@@ -45,9 +46,9 @@ public class SubSelectTest {
 
         SelectQuery subSelect = new SelectQuery();
         subSelect.addToSelection(t.get(taxCodeId));
-        subSelect.addCriteria(new MatchCriteria(t.get(taxCodeValid), MatchCriteria.EQUALS, Literal.of(true)));
+        subSelect.addCriteria(equal(t.get(taxCodeValid), Literal.of(true)));
 
-        select.addCriteria(new MatchCriteria(e.get(employeeTaxCode), MatchCriteria.EQUALS, subSelect));
+        select.addCriteria(equal(e.get(employeeTaxCode), subSelect));
 
         assertEquals("SELECT\n"
                 + "    e.name\n"

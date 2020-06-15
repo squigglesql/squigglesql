@@ -17,33 +17,23 @@ package com.github.squigglesql.squigglesql.criteria;
 
 import com.github.squigglesql.squigglesql.Matchable;
 import com.github.squigglesql.squigglesql.QueryCompiler;
-import com.github.squigglesql.squigglesql.TableReference;
-
-import java.util.Set;
 
 /**
  * Criteria representing "value IS NOT NULL" SQL expression.
  */
-public class IsNotNullCriteria implements Criteria {
-
-    private final Matchable value;
+class IsNotNullCriteria extends UnaryCriteria {
 
     /**
      * Creates a criteria.
      *
      * @param value value to match.
      */
-    public IsNotNullCriteria(Matchable value) {
-        this.value = value;
+    IsNotNullCriteria(Matchable value) {
+        super(value);
     }
 
     @Override
     public void compile(QueryCompiler compiler) {
         compiler.write(value).write(" IS NOT NULL");
-    }
-
-    @Override
-    public void collectTableReferences(Set<TableReference> tableReferences) {
-        value.collectTableReferences(tableReferences);
     }
 }

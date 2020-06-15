@@ -17,7 +17,6 @@ package com.github.squigglesql.squigglesql.dao;
 
 import com.github.squigglesql.squigglesql.Table;
 import com.github.squigglesql.squigglesql.TableColumn;
-import com.github.squigglesql.squigglesql.criteria.MatchCriteria;
 import com.github.squigglesql.squigglesql.parameter.Parameter;
 import com.github.squigglesql.squigglesql.query.InsertQuery;
 import com.github.squigglesql.squigglesql.query.SelectQuery;
@@ -26,7 +25,7 @@ import com.github.squigglesql.squigglesql.util.JdbcUtils;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.EQUALS;
+import static com.github.squigglesql.squigglesql.criteria.Criteria.equal;
 
 public class OrderItemDao {
 
@@ -49,7 +48,7 @@ public class OrderItemDao {
     public static OrderItem select(Connection connection, int id) throws SQLException {
         SelectQuery query = new SelectQuery();
         OrderItemMapper mapper = new OrderItemMapper(query);
-        query.addCriteria(new MatchCriteria(mapper.getIdRef(), EQUALS, Parameter.of(id)));
+        query.addCriteria(equal(mapper.getIdRef(), Parameter.of(id)));
         return JdbcUtils.selectOne(query, connection, mapper);
     }
 }

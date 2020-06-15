@@ -20,7 +20,6 @@ import com.github.squigglesql.squigglesql.QueryCompiler;
 import com.github.squigglesql.squigglesql.TableReference;
 import com.github.squigglesql.squigglesql.util.CollectionWriter;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
@@ -28,7 +27,7 @@ import java.util.Set;
  * Criteria representing "value IN (...options)" expression. If the list of options is empty, gets compiled to "0 = 1"
  * which is constantly false.
  */
-public class InCriteria implements Criteria {
+class InCriteria extends Criteria {
 
     private final Matchable value;
     private final Collection<Matchable> options;
@@ -37,29 +36,15 @@ public class InCriteria implements Criteria {
      * Creates a criteria.
      *
      * @param value   value to match.
-     * @param options options to match the value against.
+     * @param options options to match the value against. Considered never empty.
      */
-    public InCriteria(Matchable value, Collection<Matchable> options) {
+    InCriteria(Matchable value, Collection<Matchable> options) {
         this.value = value;
         this.options = options;
     }
 
-    /**
-     * Creates a criteria.
-     *
-     * @param value   value to match.
-     * @param options options to match the value against.
-     */
-    public InCriteria(Matchable value, Matchable... options) {
-        this(value, Arrays.asList(options));
-    }
-
     @Override
     public void compile(QueryCompiler compiler) {
-        if (options.isEmpty()) {
-            compiler.write("0 = 1");
-            return;
-        }
         compiler.write(value).write(" IN ");
         CollectionWriter.writeCollection(compiler, options, ", ", true, false);
     }

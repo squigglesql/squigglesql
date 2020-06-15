@@ -25,6 +25,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.squigglesql.squigglesql.criteria.Criteria.*;
 import static org.junit.Assert.assertEquals;
 
 public class OrAndTest {
@@ -42,11 +43,11 @@ public class OrAndTest {
 
         select.addToSelection(u.get(userId));
 
-        select.addCriteria(new OrCriteria(
-                new MatchCriteria(u.get(userName), MatchCriteria.LIKE, Literal.of("a%")),
-                new AndCriteria(
-                        new MatchCriteria(u.get(userId), MatchCriteria.EQUALS, Literal.of(12345)),
-                        new MatchCriteria(u.get(userFeet), MatchCriteria.EQUALS, Literal.of("smelly"))
+        select.addCriteria(or(
+                like(u.get(userName), Literal.of("a%")),
+                and(
+                        equal(u.get(userId), Literal.of(12345)),
+                        equal(u.get(userFeet), Literal.of("smelly"))
                 )
         ));
 
@@ -79,11 +80,11 @@ public class OrAndTest {
         select.addToSelection(u.get(userId));
 
         List<Criteria> criterias = new ArrayList<Criteria>();
-        criterias.add(new MatchCriteria(u.get(userRole), MatchCriteria.EQUALS, Literal.of("ADMIN")));
-        criterias.add(new MatchCriteria(u.get(userSuperadmin), MatchCriteria.EQUALS, Literal.of(true)));
-        criterias.add(new MatchCriteria(u.get(userEnabled), MatchCriteria.EQUALS, Literal.of(true)));
+        criterias.add(equal(u.get(userRole), Literal.of("ADMIN")));
+        criterias.add(equal(u.get(userSuperadmin), Literal.of(true)));
+        criterias.add(equal(u.get(userEnabled), Literal.of(true)));
 
-        select.addCriteria(new AndCriteria(criterias));
+        select.addCriteria(and(criterias));
 
         assertEquals("SELECT\n"
                 + "    u.id\n"
@@ -112,11 +113,11 @@ public class OrAndTest {
         select.addToSelection(u.get(userId));
 
         List<Criteria> criterias = new ArrayList<>();
-        criterias.add(new MatchCriteria(u.get(userRole), MatchCriteria.EQUALS, Literal.of("ADMIN")));
-        criterias.add(new MatchCriteria(u.get(userSuperadmin), MatchCriteria.EQUALS, Literal.of(true)));
-        criterias.add(new MatchCriteria(u.get(userEnabled), MatchCriteria.EQUALS, Literal.of(true)));
+        criterias.add(equal(u.get(userRole), Literal.of("ADMIN")));
+        criterias.add(equal(u.get(userSuperadmin), Literal.of(true)));
+        criterias.add(equal(u.get(userEnabled), Literal.of(true)));
 
-        select.addCriteria(new OrCriteria(criterias));
+        select.addCriteria(or(criterias));
 
         assertEquals("SELECT\n"
                 + "    u.id\n"
@@ -141,8 +142,8 @@ public class OrAndTest {
 
         select.addToSelection(u.get(userId));
 
-        select.addCriteria(new OrCriteria());
-        select.addCriteria(new AndCriteria());
+        select.addCriteria(or());
+        select.addCriteria(and());
 
         assertEquals("SELECT\n"
                 + "    u.id\n"

@@ -22,6 +22,7 @@ import com.github.squigglesql.squigglesql.literal.Literal;
 import com.github.squigglesql.squigglesql.query.SelectQuery;
 import org.junit.Test;
 
+import static com.github.squigglesql.squigglesql.criteria.Criteria.*;
 import static org.junit.Assert.assertEquals;
 
 public class CriteriaTest {
@@ -42,9 +43,9 @@ public class CriteriaTest {
         select.addToSelection(e.get(employeeFirstName));
         select.addToSelection(e.get(employeeLastName));
 
-        select.addCriteria(new MatchCriteria(e.get(employeeHeight), MatchCriteria.GREATER, Literal.of(1.8)));
-        select.addCriteria(new InCriteria(e.get(employeeDepartment), Literal.of("I.T."), Literal.of("Cooking")));
-        select.addCriteria(new BetweenCriteria(e.get(employeeAge), Literal.of(18), Literal.of(30)));
+        select.addCriteria(greater(e.get(employeeHeight), Literal.of(1.8)));
+        select.addCriteria(in(e.get(employeeDepartment), Literal.of("I.T."), Literal.of("Cooking")));
+        select.addCriteria(between(e.get(employeeAge), Literal.of(18), Literal.of(30)));
 
         assertEquals("SELECT\n"
                 + "    e.first_name,\n"
@@ -118,7 +119,7 @@ public class CriteriaTest {
 
         select.addToSelection(u.get(userId));
 
-        select.addCriteria(new InCriteria(u.get(userRole)));
+        select.addCriteria(in(u.get(userRole)));
 
         assertEquals("SELECT\n"
                 + "    u.id\n"

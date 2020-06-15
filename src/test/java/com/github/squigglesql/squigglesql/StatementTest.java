@@ -15,7 +15,6 @@
  */
 package com.github.squigglesql.squigglesql;
 
-import com.github.squigglesql.squigglesql.criteria.MatchCriteria;
 import com.github.squigglesql.squigglesql.mock.MockStatement;
 import com.github.squigglesql.squigglesql.mock.MockStatementCompiler;
 import com.github.squigglesql.squigglesql.parameter.Parameter;
@@ -24,6 +23,7 @@ import org.junit.Test;
 
 import java.sql.SQLException;
 
+import static com.github.squigglesql.squigglesql.criteria.Criteria.less;
 import static org.junit.Assert.assertEquals;
 
 public class StatementTest {
@@ -42,8 +42,7 @@ public class StatementTest {
 
         select.addToSelection(e.get(employeeName));
 
-        select.addCriteria(new MatchCriteria(
-                e.get(employeeAge), MatchCriteria.LESS, Parameter.of(30)));
+        select.addCriteria(less(e.get(employeeAge), Parameter.of(30)));
 
         MockStatement statement = select.toStatement(new MockStatementCompiler());
 

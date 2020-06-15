@@ -17,54 +17,14 @@ package com.github.squigglesql.squigglesql.criteria;
 
 import com.github.squigglesql.squigglesql.Matchable;
 import com.github.squigglesql.squigglesql.QueryCompiler;
-import com.github.squigglesql.squigglesql.TableReference;
-
-import java.util.Set;
 
 /**
  * Criteria representing a binary SQL operator, e.g. "left = right". The most popular operators are available as static
  * constants. We recommend you to import a static wildcard of this class to use them.
  */
-public class MatchCriteria implements Criteria {
+class MatchCriteria extends BinaryCriteria {
 
-    /**
-     * SQL "equals" operator.
-     */
-    public static final String EQUALS = "=";
-
-    /**
-     * SQL "greater" operator.
-     */
-    public static final String GREATER = ">";
-
-    /**
-     * SQL "greater or equals" operator.
-     */
-    public static final String GREATEREQUAL = ">=";
-
-    /**
-     * SQL "less" operator.
-     */
-    public static final String LESS = "<";
-
-    /**
-     * SQL "less or equals" operator.
-     */
-    public static final String LESSEQUAL = "<=";
-
-    /**
-     * SQL "like" operator.
-     */
-    public static final String LIKE = "LIKE";
-
-    /**
-     * SQL "not equal" operator.
-     */
-    public static final String NOTEQUAL = "<>";
-
-    private final Matchable left;
     private final String operator;
-    private final Matchable right;
 
     /**
      * Creates a criteria.
@@ -73,20 +33,13 @@ public class MatchCriteria implements Criteria {
      * @param operator operator.
      * @param right    right operand.
      */
-    public MatchCriteria(Matchable left, String operator, Matchable right) {
-        this.left = left;
+    MatchCriteria(Matchable left, String operator, Matchable right) {
+        super(left, right);
         this.operator = operator;
-        this.right = right;
     }
 
     @Override
     public void compile(QueryCompiler compiler) {
-        compiler.write(left).write(' ').write(operator).write(' ').write(right);
-    }
-
-    @Override
-    public void collectTableReferences(Set<TableReference> tableReferences) {
-        left.collectTableReferences(tableReferences);
-        right.collectTableReferences(tableReferences);
+        compiler.write(left).write(operator).write(right);
     }
 }

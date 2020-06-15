@@ -15,7 +15,6 @@
  */
 package com.github.squigglesql.squigglesql;
 
-import com.github.squigglesql.squigglesql.criteria.MatchCriteria;
 import com.github.squigglesql.squigglesql.literal.Literal;
 import com.github.squigglesql.squigglesql.mock.MockStatement;
 import com.github.squigglesql.squigglesql.mock.MockStatementCompiler;
@@ -25,6 +24,7 @@ import org.junit.Test;
 
 import java.sql.SQLException;
 
+import static com.github.squigglesql.squigglesql.criteria.Criteria.equal;
 import static org.junit.Assert.assertEquals;
 
 public class UpdateQueryTest {
@@ -48,10 +48,8 @@ public class UpdateQueryTest {
         query.addValue(employeeStatus, Parameter.of("BLOCKED"));
         query.addValue(employeeStatusChangedAt, new FunctionCall("now"));
 
-        query.addCriteria(new MatchCriteria(
-                e.get(employeeId), MatchCriteria.EQUALS, s.get(sessionEmployeeId)));
-        query.addCriteria(new MatchCriteria(
-                s.get(sessionId), MatchCriteria.EQUALS, Parameter.of("<session_id_value>")));
+        query.addCriteria(equal(e.get(employeeId), s.get(sessionEmployeeId)));
+        query.addCriteria(equal(s.get(sessionId), Parameter.of("<session_id_value>")));
 
         MockStatement statement = query.toStatement(new MockStatementCompiler());
 

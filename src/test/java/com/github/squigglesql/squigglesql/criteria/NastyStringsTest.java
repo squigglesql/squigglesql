@@ -22,6 +22,7 @@ import com.github.squigglesql.squigglesql.literal.Literal;
 import com.github.squigglesql.squigglesql.query.SelectQuery;
 import org.junit.Test;
 
+import static com.github.squigglesql.squigglesql.criteria.Criteria.greater;
 import static org.junit.Assert.assertEquals;
 
 public class NastyStringsTest {
@@ -38,7 +39,7 @@ public class NastyStringsTest {
 
         select.addToSelection(e.get(employeeName));
 
-        select.addCriteria(new MatchCriteria(e.get(employeeFee), MatchCriteria.GREATER, Literal.of("I've got a quote")));
+        select.addCriteria(greater(e.get(employeeFee), Literal.of("I've got a quote")));
 
         assertEquals("SELECT\n"
                 + "    e.name\n"

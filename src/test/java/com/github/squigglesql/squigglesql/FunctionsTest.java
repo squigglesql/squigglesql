@@ -15,11 +15,11 @@
  */
 package com.github.squigglesql.squigglesql;
 
-import com.github.squigglesql.squigglesql.criteria.BetweenCriteria;
 import com.github.squigglesql.squigglesql.literal.Literal;
 import com.github.squigglesql.squigglesql.query.SelectQuery;
 import org.junit.Test;
 
+import static com.github.squigglesql.squigglesql.criteria.Criteria.between;
 import static org.junit.Assert.assertEquals;
 
 public class FunctionsTest {
@@ -60,8 +60,7 @@ public class FunctionsTest {
         select.addToSelection(c.get(cardNumber));
         select.addToSelection(c.get(cardIssue));
 
-        select.addCriteria(new BetweenCriteria(
-                new FunctionCall("getDate"), c.get(cardIssueDate), c.get(cardExpiryDate)));
+        select.addCriteria(between(new FunctionCall("getDate"), c.get(cardIssueDate), c.get(cardExpiryDate)));
 
         assertEquals("SELECT\n"
                 + "    c.number,\n"

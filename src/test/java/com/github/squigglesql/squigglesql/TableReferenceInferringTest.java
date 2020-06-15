@@ -15,14 +15,13 @@
  */
 package com.github.squigglesql.squigglesql;
 
-import com.github.squigglesql.squigglesql.criteria.MatchCriteria;
 import com.github.squigglesql.squigglesql.join.QualifiedJoin;
 import com.github.squigglesql.squigglesql.join.QualifiedJoinKind;
 import com.github.squigglesql.squigglesql.literal.Literal;
 import com.github.squigglesql.squigglesql.query.SelectQuery;
 import org.junit.Test;
 
-import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.EQUALS;
+import static com.github.squigglesql.squigglesql.criteria.Criteria.equal;
 import static org.junit.Assert.assertEquals;
 
 public class TableReferenceInferringTest {
@@ -53,10 +52,10 @@ public class TableReferenceInferringTest {
 
         // here we don't mention colors, but they must be inferred from criterias
         select.addFrom(new QualifiedJoin(v, QualifiedJoinKind.LEFT, p,
-                new MatchCriteria(v.get(vehiclePersonId), EQUALS, p.get(personId))));
+                equal(v.get(vehiclePersonId), p.get(personId))));
 
-        select.addCriteria(new MatchCriteria(v.get(vehicleColorId), EQUALS, c.get(colorId)));
-        select.addCriteria(new MatchCriteria(c.get(colorName), EQUALS, Literal.of("blue")));
+        select.addCriteria(equal(v.get(vehicleColorId), c.get(colorId)));
+        select.addCriteria(equal(c.get(colorName), Literal.of("blue")));
 
         assertEquals("SELECT\n"
                 + "    v.name,\n"

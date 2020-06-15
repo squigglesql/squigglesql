@@ -15,7 +15,6 @@
  */
 package com.github.squigglesql.squigglesql;
 
-import com.github.squigglesql.squigglesql.criteria.MatchCriteria;
 import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
 import com.github.squigglesql.squigglesql.parameter.Parameter;
 import com.github.squigglesql.squigglesql.query.InsertQuery;
@@ -34,7 +33,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 
 import static com.github.squigglesql.squigglesql.TestUtils.*;
-import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.EQUALS;
+import static com.github.squigglesql.squigglesql.criteria.Criteria.equal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -100,7 +99,7 @@ public class JdbcTest {
             TableReference ref = TABLE.refer();
             UpdateQuery updateQuery = new UpdateQuery(ref);
             updateQuery.addValue(AGE, Parameter.of(BOB_GROWN.getAge()));
-            updateQuery.addCriteria(new MatchCriteria(ref.get(ID), EQUALS, Parameter.of(BOB.getId())));
+            updateQuery.addCriteria(equal(ref.get(ID), Parameter.of(BOB.getId())));
             assertEquals(1, JdbcUtils.update(updateQuery, connection));
 
             SelectQuery selectQuery = new SelectQuery();
@@ -154,7 +153,7 @@ public class JdbcTest {
 
     private static ResultMapper<Employee> addToQuery(SelectQuery query, int id) {
         return addToQuery(query, (ref, key) -> {
-            query.addCriteria(new MatchCriteria(key, EQUALS, Parameter.of(id)));
+            query.addCriteria(equal(key, Parameter.of(id)));
         });
     }
 

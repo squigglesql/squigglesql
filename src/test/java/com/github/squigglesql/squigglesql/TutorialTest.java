@@ -15,8 +15,7 @@
  */
 package com.github.squigglesql.squigglesql;
 
-import com.github.squigglesql.squigglesql.criteria.InCriteria;
-import com.github.squigglesql.squigglesql.criteria.MatchCriteria;
+import com.github.squigglesql.squigglesql.criteria.Criteria;
 import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
 import com.github.squigglesql.squigglesql.join.QualifiedJoin;
 import com.github.squigglesql.squigglesql.join.QualifiedJoinKind;
@@ -65,23 +64,20 @@ public class TutorialTest {
         select.addToSelection(o.get(orderTotalPrice));
 
         // matches
-        select.addCriteria(new MatchCriteria(
-                o.get(orderStatus), MatchCriteria.EQUALS, new TypeCast(Literal.of("processed"), "status")));
-        select.addCriteria(new MatchCriteria(
-                o.get(orderItems), MatchCriteria.LESS, Literal.of(5)));
-        select.addCriteria(new InCriteria(o.get(orderDelivery),
+        select.addCriteria(Criteria.equal(o.get(orderStatus), new TypeCast(Literal.of("processed"), "status")));
+        select.addCriteria(Criteria.less(o.get(orderItems), Literal.of(5)));
+        select.addCriteria(Criteria.in(o.get(orderDelivery),
                 Literal.of("post"), Literal.of("fedex"), Literal.of("goat")));
 
         // join
         TableReference w = warehouse.refer();
 
         select.addFrom(new QualifiedJoin(o, QualifiedJoinKind.INNER, w,
-                new MatchCriteria(o.get(orderWarehouseId), MatchCriteria.EQUALS, w.get(warehouseId))));
+                Criteria.equal(o.get(orderWarehouseId), w.get(warehouseId))));
 
         // use joined table
         select.addToSelection(w.get(warehouseLocation));
-        select.addCriteria(new MatchCriteria(
-                w.get(warehouseSize), MatchCriteria.EQUALS, Literal.of("big")));
+        select.addCriteria(Criteria.equal(w.get(warehouseSize), Literal.of("big")));
 
         // build subselect query
         TableReference f = offer.refer();
@@ -89,11 +85,10 @@ public class TutorialTest {
         SelectQuery subSelect = new SelectQuery();
 
         subSelect.addToSelection(f.get(offerLocation));
-        subSelect.addCriteria(new MatchCriteria(
-                f.get(offerValid), MatchCriteria.EQUALS, Literal.of(true)));
+        subSelect.addCriteria(Criteria.equal(f.get(offerValid), Literal.of(true)));
 
         // add subselect to original query
-        select.addCriteria(new InCriteria(w.get(warehouseLocation), subSelect));
+        select.addCriteria(Criteria.in(w.get(warehouseLocation), subSelect));
 
         assertEquals("SELECT\n"
                 + "    o.id,\n"
@@ -133,7 +128,7 @@ public class TutorialTest {
         select.addToSelection(e.get(employeeFirstName));
         select.addToSelection(e.get(employeeLastName));
 
-        select.addCriteria(new MatchCriteria(e.get(employeeAge), MatchCriteria.GREATEREQUAL, Literal.of(18)));
+        select.addCriteria(Criteria.notLess(e.get(employeeAge), Literal.of(18)));
 
         select.addOrder(e.get(employeeAge), Order.DESCENDING);
 

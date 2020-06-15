@@ -19,7 +19,6 @@ import com.github.squigglesql.squigglesql.QueryCompiler;
 import com.github.squigglesql.squigglesql.TableReference;
 import com.github.squigglesql.squigglesql.util.CollectionWriter;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
@@ -27,49 +26,24 @@ import java.util.Set;
  * Group of multiple criterias. The listed criterias will be joined with some operator. If the list is empty,
  * the criteria gets compiled to constant false or true value (depends on group kind).
  */
-public abstract class CriteriaGroup implements Criteria {
+class CriteriaGroup extends Criteria {
 
     private final Collection<Criteria> criterias;
+    private final String operator;
 
     /**
      * Creates a criteria group.
      *
-     * @param criterias criterias to join.
+     * @param criterias criterias to join. Considered never empty.
      */
-    CriteriaGroup(Collection<Criteria> criterias) {
+    CriteriaGroup(Collection<Criteria> criterias, String operator) {
         this.criterias = criterias;
+        this.operator = operator;
     }
-
-    /**
-     * Creates a criteria group.
-     *
-     * @param criterias criterias to join.
-     */
-    CriteriaGroup(Criteria... criterias) {
-        this.criterias = Arrays.asList(criterias);
-    }
-
-    /**
-     * SQL operator to join the criterias with. Should start with a space (e.g. " AND").
-     *
-     * @return SQL operator.
-     */
-    protected abstract String getOperator();
-
-    /**
-     * Value to return by default if the list of criterias is empty.
-     *
-     * @return default value.
-     */
-    protected abstract boolean isEmptyTrue();
 
     @Override
     public void compile(QueryCompiler compiler) {
-        if (criterias.isEmpty()) {
-            compiler.write(isEmptyTrue() ? "1 = 1" : "0 = 1");
-            return;
-        }
-        CollectionWriter.writeCollection(compiler, criterias, getOperator(), true, true);
+        CollectionWriter.writeCollection(compiler, criterias, operator, true, true);
     }
 
     @Override

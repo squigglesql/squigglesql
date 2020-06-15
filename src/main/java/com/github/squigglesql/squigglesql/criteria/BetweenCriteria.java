@@ -24,7 +24,7 @@ import java.util.Set;
 /**
  * Criteria representing "value BETWEEN lower AND upper" SQL expression.
  */
-public class BetweenCriteria implements Criteria {
+class BetweenCriteria extends Criteria {
 
     private final Matchable value, lower, upper;
 
@@ -35,7 +35,7 @@ public class BetweenCriteria implements Criteria {
      * @param lower lower limit.
      * @param upper upper limit.
      */
-    public BetweenCriteria(Matchable value, Matchable lower, Matchable upper) {
+    BetweenCriteria(Matchable value, Matchable lower, Matchable upper) {
         this.value = value;
         this.lower = lower;
         this.upper = upper;

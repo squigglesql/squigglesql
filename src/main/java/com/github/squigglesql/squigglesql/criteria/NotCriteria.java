@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * Criteria representing "NOT (criteria)" SQL expression.
  */
-public class NotCriteria implements Criteria {
+class NotCriteria extends Criteria {
 
     private final Criteria criteria;
 
@@ -32,7 +32,7 @@ public class NotCriteria implements Criteria {
      *
      * @param criteria criteria to negate.
      */
-    public NotCriteria(Criteria criteria) {
+    NotCriteria(Criteria criteria) {
         this.criteria = criteria;
     }
 

@@ -18,7 +18,6 @@ package com.github.squigglesql.squigglesql.dao;
 import com.github.squigglesql.squigglesql.ResultMapper;
 import com.github.squigglesql.squigglesql.Selectable;
 import com.github.squigglesql.squigglesql.TableReference;
-import com.github.squigglesql.squigglesql.criteria.MatchCriteria;
 import com.github.squigglesql.squigglesql.query.ResultColumn;
 import com.github.squigglesql.squigglesql.query.SelectQuery;
 import com.github.squigglesql.squigglesql.util.JdbcUtils;
@@ -26,7 +25,7 @@ import com.github.squigglesql.squigglesql.util.JdbcUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.EQUALS;
+import static com.github.squigglesql.squigglesql.criteria.Criteria.equal;
 import static com.github.squigglesql.squigglesql.dao.OrderItemDao.*;
 
 public class OrderItemMapper implements ResultMapper<OrderItem> {
@@ -45,10 +44,10 @@ public class OrderItemMapper implements ResultMapper<OrderItem> {
         quantity = query.addToSelection(ref.get(QUANTITY));
 
         order = new OrderMapper(query);
-        query.addCriteria(new MatchCriteria(order.getIdRef(), EQUALS, ref.get(ORDER_ID)));
+        query.addCriteria(equal(order.getIdRef(), ref.get(ORDER_ID)));
 
         product = new ProductMapper(query);
-        query.addCriteria(new MatchCriteria(product.getIdRef(), EQUALS, ref.get(PRODUCT_ID)));
+        query.addCriteria(equal(product.getIdRef(), ref.get(PRODUCT_ID)));
     }
 
     public Selectable getIdRef() {

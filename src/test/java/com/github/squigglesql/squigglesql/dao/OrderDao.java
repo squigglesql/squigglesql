@@ -17,7 +17,6 @@ package com.github.squigglesql.squigglesql.dao;
 
 import com.github.squigglesql.squigglesql.Table;
 import com.github.squigglesql.squigglesql.TableColumn;
-import com.github.squigglesql.squigglesql.criteria.MatchCriteria;
 import com.github.squigglesql.squigglesql.parameter.Parameter;
 import com.github.squigglesql.squigglesql.query.InsertQuery;
 import com.github.squigglesql.squigglesql.query.SelectQuery;
@@ -28,7 +27,7 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
 
-import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.EQUALS;
+import static com.github.squigglesql.squigglesql.criteria.Criteria.equal;
 
 public class OrderDao {
 
@@ -49,14 +48,14 @@ public class OrderDao {
     public static Order select(Connection connection, int id) throws SQLException {
         SelectQuery query = new SelectQuery();
         OrderMapper mapper = new OrderMapper(query);
-        query.addCriteria(new MatchCriteria(mapper.getIdRef(), EQUALS, Parameter.of(id)));
+        query.addCriteria(equal(mapper.getIdRef(), Parameter.of(id)));
         return JdbcUtils.selectOne(query, connection, mapper);
     }
 
     public static List<Order> selectByCity(Connection connection, String city) throws SQLException {
         SelectQuery query = new SelectQuery();
         OrderMapper mapper = new OrderMapper(query);
-        query.addCriteria(new MatchCriteria(mapper.getCityRef(), EQUALS, Parameter.of(city)));
+        query.addCriteria(equal(mapper.getCityRef(), Parameter.of(city)));
         query.addOrder(mapper.getIdRef(), true);
         return JdbcUtils.selectAll(query, connection, mapper);
     }
