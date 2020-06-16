@@ -67,6 +67,7 @@ public interface AbstractSqlSyntax {
      * @param compiler compiler to compile the query with.
      * @param left     left operand.
      * @param right    right operand.
+     * @since 4.1.0
      */
     void compileIsDistinctFrom(QueryCompiler compiler, Matchable left, Matchable right);
 
@@ -77,6 +78,7 @@ public interface AbstractSqlSyntax {
      * @param compiler compiler to compile the query with.
      * @param left     left operand.
      * @param right    right operand.
+     * @since 4.1.0
      */
     void compileIsNotDistinctFrom(QueryCompiler compiler, Matchable left, Matchable right);
 }

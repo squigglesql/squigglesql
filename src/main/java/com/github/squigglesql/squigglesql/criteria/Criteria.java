@@ -34,6 +34,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      *
      * @param value value to match.
      * @return criteria.
+     * @since 4.1.0
      */
     public static Criteria isNull(Matchable value) {
         return new IsNullCriteria(value);
@@ -44,6 +45,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      *
      * @param value value to match.
      * @return criteria.
+     * @since 4.1.0
      */
     public static Criteria isNotNull(Matchable value) {
         return new IsNotNullCriteria(value);
@@ -56,6 +58,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      * @param left  left operand.
      * @param right right operand.
      * @return criteria.
+     * @since 4.1.0
      */
     public static Criteria equal(Matchable left, Matchable right) {
         return new MatchCriteria(left, " = ", right);
@@ -68,6 +71,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      * @param left  left operand.
      * @param right right operand.
      * @return criteria.
+     * @since 4.1.0
      */
     public static Criteria notEqual(Matchable left, Matchable right) {
         return new MatchCriteria(left, " <> ", right);
@@ -79,6 +83,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      * @param left  left operand.
      * @param right right operand.
      * @return criteria.
+     * @since 4.1.0
      */
     public static Criteria greater(Matchable left, Matchable right) {
         return new MatchCriteria(left, " > ", right);
@@ -90,6 +95,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      * @param left  left operand.
      * @param right right operand.
      * @return criteria.
+     * @since 4.1.0
      */
     public static Criteria notGreater(Matchable left, Matchable right) {
         return new MatchCriteria(left, " <= ", right);
@@ -101,6 +107,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      * @param left  left operand.
      * @param right right operand.
      * @return criteria.
+     * @since 4.1.0
      */
     public static Criteria less(Matchable left, Matchable right) {
         return new MatchCriteria(left, " < ", right);
@@ -112,6 +119,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      * @param left  left operand.
      * @param right right operand.
      * @return criteria.
+     * @since 4.1.0
      */
     public static Criteria notLess(Matchable left, Matchable right) {
         return new MatchCriteria(left, " >= ", right);
@@ -123,6 +131,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      * @param left  left operand.
      * @param right right operand.
      * @return criteria.
+     * @since 4.1.0
      */
     public static Criteria like(Matchable left, Matchable right) {
         return new MatchCriteria(left, " LIKE ", right);
@@ -134,6 +143,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      * @param left  left operand.
      * @param right right operand.
      * @return criteria.
+     * @since 4.1.0
      */
     public static Criteria distinct(Matchable left, Matchable right) {
         return new IsDistinctFromCriteria(left, right);
@@ -145,6 +155,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      * @param left  left operand.
      * @param right right operand.
      * @return criteria.
+     * @since 4.1.0
      */
     public static Criteria notDistinct(Matchable left, Matchable right) {
         return new IsNotDistinctFromCriteria(left, right);
@@ -156,6 +167,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      *
      * @param criteria criteria to join.
      * @return conjunction criteria.
+     * @since 4.1.0
      */
     public static Criteria and(Collection<Criteria> criteria) {
         return criteria.isEmpty() ? LiteralCriteria.TRUE : new CriteriaGroup(criteria, " AND");
@@ -167,6 +179,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      *
      * @param criteria criteria to join.
      * @return conjunction criteria.
+     * @since 4.1.0
      */
     public static Criteria and(Criteria... criteria) {
         return criteria.length == 0 ? LiteralCriteria.TRUE : new CriteriaGroup(Arrays.asList(criteria), " AND");
@@ -178,6 +191,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      *
      * @param criteria criteria to join.
      * @return conjunction criteria.
+     * @since 4.1.0
      */
     public static Criteria or(Collection<Criteria> criteria) {
         return criteria.isEmpty() ? LiteralCriteria.FALSE : new CriteriaGroup(criteria, " OR");
@@ -189,6 +203,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      *
      * @param criteria criteria to join.
      * @return disjunction criteria.
+     * @since 4.1.0
      */
     public static Criteria or(Criteria... criteria) {
         return criteria.length == 0 ? LiteralCriteria.FALSE : new CriteriaGroup(Arrays.asList(criteria), " OR");
@@ -201,6 +216,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      * @param lower lower limit.
      * @param upper upper limit.
      * @return criteria.
+     * @since 4.1.0
      */
     public static Criteria between(Matchable value, Matchable lower, Matchable upper) {
         return new BetweenCriteria(value, lower, upper);
@@ -213,6 +229,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      * @param value   value to match.
      * @param options options to match the value against.
      * @return criteria.
+     * @since 4.1.0
      */
     public static Criteria in(Matchable value, Collection<Matchable> options) {
         return options.isEmpty() ? LiteralCriteria.FALSE : new InCriteria(value, options);
@@ -225,6 +242,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      * @param value   value to match.
      * @param options options to match the value against.
      * @return criteria.
+     * @since 4.1.0
      */
     public static Criteria in(Matchable value, Matchable... options) {
         return options.length == 0 ? LiteralCriteria.FALSE : new InCriteria(value, Arrays.asList(options));
@@ -235,6 +253,7 @@ public abstract class Criteria implements Compilable, TableReferred {
      *
      * @param criteria criteria to negate.
      * @return negated criteria.
+     * @since 4.1.0
      */
     public static Criteria not(Criteria criteria) {
         return new NotCriteria(criteria);
