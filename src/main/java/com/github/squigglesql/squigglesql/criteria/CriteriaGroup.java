@@ -22,20 +22,11 @@ import com.github.squigglesql.squigglesql.util.CollectionWriter;
 import java.util.Collection;
 import java.util.Set;
 
-/**
- * Group of multiple criterias. The listed criterias will be joined with some operator. If the list is empty,
- * the criteria gets compiled to constant false or true value (depends on group kind).
- */
 class CriteriaGroup extends Criteria {
 
     private final Collection<Criteria> criterias;
     private final String operator;
 
-    /**
-     * Creates a criteria group.
-     *
-     * @param criterias criterias to join. Considered never empty.
-     */
     CriteriaGroup(Collection<Criteria> criterias, String operator) {
         this.criterias = criterias;
         this.operator = operator;

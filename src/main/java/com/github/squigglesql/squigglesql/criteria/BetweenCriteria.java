@@ -21,20 +21,10 @@ import com.github.squigglesql.squigglesql.TableReference;
 
 import java.util.Set;
 
-/**
- * Criteria representing "value BETWEEN lower AND upper" SQL expression.
- */
 class BetweenCriteria extends Criteria {
 
     private final Matchable value, lower, upper;
 
-    /**
-     * Creates a criteria.
-     *
-     * @param value value to match.
-     * @param lower lower limit.
-     * @param upper upper limit.
-     */
     BetweenCriteria(Matchable value, Matchable lower, Matchable upper) {
         this.value = value;
         this.lower = lower;

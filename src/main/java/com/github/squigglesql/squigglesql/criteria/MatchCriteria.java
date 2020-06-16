@@ -18,21 +18,10 @@ package com.github.squigglesql.squigglesql.criteria;
 import com.github.squigglesql.squigglesql.Matchable;
 import com.github.squigglesql.squigglesql.QueryCompiler;
 
-/**
- * Criteria representing a binary SQL operator, e.g. "left = right". The most popular operators are available as static
- * constants. We recommend you to import a static wildcard of this class to use them.
- */
 class MatchCriteria extends BinaryCriteria {
 
     private final String operator;
 
-    /**
-     * Creates a criteria.
-     *
-     * @param left     left operand.
-     * @param operator operator.
-     * @param right    right operand.
-     */
     MatchCriteria(Matchable left, String operator, Matchable right) {
         super(left, right);
         this.operator = operator;

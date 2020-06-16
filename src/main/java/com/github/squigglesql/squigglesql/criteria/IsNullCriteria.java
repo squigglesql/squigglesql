@@ -18,16 +18,8 @@ package com.github.squigglesql.squigglesql.criteria;
 import com.github.squigglesql.squigglesql.Matchable;
 import com.github.squigglesql.squigglesql.QueryCompiler;
 
-/**
- * Criteria representing "value IS NULL" SQL expression.
- */
 class IsNullCriteria extends UnaryCriteria {
 
-    /**
-     * Creates a criteria.
-     *
-     * @param value value to match.
-     */
     IsNullCriteria(Matchable value) {
         super(value);
     }

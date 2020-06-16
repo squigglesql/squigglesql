@@ -60,7 +60,23 @@ public interface AbstractSqlSyntax {
      */
     void compileEmptyInsert(QueryCompiler compiler);
 
+    /**
+     * Compiles "left IS DISTINCT FROM right" criteria. Some databases don't support this operator directly, so
+     * their implementations of this method should provide a logically equivalent alternative.
+     *
+     * @param compiler compiler to compile the query with.
+     * @param left     left operand.
+     * @param right    right operand.
+     */
     void compileIsDistinctFrom(QueryCompiler compiler, Matchable left, Matchable right);
 
+    /**
+     * Compiles "left IS NOT DISTINCT FROM right" criteria. Some databases don't support this operator directly, so
+     * their implementations of this method should provide a logically equivalent alternative.
+     *
+     * @param compiler compiler to compile the query with.
+     * @param left     left operand.
+     * @param right    right operand.
+     */
     void compileIsNotDistinctFrom(QueryCompiler compiler, Matchable left, Matchable right);
 }

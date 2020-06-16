@@ -23,21 +23,11 @@ import com.github.squigglesql.squigglesql.util.CollectionWriter;
 import java.util.Collection;
 import java.util.Set;
 
-/**
- * Criteria representing "value IN (...options)" expression. If the list of options is empty, gets compiled to "0 = 1"
- * which is constantly false.
- */
 class InCriteria extends Criteria {
 
     private final Matchable value;
     private final Collection<Matchable> options;
 
-    /**
-     * Creates a criteria.
-     *
-     * @param value   value to match.
-     * @param options options to match the value against. Considered never empty.
-     */
     InCriteria(Matchable value, Collection<Matchable> options) {
         this.value = value;
         this.options = options;
