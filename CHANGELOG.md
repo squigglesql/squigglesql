@@ -1,6 +1,6 @@
 # 4.1.0
 
-* :boom: *Breaking change.* Criteria implementations should now be accessed via static methods, e.g. Criteria.equal,
+* :boom: **Breaking change.** Criteria implementations should now be accessed via static methods, e.g. Criteria.equal,
 Criteria.not etc. Subclasses are now package-private. This change substantially reduces the amount of code you need to
 type, especially if you import static Criteria.*
 * Added `JOIN` syntax (see Join, CrossJoin, QualifiedJoin, QualifiedJoinKind).
