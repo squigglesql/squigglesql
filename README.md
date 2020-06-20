@@ -36,7 +36,7 @@ SelectQuery select = new SelectQuery();
 select.addToSelection(e.get(employeeFirstName));
 select.addToSelection(e.get(employeeLastName));
 
-select.addCriteria(new MatchCriteria(e.get(employeeAge), MatchCriteria.GREATEREQUAL, Literal.of(18)));
+select.addCriteria(Criteria.notLess(e.get(employeeAge), Literal.of(18)));
 
 select.addOrder(e.get(employeeAge), Order.DESCENDING);
 
@@ -87,23 +87,20 @@ select.addToSelection(o.get(orderId));
 select.addToSelection(o.get(orderTotalPrice));
 
 // matches
-select.addCriteria(new MatchCriteria(
-        o.get(orderStatus), MatchCriteria.EQUALS, new TypeCast(Literal.of("processed"), "status")));
-select.addCriteria(new MatchCriteria(
-        o.get(orderItems), MatchCriteria.LESS, Literal.of(5)));
-select.addCriteria(new InCriteria(o.get(orderDelivery),
-        Literal.of("post"), Literal.of("fedex"), Literal.of("goat")));
+select.addCriteria(Criteria.equal(o.get(orderStatus), new TypeCast(Literal.of("processed"), "status")));
+select.addCriteria(Criteria.less(o.get(orderItems), Literal.of(5)));
+select.addCriteria(Criteria.in(o.get(orderDelivery),
+    Literal.of("post"), Literal.of("fedex"), Literal.of("goat")));
 
 // join
 TableReference w = warehouse.refer();
 
 select.addFrom(new QualifiedJoin(o, QualifiedJoinKind.INNER, w,
-        new MatchCriteria(o.get(orderWarehouseId), MatchCriteria.EQUALS, w.get(warehouseId))));
+        Criteria.equal(o.get(orderWarehouseId), w.get(warehouseId))));
 
 // use joined table
 select.addToSelection(w.get(warehouseLocation));
-select.addCriteria(new MatchCriteria(
-        w.get(warehouseSize), MatchCriteria.EQUALS, Literal.of("big")));
+select.addCriteria(Criteria.notDistinct(w.get(warehouseSize), Literal.of("big")));
 
 // build subselect query
 TableReference f = offer.refer();
@@ -111,11 +108,10 @@ TableReference f = offer.refer();
 SelectQuery subSelect = new SelectQuery();
 
 subSelect.addToSelection(f.get(offerLocation));
-subSelect.addCriteria(new MatchCriteria(
-        f.get(offerValid), MatchCriteria.EQUALS, Literal.of(true)));
+subSelect.addCriteria(Criteria.equal(f.get(offerValid), Literal.of(true)));
 
 // add subselect to original query
-select.addCriteria(new InCriteria(w.get(warehouseLocation), subSelect));
+select.addCriteria(Criteria.in(w.get(warehouseLocation), subSelect));
 
 select.toString();
 ```
@@ -134,7 +130,7 @@ WHERE
     o.status = 'processed'::status AND
     o.items < 5 AND
     o.delivery IN ('post', 'fedex', 'goat') AND
-    w.size = 'big' AND
+    w.size IS NOT DISTINCT FROM 'big' AND
     w.location IN ((
         SELECT
             o.location
@@ -160,8 +156,7 @@ SelectQuery select = new SelectQuery();
 
 select.addToSelection(e.get(employeeName));
 
-select.addCriteria(new MatchCriteria(
-        e.get(employeeAge), MatchCriteria.LESS, Parameter.of(30)));
+select.addCriteria(Criteria.less(e.get(employeeAge), Parameter.of(30)));
 
 // with java.sql.Connection connection...
 PreparedStatement statement = select.toStatement(new JdbcStatementCompiler(connection));
@@ -348,14 +343,14 @@ single database table containing data from different sets of columns.
 Let's define `select` static method in CustomerDao to select a Customer by its identifier.
 
 ```java
-import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
+import static com.github.squigglesql.squigglesql.criteria.Criteria.*;
 
 ...
 
     public static Customer select(Connection connection, int id) throws SQLException {
         SelectQuery query = new SelectQuery();
         CustomerMapper mapper = new CustomerMapper(query);
-        query.addCriteria(new MatchCriteria(mapper.getIdRef(), EQUALS, Parameter.of(id)));
+        query.addCriteria(equal(mapper.getIdRef(), Parameter.of(id)));
         return JdbcUtils.selectOne(query, connection, mapper);
     }
 ```
@@ -408,7 +403,7 @@ You can use the same approach to define mappers for models distributed across se
 ResultMappers in new ones:
 
 ```java
-import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
+import static com.github.squigglesql.squigglesql.criteria.Criteria.*;
 import static com.github.squigglesql.squigglesql.dao.OrderDao.*;
 
 public class OrderMapper implements ResultMapper<Order> {
@@ -426,7 +421,7 @@ public class OrderMapper implements ResultMapper<Order> {
         issuedAt = query.addToSelection(ref.get(ISSUED_AT));
 
         customer = new CustomerMapper(query);
-        query.addCriteria(new MatchCriteria(customer.getIdRef(), EQUALS, ref.get(CUSTOMER_ID)));
+        query.addCriteria(equal(customer.getIdRef(), ref.get(CUSTOMER_ID)));
     }
 
     public Selectable getIdRef() {
@@ -450,14 +445,14 @@ Now you can easily select full Order instances in the same way as Customer insta
 OrderDao:
 
 ```java
-import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
+import static com.github.squigglesql.squigglesql.criteria.Criteria.*;
 
 ...
 
     public static Order select(Connection connection, int id) throws SQLException {
         SelectQuery query = new SelectQuery();
         OrderMapper mapper = new OrderMapper(query);
-        query.addCriteria(new MatchCriteria(mapper.getIdRef(), EQUALS, Parameter.of(id)));
+        query.addCriteria(equal(mapper.getIdRef(), Parameter.of(id)));
         return JdbcUtils.selectOne(query, connection, mapper);
     }
 ```
@@ -499,7 +494,7 @@ public class ProductMapper implements ResultMapper<Product> {
 ```
 
 ```java
-import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
+import static com.github.squigglesql.squigglesql.criteria.Criteria.*;
 import static com.github.squigglesql.squigglesql.dao.OrderItemDao.*;
 
 public class OrderItemMapper implements ResultMapper<OrderItem> {
@@ -518,10 +513,10 @@ public class OrderItemMapper implements ResultMapper<OrderItem> {
         quantity = query.addToSelection(ref.get(QUANTITY));
 
         order = new OrderMapper(query);
-        query.addCriteria(new MatchCriteria(order.getIdRef(), EQUALS, ref.get(ORDER_ID)));
+        query.addCriteria(equal(order.getIdRef(), ref.get(ORDER_ID)));
 
         product = new ProductMapper(query);
-        query.addCriteria(new MatchCriteria(product.getIdRef(), EQUALS, ref.get(PRODUCT_ID)));
+        query.addCriteria(equal(product.getIdRef(), ref.get(PRODUCT_ID)));
     }
 
     public Selectable getIdRef() {
@@ -542,14 +537,14 @@ public class OrderItemMapper implements ResultMapper<OrderItem> {
 The selection query of a complex OrderItem instance in OrderDao is still consistently easy:
 
 ```java
-import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
+import static com.github.squigglesql.squigglesql.criteria.Criteria.*;
 
 ...
 
     public static OrderItem select(Connection connection, int id) throws SQLException {
         SelectQuery query = new SelectQuery();
         OrderItemMapper mapper = new OrderItemMapper(query);
-        query.addCriteria(new MatchCriteria(mapper.getIdRef(), EQUALS, Parameter.of(id)));
+        query.addCriteria(equal(mapper.getIdRef(), EQUALS, Parameter.of(id)));
         return JdbcUtils.selectOne(query, connection, mapper);
     }
 ```
@@ -569,14 +564,14 @@ selection of customers by a city. Add the following method to CustomerMapper:
 Now the selection function in CustomerDao can be implemented as simple as this:
 
 ```java
-import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
+import static com.github.squigglesql.squigglesql.criteria.Criteria.*;
 
 ...
 
     public static List<Customer> selectByCity(Connection connection, String city) throws SQLException {
         SelectQuery query = new SelectQuery();
         CustomerMapper mapper = new CustomerMapper(query);
-        query.addCriteria(new MatchCriteria(mapper.getCityRef(), EQUALS, Parameter.of(city)));
+        query.addCriteria(equal(mapper.getCityRef(), EQUALS, Parameter.of(city)));
         query.addOrder(mapper.getIdRef(), true);
         return JdbcUtils.selectAll(query, connection, mapper);
     }
@@ -597,14 +592,14 @@ getCityRef methods in OrderMapper:
 Now the selection method in OrderDao can be easily implemented:
 
 ```java
-import static com.github.squigglesql.squigglesql.criteria.MatchCriteria.*;
+import static com.github.squigglesql.squigglesql.criteria.Criteria.*;
 
 ...
 
     public static List<Order> selectByCity(Connection connection, String city) throws SQLException {
         SelectQuery query = new SelectQuery();
         OrderMapper mapper = new OrderMapper(query);
-        query.addCriteria(new MatchCriteria(mapper.getCityRef(), EQUALS, Parameter.of(city)));
+        query.addCriteria(equal(mapper.getCityRef(), EQUALS, Parameter.of(city)));
         query.addOrder(mapper.getIdRef(), true);
         return JdbcUtils.selectAll(query, connection, mapper);
     }

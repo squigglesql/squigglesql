@@ -77,7 +77,7 @@ public class TutorialTest {
 
         // use joined table
         select.addToSelection(w.get(warehouseLocation));
-        select.addCriteria(Criteria.equal(w.get(warehouseSize), Literal.of("big")));
+        select.addCriteria(Criteria.notDistinct(w.get(warehouseSize), Literal.of("big")));
 
         // build subselect query
         TableReference f = offer.refer();
@@ -101,7 +101,7 @@ public class TutorialTest {
                 + "    o.status = 'processed'::status AND\n"
                 + "    o.items < 5 AND\n"
                 + "    o.delivery IN ('post', 'fedex', 'goat') AND\n"
-                + "    w.size = 'big' AND\n"
+                + "    w.size IS NOT DISTINCT FROM 'big' AND\n"
                 + "    w.location IN ((\n"
                 + "        SELECT\n"
                 + "            o.location\n"
