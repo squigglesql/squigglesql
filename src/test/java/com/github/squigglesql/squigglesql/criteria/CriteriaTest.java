@@ -20,7 +20,10 @@ import com.github.squigglesql.squigglesql.TableColumn;
 import com.github.squigglesql.squigglesql.TableReference;
 import com.github.squigglesql.squigglesql.literal.Literal;
 import com.github.squigglesql.squigglesql.query.SelectQuery;
+import com.github.squigglesql.squigglesql.syntax.SqlSyntax;
 import org.junit.Test;
+
+import java.util.Collections;
 
 import static com.github.squigglesql.squigglesql.criteria.Criteria.*;
 import static org.junit.Assert.assertEquals;
@@ -33,8 +36,12 @@ public class CriteriaTest {
         TableColumn employeeFirstName = employee.get("first_name");
         TableColumn employeeLastName = employee.get("last_name");
         TableColumn employeeHeight = employee.get("height");
+        TableColumn employeeIncome = employee.get("income");
         TableColumn employeeDepartment = employee.get("department");
         TableColumn employeeAge = employee.get("age");
+        TableColumn employeePosition = employee.get("position");
+        TableColumn employeeFavoriteFood = employee.get("favorite_food");
+        TableColumn employeeFavoriteMusic = employee.get("favorite_music");
 
         TableReference e = employee.refer();
 
@@ -44,8 +51,12 @@ public class CriteriaTest {
         select.addToSelection(e.get(employeeLastName));
 
         select.addCriteria(greater(e.get(employeeHeight), Literal.of(1.8)));
+        select.addCriteria(notGreater(e.get(employeeIncome), Literal.of(2500)));
         select.addCriteria(in(e.get(employeeDepartment), Literal.of("I.T."), Literal.of("Cooking")));
         select.addCriteria(between(e.get(employeeAge), Literal.of(18), Literal.of(30)));
+        select.addCriteria(notEqual(e.get(employeePosition), Literal.of("engineer")));
+        select.addCriteria(distinct(e.get(employeeFavoriteFood), Literal.of("pizza")));
+        select.addCriteria(notDistinct(e.get(employeeFavoriteMusic), Literal.of("pop")));
 
         assertEquals("SELECT\n"
                 + "    e.first_name,\n"
@@ -54,9 +65,12 @@ public class CriteriaTest {
                 + "    employee e\n"
                 + "WHERE\n"
                 + "    e.height > 1.8 AND\n"
+                + "    e.income <= 2500 AND\n"
                 + "    e.department IN ('I.T.', 'Cooking') AND\n"
-                + "    e.age BETWEEN 18 AND 30", select.toString());
-
+                + "    e.age BETWEEN 18 AND 30 AND\n"
+                + "    e.position <> 'engineer' AND\n"
+                + "    e.favorite_food IS DISTINCT FROM 'pizza' AND\n"
+                + "    e.favorite_music IS NOT DISTINCT FROM 'pop'", select.toString());
     }
 
     @Test
@@ -69,8 +83,8 @@ public class CriteriaTest {
 
         SelectQuery select = new SelectQuery();
 
-        select.addCriteria(new IsNullCriteria(e.get(employeeName)));
-        select.addCriteria(new IsNotNullCriteria(e.get(employeeAge)));
+        select.addCriteria(isNull(e.get(employeeName)));
+        select.addCriteria(isNotNull(e.get(employeeAge)));
 
         assertEquals("SELECT 1\n"
                 + "FROM\n"
@@ -95,8 +109,7 @@ public class CriteriaTest {
         select.addToSelection(r.get(riverName));
         select.addToSelection(r.get(riverLevel));
 
-        select.addCriteria(new NotCriteria(
-                new BetweenCriteria(r.get(riverLevel), r.get(riverLowerLimit), r.get(riverUpperLimit))));
+        select.addCriteria(not(between(r.get(riverLevel), r.get(riverLowerLimit), r.get(riverUpperLimit))));
 
         assertEquals("SELECT\n"
                 + "    r.name,\n"
@@ -112,6 +125,7 @@ public class CriteriaTest {
         Table user = new Table("user");
         TableColumn userId = user.get("id");
         TableColumn userRole = user.get("role");
+        TableColumn userTenant = user.get("tenant");
 
         TableReference u = user.refer();
 
@@ -120,12 +134,42 @@ public class CriteriaTest {
         select.addToSelection(u.get(userId));
 
         select.addCriteria(in(u.get(userRole)));
+        select.addCriteria(in(u.get(userTenant), Collections.emptyList()));
 
         assertEquals("SELECT\n"
                 + "    u.id\n"
                 + "FROM\n"
                 + "    user u\n"
                 + "WHERE\n"
+                + "    0 = 1 AND\n"
                 + "    0 = 1", select.toString());
+    }
+
+    @Test
+    public void testMysqlDistinction() {
+        Table employee = new Table("employee");
+        TableColumn employeeFirstName = employee.get("first_name");
+        TableColumn employeeLastName = employee.get("last_name");
+        TableColumn employeeFavoriteFood = employee.get("favorite_food");
+        TableColumn employeeFavoriteMusic = employee.get("favorite_music");
+
+        TableReference e = employee.refer();
+
+        SelectQuery select = new SelectQuery();
+
+        select.addToSelection(e.get(employeeFirstName));
+        select.addToSelection(e.get(employeeLastName));
+
+        select.addCriteria(distinct(e.get(employeeFavoriteFood), Literal.of("pizza")));
+        select.addCriteria(notDistinct(e.get(employeeFavoriteMusic), Literal.of("pop")));
+
+        assertEquals("SELECT\n"
+                + "    `e`.`first_name`,\n"
+                + "    `e`.`last_name`\n"
+                + "FROM\n"
+                + "    `employee` `e`\n"
+                + "WHERE\n"
+                + "    NOT `e`.`favorite_food` <=> 'pizza' AND\n"
+                + "    `e`.`favorite_music` <=> 'pop'", select.toString(SqlSyntax.MY_SQL_SYNTAX));
     }
 }
