@@ -599,7 +599,7 @@ public class ParameterTest {
                 connection, database, TABLE.getName(),
                 new TestDatabaseColumn[]{
                         new TestDatabaseColumn(TIMESTAMP_COLUMN.getName(), "TIMESTAMP(3)", notNull, null),
-                        new TestDatabaseColumn(TIME_COLUMN.getName(), "TIME", notNull, null),
+                        new TestDatabaseColumn(TIME_COLUMN.getName(), "TIME(3)", notNull, null),
                         new TestDatabaseColumn(DATE_COLUMN.getName(), "DATE", notNull, null)
                 },
                 () -> {
@@ -632,7 +632,7 @@ public class ParameterTest {
                 new TestDatabaseColumn[]{
                         new TestDatabaseColumn(INSTANT_COLUMN.getName(), TestDatabase::getTimestampWithTimeZoneType, notNull, null),
                         new TestDatabaseColumn(LOCAL_DATE_COLUMN.getName(), "DATE", notNull, null),
-                        new TestDatabaseColumn(LOCAL_TIME_COLUMN.getName(), "TIME", notNull, null),
+                        new TestDatabaseColumn(LOCAL_TIME_COLUMN.getName(), "TIME(3)", notNull, null),
                         new TestDatabaseColumn(LOCAL_DATE_TIME_COLUMN.getName(), "TIMESTAMP(3)", notNull, null),
                         new TestDatabaseColumn(ZONED_DATE_TIME_COLUMN.getName(), TestDatabase::getTimestampWithTimeZoneType, notNull, null),
                         new TestDatabaseColumn(OFFSET_DATE_TIME_COLUMN.getName(), TestDatabase::getTimestampWithTimeZoneType, notNull, null)

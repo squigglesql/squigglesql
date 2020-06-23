@@ -262,7 +262,6 @@ public abstract class Parameter implements Matchable {
      * Instantiates a timestamp parameter. The corresponding SQL type is TIMESTAMP with a preferred precision,
      * regardless of NOT NULL modifier.
      * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readTimestamp} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      *
      * @param value parameter value.
      * @return parameter to use in a query.
@@ -276,7 +275,6 @@ public abstract class Parameter implements Matchable {
      * Instantiates a timestamp parameter. The corresponding SQL type is TIMESTAMP with a preferred precision,
      * regardless of NOT NULL modifier.
      * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readTimestamp} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      *
      * @param value    parameter value.
      * @param calendar calendar to use. See setTimestamp method of JDBC PreparedStatement for details.
@@ -290,9 +288,10 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a time parameter. The corresponding SQL type is TIME, regardless of NOT NULL modifier.
-     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readTimestamp} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
+     * Instantiates a time parameter. The corresponding SQL type is TIME with a preferred precision, regardless of
+     * NOT NULL modifier. To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readTimestamp}
+     * method.
+     * <b>Note:</b> MySQL JDBC driver doesn't support milliseconds in TIME type. Be careful.
      *
      * @param value parameter value.
      * @return parameter to use in a query.
@@ -303,9 +302,10 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates a time parameter. The corresponding SQL type is TIME, regardless of NOT NULL modifier.
-     * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readTime} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
+     * Instantiates a time parameter. The corresponding SQL type is TIME with a preferred precision, regardless of
+     * NOT NULL modifier. To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readTime}
+     * method.
+     * <b>Note:</b> MySQL JDBC driver doesn't support milliseconds in TIME type. Be careful.
      *
      * @param value    parameter value.
      * @param calendar calendar to use. See setTimestamp method of JDBC PreparedStatement for details.
@@ -359,7 +359,7 @@ public abstract class Parameter implements Matchable {
     /**
      * Instantiates a binary data parameter. The corresponding PostgreSQL type is BYTEA.
      * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readBinary} method.
-     * <b>Note:</b> MySQL blob support will be added later.
+     * <b>Note:</b> MySQL and H2 blob support will be added later.
      *
      * @param value parameter value.
      * @return parameter to use in a query.
@@ -369,10 +369,9 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates Java 8 instant parameter. The corresponding PostgreSQL type is TIMESTAMP WITH TIME ZONE with
-     * preferred precision. The corresponding MySQL type is TIMESTAMP with preferred precision.
+     * Instantiates Java 8 instant parameter. The corresponding PostgreSQL and H2 type is TIMESTAMP WITH TIME ZONE with
+     * a preferred precision. The corresponding MySQL type is TIMESTAMP with a preferred precision.
      * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readInstant} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      *
      * @param value parameter value.
      * @return parameter to use in a query.
@@ -393,9 +392,9 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates Java 8 local time parameter. The corresponding SQL type is TIME.
+     * Instantiates Java 8 local time parameter. The corresponding SQL type is TIME with a preferred precision.
      * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readLocalTime} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
+     * <b>Note:</b> MySQL JDBC driver doesn't support milliseconds in TIME type. Be careful.
      *
      * @param value parameter value.
      * @return parameter to use in a query.
@@ -405,9 +404,8 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates Java 8 local date/time parameter. The corresponding SQL type is TIMESTAMP with preferred precision.
+     * Instantiates Java 8 local date/time parameter. The corresponding SQL type is TIMESTAMP with a preferred precision.
      * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readLocalDateTime} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      *
      * @param value parameter value.
      * @return parameter to use in a query.
@@ -417,10 +415,9 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates Java 8 zoned date/time parameter. The corresponding PostgreSQL type is TIMESTAMP WITH TIME ZONE
-     * with preferred precision. The corresponding MySQL type is TIMESTAMP with preferred precision.
+     * Instantiates Java 8 zoned date/time parameter. The corresponding PostgreSQL and H2 type is TIMESTAMP WITH TIME
+     * ZONE with a preferred precision. The corresponding MySQL type is TIMESTAMP with a preferred precision.
      * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readInstant} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      * <b>Note:</b> None of the databases stores the exact time zone identifier. That's why all you can get back
      * is an Instant.
      *
@@ -432,10 +429,9 @@ public abstract class Parameter implements Matchable {
     }
 
     /**
-     * Instantiates Java 8 offset date/time parameter. The corresponding PostgreSQL type is TIMESTAMP WITH TIME ZONE
-     * with preferred precision. The corresponding MySQL type is TIMESTAMP with preferred precision.
+     * Instantiates Java 8 offset date/time parameter. The corresponding PostgreSQL and H2 type is TIMESTAMP WITH TIME
+     * ZONE with a preferred precision. The corresponding MySQL type is TIMESTAMP with a preferred precision.
      * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readInstant} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      * <b>Note:</b> None of the databases stores the exact time zone identifier. That's why all you can get back is an Instant.
      *
      * @param value parameter value.

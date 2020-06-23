@@ -29,10 +29,12 @@ public class H2TestDatabase implements TestDatabase {
     @Override
     public void createTable(Connection connection, String name, TestDatabaseColumn[] columns) throws SQLException {
         try (Statement statement = connection.createStatement()) {
-            statement.execute("CREATE SEQUENCE \"" + name + "_id_seq\"\n" + "START WITH 1\n" + "INCREMENT BY 1\n" + "NO MINVALUE\n" + "NO MAXVALUE\n" + "CACHE 1");
+            statement.execute("CREATE SEQUENCE \"" + name + "_id_seq\"\n" + "START WITH 1\n" + "INCREMENT BY 1\n"
+                    + "NO MINVALUE\n" + "NO MAXVALUE\n" + "CACHE 1");
         }
         try (Statement statement = connection.createStatement()) {
-            StringBuilder builder = new StringBuilder("CREATE TABLE \"" + name + "\" (\n" + "\"id\" INTEGER DEFAULT NEXT VALUE FOR \"" + name + "_id_seq\" NOT NULL PRIMARY KEY");
+            StringBuilder builder = new StringBuilder("CREATE TABLE \"" + name + "\" (\n"
+                    + "\"id\" INTEGER DEFAULT NEXT VALUE FOR \"" + name + "_id_seq\" NOT NULL PRIMARY KEY");
             for (TestDatabaseColumn column : columns) {
                 builder.append(",\n");
                 builder.append('"').append(column.getName()).append("\" ").append(column.getType(this));
@@ -43,7 +45,9 @@ public class H2TestDatabase implements TestDatabase {
             for (TestDatabaseColumn column : columns) {
                 if (column.getReference() != null) {
                     builder.append(",\n");
-                    builder.append("FOREIGN KEY (\"").append(column.getName()).append("\") REFERENCES \"").append(column.getReference()).append("\" (\"id\")").append(" ON UPDATE CASCADE ON DELETE CASCADE");
+                    builder.append("FOREIGN KEY (\"").append(column.getName()).append("\") REFERENCES \"")
+                            .append(column.getReference()).append("\" (\"id\")")
+                            .append(" ON UPDATE CASCADE ON DELETE CASCADE");
                 }
             }
             builder.append(')');
@@ -73,7 +77,7 @@ public class H2TestDatabase implements TestDatabase {
 
     @Override
     public boolean supportsTimeMs() {
-        return false;
+        return true;
     }
 
     @Override

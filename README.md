@@ -14,7 +14,7 @@ figure out how to build this string. Squiggle SQL takes much of this pain away.
 * Generates clean SQL designed that is very human readable.
 * Supports all basic SQL features.
 * Supports JDBC PreparedStatement compilation.
-* Supports MySQL, PostgreSQL and custom SQL syntax.
+* Supports MySQL, PostgreSQL, [H2](https://www.h2database.com) and custom SQL syntax.
 * Provides matching sets of raw literals, SQL parameters and result set readers.
 
 # Examples

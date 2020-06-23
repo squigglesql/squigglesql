@@ -278,7 +278,6 @@ public abstract class JdbcUtils {
      * Reads a timestamp value from {@link ResultSet}. The corresponding SQL type is TIMESTAMP with a preferred
      * precision, regardless of NOT NULL modifier.
      * To write the value, use {@link com.github.squigglesql.squigglesql.parameter.Parameter#of(Timestamp)} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      *
      * @param rs    result set.
      * @param index 1-based column index.
@@ -290,9 +289,10 @@ public abstract class JdbcUtils {
     }
 
     /**
-     * Reads a time value from {@link ResultSet}. The corresponding SQL type is TIME, regardless of NOT NULL modifier.
+     * Reads a time value from {@link ResultSet}. The corresponding SQL type is TIME with a preferred precision,
+     * regardless of NOT NULL modifier.
      * To write the value, use {@link com.github.squigglesql.squigglesql.parameter.Parameter#of(Time)} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
+     * <b>Note:</b> MySQL JDBC driver doesn't support milliseconds in TIME type. Be careful.
      *
      * @param rs    result set.
      * @param index 1-based column index.
@@ -335,7 +335,7 @@ public abstract class JdbcUtils {
     /**
      * Reads a binary data value from {@link ResultSet}. The corresponding PostgreSQL type is BYTEA.
      * To write the value, use {@link com.github.squigglesql.squigglesql.parameter.Parameter#of(byte[])} method.
-     * <b>Note:</b> MySQL blob support will be added later.
+     * <b>Note:</b> MySQL and H2 blob support will be added later.
      *
      * @param rs    result set.
      * @param index 1-based column index.
@@ -347,11 +347,10 @@ public abstract class JdbcUtils {
     }
 
     /**
-     * Reads Java 8 instant value from {@link ResultSet}. The corresponding PostgreSQL type is TIMESTAMP WITH TIME ZONE
-     * with preferred precision. The corresponding MySQL type is TIMESTAMP with preferred precision.
+     * Reads Java 8 instant value from {@link ResultSet}. The corresponding PostgreSQL and H2 type is TIMESTAMP WITH
+     * TIME ZONE with a preferred precision. The corresponding MySQL type is TIMESTAMP with a preferred precision.
      * To write the value, use {@link com.github.squigglesql.squigglesql.parameter.Parameter#of(Instant)} or
      * {@link com.github.squigglesql.squigglesql.literal.Literal#of(Instant)} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      *
      * @param rs    result set.
      * @param index 1-based column index.
@@ -379,10 +378,11 @@ public abstract class JdbcUtils {
     }
 
     /**
-     * Reads Java 8 local time value from {@link ResultSet}. The corresponding SQL type is TIME.
+     * Reads Java 8 local time value from {@link ResultSet}. The corresponding SQL type is TIME with a preferred
+     * precision.
      * To write the value, use {@link com.github.squigglesql.squigglesql.parameter.Parameter#of(LocalTime)} or
      * {@link com.github.squigglesql.squigglesql.literal.Literal#of(LocalTime)} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
+     * <b>Note:</b> MySQL JDBC driver doesn't support milliseconds in TIME type. Be careful.
      *
      * @param rs    result set.
      * @param index 1-based column index.
@@ -394,11 +394,10 @@ public abstract class JdbcUtils {
     }
 
     /**
-     * Reads Java 8 local date/time value from {@link ResultSet}. The corresponding SQL type is TIMESTAMP with
+     * Reads Java 8 local date/time value from {@link ResultSet}. The corresponding SQL type is TIMESTAMP with a
      * preferred precision.
      * To write the value, use {@link com.github.squigglesql.squigglesql.parameter.Parameter#of(LocalDateTime)} or
      * {@link com.github.squigglesql.squigglesql.literal.Literal#of(LocalDateTime)} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      *
      * @param rs    result set.
      * @param index 1-based column index.

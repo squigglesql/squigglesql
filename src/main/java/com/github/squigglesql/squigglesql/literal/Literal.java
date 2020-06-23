@@ -233,10 +233,9 @@ public abstract class Literal implements Selectable {
     }
 
     /**
-     * Returns SQL date/time string literal. The corresponding PostgreSQL type is TIMESTAMP WITH TIME ZONE with
-     * preferred precision. The corresponding MySQL type is TIMESTAMP with preferred precision.
+     * Returns SQL date/time string literal. The corresponding PostgreSQL and H2 type is TIMESTAMP WITH TIME ZONE with
+     * a preferred precision. The corresponding MySQL type is TIMESTAMP with a preferred precision.
      * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readInstant} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      *
      * @param value literal value.
      * @return literal to use in a query.
@@ -257,9 +256,9 @@ public abstract class Literal implements Selectable {
     }
 
     /**
-     * Returns SQL time string literal. The corresponding SQL type is TIME.
+     * Returns SQL time string literal. The corresponding SQL type is TIME with a preferred precision.
      * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readLocalTime} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
+     * <b>Note:</b> MySQL JDBC driver doesn't support milliseconds in TIME type. Be careful.
      *
      * @param value literal value.
      * @return literal to use in a query.
@@ -269,9 +268,8 @@ public abstract class Literal implements Selectable {
     }
 
     /**
-     * Returns SQL date/time string literal. The corresponding SQL type is TIMESTAMP with preferred precision.
+     * Returns SQL date/time string literal. The corresponding SQL type is TIMESTAMP with a preferred precision.
      * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readLocalDateTime} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      *
      * @param value literal value.
      * @return literal to use in a query.
@@ -281,10 +279,9 @@ public abstract class Literal implements Selectable {
     }
 
     /**
-     * Returns SQL date/time string literal. The corresponding PostgreSQL type is TIMESTAMP WITH TIME ZONE
-     * with preferred precision. The corresponding MySQL type is TIMESTAMP with preferred precision.
+     * Returns SQL date/time string literal. The corresponding PostgreSQL and H2 type is TIMESTAMP WITH TIME ZONE
+     * with a preferred precision. The corresponding MySQL type is TIMESTAMP with a preferred precision.
      * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readInstant} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      * <b>Note:</b> None of the databases stores the exact time zone identifier. That's why all you can get back
      * is an Instant.
      *
@@ -296,10 +293,9 @@ public abstract class Literal implements Selectable {
     }
 
     /**
-     * Returns SQL date/time string literal. The corresponding PostgreSQL type is TIMESTAMP WITH TIME ZONE
-     * with preferred precision. The corresponding MySQL type is TIMESTAMP with preferred precision.
+     * Returns SQL date/time string literal. The corresponding PostgreSQL and H2 type is TIMESTAMP WITH TIME ZONE
+     * with a preferred precision. The corresponding MySQL type is TIMESTAMP with a preferred precision.
      * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readInstant} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
      * <b>Note:</b> None of the databases stores the exact time zone identifier. That's why all you can get back is an Instant.
      *
      * @param value literal value.
@@ -310,9 +306,9 @@ public abstract class Literal implements Selectable {
     }
 
     /**
-     * Returns SQL time string literal. The corresponding SQL type is TIME.
+     * Returns SQL time string literal. The corresponding SQL type is TIME with a preferred precision.
      * To read the value, use {@link com.github.squigglesql.squigglesql.util.JdbcUtils#readLocalTime} method.
-     * <b>Note:</b> MySQL doesn't support milliseconds. Be careful.
+     * <b>Note:</b> MySQL JDBC driver doesn't support milliseconds in TIME type. Be careful.
      *
      * @param value literal value.
      * @return literal to use in a query.
