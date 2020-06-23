@@ -45,6 +45,7 @@ public abstract class SqlSyntax {
 
     /**
      * H2 syntax. Uses double quote to quote identifiers and single quote to quote string literals.
+     * @since 4.1.0
      */
     public static final AbstractSqlSyntax H2_SQL_SYNTAX = new H2Syntax();
 

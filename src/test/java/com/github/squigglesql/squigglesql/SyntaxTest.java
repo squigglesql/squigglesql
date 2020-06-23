@@ -29,6 +29,7 @@ public class SyntaxTest {
         assertEquals(SqlSyntax.DEFAULT_SQL_SYNTAX, SqlSyntax.from(""));
         assertEquals(SqlSyntax.MY_SQL_SYNTAX, SqlSyntax.from("mysql"));
         assertEquals(SqlSyntax.POSTGRE_SQL_SYNTAX, SqlSyntax.from("postgresql"));
+        assertEquals(SqlSyntax.H2_SQL_SYNTAX, SqlSyntax.from("h2"));
     }
 
     @Test(expected = UnsupportedDatabaseException.class)
