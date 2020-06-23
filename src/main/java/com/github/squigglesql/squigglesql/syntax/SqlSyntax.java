@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Egor Nepomnyaschih.
+ * Copyright 2019-2020 Egor Nepomnyaschih and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,12 +44,18 @@ public abstract class SqlSyntax {
     public static final AbstractSqlSyntax POSTGRE_SQL_SYNTAX = new PostgreSqlSyntax();
 
     /**
+     * H2 syntax. Uses double quote to quote identifiers and single quote to quote string literals.
+     */
+    public static final AbstractSqlSyntax H2_SQL_SYNTAX = new H2Syntax();
+
+    /**
      * Detects an SQL syntax by JDBC protocol name.
      *
      * <ul>
      * <li>Returns {@link SqlSyntax#DEFAULT_SQL_SYNTAX} for "" protocol.</li>
      * <li>Returns {@link SqlSyntax#MY_SQL_SYNTAX} for "mysql" protocol.</li>
      * <li>Returns {@link SqlSyntax#POSTGRE_SQL_SYNTAX} for "postgresql" protocol.</li>
+     * <li>Returns {@link SqlSyntax#H2_SQL_SYNTAX} for "h2" protocol.</li>
      * <li>Else throws {@link UnsupportedDatabaseException}.</li>
      * </ul>
      *
@@ -64,6 +70,8 @@ public abstract class SqlSyntax {
                 return MY_SQL_SYNTAX;
             case "postgresql":
                 return POSTGRE_SQL_SYNTAX;
+            case "h2":
+                return H2_SQL_SYNTAX;
             default:
                 throw new UnsupportedDatabaseException(protocol);
         }

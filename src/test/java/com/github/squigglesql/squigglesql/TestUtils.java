@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Egor Nepomnyaschih.
+ * Copyright 2019-2020 Egor Nepomnyaschih and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,7 @@
  */
 package com.github.squigglesql.squigglesql;
 
-import com.github.squigglesql.squigglesql.databases.MySqlTestDatabase;
-import com.github.squigglesql.squigglesql.databases.PostgreSqlTestDatabase;
-import com.github.squigglesql.squigglesql.databases.TestDatabase;
-import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
+import com.github.squigglesql.squigglesql.databases.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -64,6 +61,7 @@ public abstract class TestUtils {
     public static void withDatabase(Consumer consumer) throws SQLException {
         withPostgreSqlDatabase(consumer);
         withMySqlDatabase(consumer);
+        withH2Database(consumer);
     }
 
     private static void withPostgreSqlDatabase(Consumer consumer) throws SQLException {
@@ -72,6 +70,10 @@ public abstract class TestUtils {
 
     private static void withMySqlDatabase(Consumer consumer) throws SQLException {
         withDatabase(new MySqlTestDatabase(), consumer);
+    }
+
+    private static void withH2Database(Consumer consumer) throws SQLException {
+        withDatabase(new H2TestDatabase(), consumer);
     }
 
     private static void withDatabase(TestDatabase database, Consumer consumer) throws SQLException {
