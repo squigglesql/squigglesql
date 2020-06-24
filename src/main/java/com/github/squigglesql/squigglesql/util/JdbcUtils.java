@@ -469,6 +469,7 @@ public abstract class JdbcUtils {
      * @param query      SQL selection query.
      * @param connection JDBC connection.
      * @param keyMapper  Mapper for generated keys.
+     * @param <T>        type of generated key.
      * @return list of Java model instances.
      * @throws SQLException if JDBC driver throws the exception.
      */
