@@ -1,3 +1,7 @@
+# 4.2.0
+
+* [#15](https://github.com/squigglesql/squigglesql/pull/15): Added DeleteQuery
+
 # 4.1.0
 
 * :boom: **Breaking change.** Criteria implementations should now be accessed via static methods, e.g. Criteria.equal,

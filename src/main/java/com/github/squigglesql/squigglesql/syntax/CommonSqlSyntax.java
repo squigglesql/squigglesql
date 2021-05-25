@@ -17,6 +17,7 @@ package com.github.squigglesql.squigglesql.syntax;
 
 import com.github.squigglesql.squigglesql.Matchable;
 import com.github.squigglesql.squigglesql.QueryCompiler;
+import com.github.squigglesql.squigglesql.TableReference;
 
 abstract class CommonSqlSyntax implements AbstractSqlSyntax {
 
@@ -60,5 +61,10 @@ abstract class CommonSqlSyntax implements AbstractSqlSyntax {
     @Override
     public void compileIsNotDistinctFrom(QueryCompiler compiler, Matchable left, Matchable right) {
         compiler.write(left).write(" IS NOT DISTINCT FROM ").write(right);
+    }
+
+    @Override
+    public void compileDeleteFrom(QueryCompiler compiler, TableReference tableReference) {
+        compiler.writeln("DELETE FROM").indent().writeln(tableReference).unindent();
     }
 }

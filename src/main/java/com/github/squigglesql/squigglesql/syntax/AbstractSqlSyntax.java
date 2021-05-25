@@ -17,6 +17,7 @@ package com.github.squigglesql.squigglesql.syntax;
 
 import com.github.squigglesql.squigglesql.Matchable;
 import com.github.squigglesql.squigglesql.QueryCompiler;
+import com.github.squigglesql.squigglesql.TableReference;
 
 /**
  * Abstract SQL syntax. Describes database-specific SQL features necessary to compile a query. You may use
@@ -81,4 +82,14 @@ public interface AbstractSqlSyntax {
      * @since 4.1.0
      */
     void compileIsNotDistinctFrom(QueryCompiler compiler, Matchable left, Matchable right);
+
+    /**
+     * Compiles "DELETE FROM table" with table aliases.  Some databases have special requirements for how the
+     * table is specified when using table aliases.
+     *
+     * @param compiler       compiler to compile the query with.
+     * @param tableReference the table to delete rows from.
+     * @since 4.2.0
+     */
+    void compileDeleteFrom(QueryCompiler compiler, TableReference tableReference);
 }
