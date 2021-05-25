@@ -15,8 +15,11 @@
  */
 package com.github.squigglesql.squigglesql;
 
+import com.github.squigglesql.squigglesql.criteria.Criteria;
 import com.github.squigglesql.squigglesql.databases.TestDatabaseColumn;
+import com.github.squigglesql.squigglesql.literal.Literal;
 import com.github.squigglesql.squigglesql.parameter.Parameter;
+import com.github.squigglesql.squigglesql.query.DeleteQuery;
 import com.github.squigglesql.squigglesql.query.InsertQuery;
 import com.github.squigglesql.squigglesql.query.ResultColumn;
 import com.github.squigglesql.squigglesql.query.SelectQuery;
@@ -116,6 +119,33 @@ public class JdbcTest {
             UpdateQuery updateQuery = new UpdateQuery(ref);
             updateQuery.addValue(AGE, Parameter.of(BOB_GROWN.getAge()));
             assertEquals(2, JdbcUtils.update(updateQuery, connection));
+        });
+    }
+
+    @Test
+    public void testDelete() throws SQLException {
+        withContents((connection, database) -> {
+            TableReference ref = TABLE.refer();
+            DeleteQuery deleteQuery = new DeleteQuery(ref);
+            deleteQuery.addCriteria(equal(ref.get(ID), Parameter.of(AARON.getId())));
+            assertEquals(1, JdbcUtils.update(deleteQuery, connection));
+
+            SelectQuery selectQuery = new SelectQuery();
+            ResultMapper<Employee> mapper = addToQuery(selectQuery, AARON.getId());
+            Employee employee = JdbcUtils.selectOne(selectQuery, connection, mapper);
+            assertNull(employee);
+        });
+    }
+
+    @Test
+    public void testMultiDelete() throws SQLException {
+        withContents((connection, database) -> {
+            insert(connection, CHRIS);
+
+            TableReference ref = TABLE.refer();
+            DeleteQuery deleteQuery = new DeleteQuery(ref);
+            deleteQuery.addCriteria(Criteria.greater(ref.get(AGE), Literal.of(21)));
+            assertEquals(2, JdbcUtils.update(deleteQuery, connection));
         });
     }
 

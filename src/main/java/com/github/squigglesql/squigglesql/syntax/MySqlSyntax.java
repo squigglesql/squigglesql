@@ -17,6 +17,7 @@ package com.github.squigglesql.squigglesql.syntax;
 
 import com.github.squigglesql.squigglesql.Matchable;
 import com.github.squigglesql.squigglesql.QueryCompiler;
+import com.github.squigglesql.squigglesql.TableReference;
 
 class MySqlSyntax extends CommonSqlSyntax {
 
@@ -38,5 +39,15 @@ class MySqlSyntax extends CommonSqlSyntax {
     @Override
     public void compileIsNotDistinctFrom(QueryCompiler compiler, Matchable left, Matchable right) {
         compiler.write(left).write(" <=> ").write(right);
+    }
+
+    @Override
+    public void compileDeleteFrom(QueryCompiler compiler, TableReference tableReference) {
+        compiler.write("DELETE ")
+                .quote(compiler.getAlias(tableReference), getTableReferenceQuote())
+                .writeln(" FROM")
+                .indent()
+                .writeln(tableReference)
+                .unindent();
     }
 }
