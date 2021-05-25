@@ -72,4 +72,23 @@ public class DeleteQueryTest {
         TableReference e = employee.refer();
         new DeleteQuery(e).addCriteria(null);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMultipleTables() throws SQLException {
+        Table employee = new Table("employee");
+        TableColumn employeeId = employee.get("id");
+
+        Table session = new Table("session");
+        TableColumn sessionId = session.get("id");
+        TableColumn sessionEmployeeId = session.get("employee_id");
+
+        TableReference e = employee.refer();
+        TableReference s = session.refer();
+
+        DeleteQuery query = new DeleteQuery(e);
+        query.addCriteria(equal(e.get(employeeId), s.get(sessionEmployeeId)));
+        query.addCriteria(equal(s.get(sessionId), Parameter.of("<session_id_value>")));
+
+        query.toStatement(new MockStatementCompiler());
+    }
 }
