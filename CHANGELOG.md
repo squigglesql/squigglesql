@@ -1,6 +1,6 @@
 # 4.2.0
 
-* [#15](https://github.com/squigglesql/squigglesql/pull/15): Added DeleteQuery
+* [#15](https://github.com/squigglesql/squigglesql/pull/15): Added DeleteQuery.
 
 # 4.1.0
 
