@@ -63,6 +63,42 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.moditect</groupId>
+                <artifactId>moditect-maven-plugin</artifactId>
+                <version>1.0.0.Final</version>
+                <executions>
+                    <execution>
+                        <id>add-module-infos</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>add-module-info</goal>
+                        </goals>
+                        <configuration>
+                            <module>
+                                <moduleInfoSource>
+                                    module com.github.squigglesql.squigglesql {
+                                        requires transitive java.sql;
+
+                                        exports com.github.squigglesql.squigglesql;
+                                        exports com.github.squigglesql.squigglesql.alias;
+                                        exports com.github.squigglesql.squigglesql.criteria;
+                                        exports com.github.squigglesql.squigglesql.exception;
+                                        exports com.github.squigglesql.squigglesql.join;
+                                        exports com.github.squigglesql.squigglesql.literal;
+                                        exports com.github.squigglesql.squigglesql.literal.time;
+                                        exports com.github.squigglesql.squigglesql.parameter;
+                                        exports com.github.squigglesql.squigglesql.query;
+                                        exports com.github.squigglesql.squigglesql.statement;
+                                        exports com.github.squigglesql.squigglesql.syntax;
+                                        exports com.github.squigglesql.squigglesql.util;
+                                    }
+                                </moduleInfoSource>
+                            </module>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <profiles>
