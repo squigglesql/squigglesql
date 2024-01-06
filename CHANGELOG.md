@@ -1,3 +1,7 @@
+# 4.2.1
+
+* [#18](https://github.com/squigglesql/squigglesql/pull/18): Added module-info.
+
 # 4.2.0
 
 * [#15](https://github.com/squigglesql/squigglesql/pull/15): Added DeleteQuery.
