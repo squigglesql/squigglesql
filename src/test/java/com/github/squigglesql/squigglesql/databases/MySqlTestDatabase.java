@@ -23,7 +23,7 @@ public class MySqlTestDatabase implements TestDatabase {
 
     @Override
     public String getUrl() {
-        return "jdbc:mysql://localhost:3306/squiggletest?serverTimezone=UTC";
+        return "jdbc:mysql://localhost:3306/squiggletest?serverTimezone=UTC&useSSL=false";
     }
 
     @Override
