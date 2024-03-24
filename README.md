@@ -1,4 +1,4 @@
-[![Build Status via Travis CI](https://api.travis-ci.org/squigglesql/squigglesql.svg?branch=master)](https://travis-ci.org/squigglesql/squigglesql)
+[![Build Status](https://app.travis-ci.com/squigglesql/squigglesql.svg?token=LRzZNW8qjHHeLWqdHxVm&branch=master)](https://app.travis-ci.com/squigglesql/squigglesql)
 [![Coverage Status](https://coveralls.io/repos/github/squigglesql/squigglesql/badge.svg?branch=master)](https://coveralls.io/github/squigglesql/squigglesql?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.squigglesql/squigglesql/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.squigglesql/squigglesql)
 
